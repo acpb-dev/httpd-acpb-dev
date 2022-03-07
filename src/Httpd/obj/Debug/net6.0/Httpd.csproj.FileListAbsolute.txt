@@ -1,0 +1,12 @@
+/Users/Admin/Documents/GitHub/httpd-acpb-dev/src/Httpd/bin/Debug/net6.0/Httpd.deps.json
+/Users/Admin/Documents/GitHub/httpd-acpb-dev/src/Httpd/bin/Debug/net6.0/Httpd.dll
+/Users/Admin/Documents/GitHub/httpd-acpb-dev/src/Httpd/bin/Debug/net6.0/ref/Httpd.dll
+/Users/Admin/Documents/GitHub/httpd-acpb-dev/src/Httpd/bin/Debug/net6.0/Httpd.pdb
+/Users/Admin/Documents/GitHub/httpd-acpb-dev/src/Httpd/obj/Debug/net6.0/Httpd.csproj.AssemblyReference.cache
+/Users/Admin/Documents/GitHub/httpd-acpb-dev/src/Httpd/obj/Debug/net6.0/Httpd.GeneratedMSBuildEditorConfig.editorconfig
+/Users/Admin/Documents/GitHub/httpd-acpb-dev/src/Httpd/obj/Debug/net6.0/Httpd.AssemblyInfoInputs.cache
+/Users/Admin/Documents/GitHub/httpd-acpb-dev/src/Httpd/obj/Debug/net6.0/Httpd.AssemblyInfo.cs
+/Users/Admin/Documents/GitHub/httpd-acpb-dev/src/Httpd/obj/Debug/net6.0/Httpd.csproj.CoreCompileInputs.cache
+/Users/Admin/Documents/GitHub/httpd-acpb-dev/src/Httpd/obj/Debug/net6.0/Httpd.dll
+/Users/Admin/Documents/GitHub/httpd-acpb-dev/src/Httpd/obj/Debug/net6.0/ref/Httpd.dll
+/Users/Admin/Documents/GitHub/httpd-acpb-dev/src/Httpd/obj/Debug/net6.0/Httpd.pdb
