@@ -2,13 +2,10 @@ namespace Httpd;
 
 public class ReadHTML
 {
-    private string CurrentDirectory;
-    private string[] FilesInDirectory;
-    
-    public string[] ReadHTMLFromRoute(string route)
+    public string[] ReadHtmlFromRoute()
     {
-        CurrentDirectory = Directory.GetCurrentDirectory();
-        FilesInDirectory = Directory.GetFiles(CurrentDirectory);
-        return FilesInDirectory;
+        var currentDirectory = Directory.GetCurrentDirectory();
+        var filesInDirectory = Directory.GetFiles(currentDirectory);
+        return filesInDirectory;
     }
 }

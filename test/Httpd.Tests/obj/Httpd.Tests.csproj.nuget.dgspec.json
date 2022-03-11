@@ -1,20 +1,20 @@
 {
   "format": 1,
   "restore": {
-    "\\\\sfs03\\etudiants$\\1739316\\Documents\\GitHub\\httpd-acpb-dev\\test\\Httpd.Tests\\Httpd.Tests.csproj": {}
+    "C:\\Users\\willi\\Documents\\GitHub\\httpd-acpb-dev\\test\\Httpd.Tests\\Httpd.Tests.csproj": {}
   },
   "projects": {
-    "\\\\sfs03\\etudiants$\\1739316\\Documents\\GitHub\\httpd-acpb-dev\\test\\Httpd.Tests\\Httpd.Tests.csproj": {
+    "C:\\Users\\willi\\Documents\\GitHub\\httpd-acpb-dev\\test\\Httpd.Tests\\Httpd.Tests.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "\\\\sfs03\\etudiants$\\1739316\\Documents\\GitHub\\httpd-acpb-dev\\test\\Httpd.Tests\\Httpd.Tests.csproj",
+        "projectUniqueName": "C:\\Users\\willi\\Documents\\GitHub\\httpd-acpb-dev\\test\\Httpd.Tests\\Httpd.Tests.csproj",
         "projectName": "Httpd.Tests",
-        "projectPath": "\\\\sfs03\\etudiants$\\1739316\\Documents\\GitHub\\httpd-acpb-dev\\test\\Httpd.Tests\\Httpd.Tests.csproj",
-        "packagesPath": "C:\\Users\\1739316\\.nuget\\packages\\",
-        "outputPath": "\\\\sfs03\\etudiants$\\1739316\\Documents\\GitHub\\httpd-acpb-dev\\test\\Httpd.Tests\\obj\\",
+        "projectPath": "C:\\Users\\willi\\Documents\\GitHub\\httpd-acpb-dev\\test\\Httpd.Tests\\Httpd.Tests.csproj",
+        "packagesPath": "C:\\Users\\willi\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\willi\\Documents\\GitHub\\httpd-acpb-dev\\test\\Httpd.Tests\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
-          "C:\\Users\\1739316\\AppData\\Roaming\\NuGet\\NuGet.Config"
+          "C:\\Users\\willi\\AppData\\Roaming\\NuGet\\NuGet.Config"
         ],
         "originalTargetFrameworks": [
           "net6.0"
@@ -52,7 +52,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\6.0.101\\RuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\6.0.200\\RuntimeIdentifierGraph.json"
         }
       }
     }
