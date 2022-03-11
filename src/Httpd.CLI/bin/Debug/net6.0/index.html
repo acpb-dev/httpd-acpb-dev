@@ -1,12 +1,111 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
+
 <head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Yessir</title>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width">
+	<title>The Office Ceo</title>
+	<link href="https://fonts.googleapis.com/css?family=Special+Elite&display=swap" rel="stylesheet">
+	<link href="https://fonts.googleapis.com/css?family=Aldrich&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+	<link href="style/style.css" rel="stylesheet" type="text/css" />
+	<link rel="icon" href="image/fanta.jpg">
 </head>
+
 <body>
-    <div class="div">It works</div>
+  <div class="debug">
+    <div class="contentDebug">
+      <div class="row">
+        <a>debug<a class="skeetColor">&nbsp;>&nbsp;</a>epoch:&nbsp;</a>
+        <div id="epoc"
+        class="debugger skeetColor"></div>
+      </div>
+      <div class="row">
+        <a>debug<a class="skeetColor">&nbsp;>&nbsp;</a>current_date:&nbsp;</a>
+        <div id="date" class="debugger skeetColor"></div>
+      </div>
+      <div class="row">
+        <a>debug<a class="skeetColor">&nbsp;>&nbsp;</a>current_time:&nbsp;</a>
+        <div id="time" class="debugger skeetColor"></div>
+      </div>
+      <div class="row">
+        <a>debug<a class="skeetColor">&nbsp;>&nbsp;</a>session_id:&nbsp;</a>
+        <div id="sessionid" class="debugger skeetColor"></div>
+      </div>
+      <div class="row">
+        <a>debug<a class="skeetColor">&nbsp;>&nbsp;</a>user:&nbsp;</a>
+        <div id="user" class="debugger skeetColor"></div>
+      </div>
+    </div>
+  </div>
+  <div class="demo content containerr">
+    <div id="large-header" class="large-header">
+      <canvas id="demo-canvas"></canvas>
+    </div>
+  </div>
+  <div class="page">
+    <div class="containercontainer">
+      <div class="row">
+        <div class="col-sm" id="timee"></div>
+        <div class="col-sm" id="datee"></div>
+      </div>
+      <div class="container2">
+        <div id="dumbass" class="bruh">
+          <div class="imageCenter">
+            <a href="http://steamcommunity.com/profiles/76561197971895445" target="_blank">
+              <img class="profile-image fucker" src="image/pfppp.gif" alt=""/>
+            </a>
+            <h1>[ <a id="name" class="skeetColor"></a> ]</h1>
+          </div>
+          <div class="row">
+            <div class="col-sm ">Username</div>
+            <div class="col-sm skeet">acpb</div>
+          </div>
+          <div class="row">
+            <div class="col-sm">Title</div>
+            <div class="col-sm skeet">Riding szn is on</div>
+          </div>
+          <div class="row">
+            <div class="col-sm">Real name</div>
+            <div class="col-sm skeet">Bergy#0001</div>
+          </div>
+          <div class="row">
+            <div class="col-sm">Location</div>
+            <div class="col-sm skeet">Unix</div>
+          </div>
+          <div class="row">
+            <div class="col-sm">PM</div>
+            <div class="col-sm skeet"><a class="sendpm" href="https://gamesense.pub/forums/pmsnew.php?mdl=post&uid=5967" target="_blank">Send private message</a></div>
+          </div>
+          <div class="row"></div>
+          <div id="accs" class="col-sm temp">
+            <a class="row linksCheats altSteam steamllinks accounts" href="http://steamcommunity.com/profiles/76561199155047417" target="_blank">Xeno</a>
+            <a class="row linksCheats altSteam steamllinks accounts" href="http://steamcommunity.com/profiles/76561198887922595" target="_blank">StoneWarrior</a>
+            <a class="row linksCheats altSteam steamllinks accounts" href="https://steamcommunity.com/profiles/76561199008633299" target="_blank">Stone Rock</a>
+          </div>
+        </div>  
+      </div>
+      <div class="textCenter"><a>
+          <a class="linksCheats skeett" href="https://gamesense.pub/forums/profile.php?id=5967" target="_blank">GAMESENSE</a> | 
+          <a class="linksCheats novo" href="https://novo.win/members/acpb.6068/" target="_blank">NOVOLINE</a> |
+          <a class="linksCheats ot" href="https://www.onetap.com/members/acpb.22386/" target="_blank">ONETAP</a> |
+          <a class="linksCheats aimware" href="https://aimware.net/forum/user/211280" target="_blank">AIMWARE</a> |
+          <a class="linksCheats discord" href="https://discord.gg/WRn86Tspka" target="_blank">DISCORD</a> |
+          <a class="linksCheats altSteam" id="temper" href="javascripts::null">ALTS</a>
+        </a></div>
+    </div>
+  </div>
+  
+  <script src="javascripts/query.js"></script>
+  <script src="javascripts/customJS.js"></script>
+  <script src="javascripts/name.js"></script>
+  <script src="javascripts/debug.js"></script>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+	<script src="https://s3-us-west-2.amazonaws.com/s.cdpn.io/499416/TweenLite.min.js"></script>
+  <script src="https://s3-us-west-2.amazonaws.com/s.cdpn.io/499416/EasePack.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/2.0.2/anime.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+  <script src="javascripts/backgroundJS.js"></script>
 </body>
 </html>

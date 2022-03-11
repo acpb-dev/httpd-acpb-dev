@@ -10,3 +10,15 @@
 /Users/Admin/Documents/GitHub/httpd-acpb-dev/src/Httpd/obj/Debug/net6.0/Httpd.dll
 /Users/Admin/Documents/GitHub/httpd-acpb-dev/src/Httpd/obj/Debug/net6.0/ref/Httpd.dll
 /Users/Admin/Documents/GitHub/httpd-acpb-dev/src/Httpd/obj/Debug/net6.0/Httpd.pdb
+\\sfs03\etudiants$\1739316\Documents\GitHub\httpd-acpb-dev\src\Httpd\bin\Debug\net6.0\Httpd.deps.json
+\\sfs03\etudiants$\1739316\Documents\GitHub\httpd-acpb-dev\src\Httpd\bin\Debug\net6.0\Httpd.dll
+\\sfs03\etudiants$\1739316\Documents\GitHub\httpd-acpb-dev\src\Httpd\bin\Debug\net6.0\ref\Httpd.dll
+\\sfs03\etudiants$\1739316\Documents\GitHub\httpd-acpb-dev\src\Httpd\bin\Debug\net6.0\Httpd.pdb
+\\sfs03\etudiants$\1739316\Documents\GitHub\httpd-acpb-dev\src\Httpd\obj\Debug\net6.0\Httpd.csproj.AssemblyReference.cache
+\\sfs03\etudiants$\1739316\Documents\GitHub\httpd-acpb-dev\src\Httpd\obj\Debug\net6.0\Httpd.GeneratedMSBuildEditorConfig.editorconfig
+\\sfs03\etudiants$\1739316\Documents\GitHub\httpd-acpb-dev\src\Httpd\obj\Debug\net6.0\Httpd.AssemblyInfoInputs.cache
+\\sfs03\etudiants$\1739316\Documents\GitHub\httpd-acpb-dev\src\Httpd\obj\Debug\net6.0\Httpd.AssemblyInfo.cs
+\\sfs03\etudiants$\1739316\Documents\GitHub\httpd-acpb-dev\src\Httpd\obj\Debug\net6.0\Httpd.csproj.CoreCompileInputs.cache
+\\sfs03\etudiants$\1739316\Documents\GitHub\httpd-acpb-dev\src\Httpd\obj\Debug\net6.0\Httpd.dll
+\\sfs03\etudiants$\1739316\Documents\GitHub\httpd-acpb-dev\src\Httpd\obj\Debug\net6.0\ref\Httpd.dll
+\\sfs03\etudiants$\1739316\Documents\GitHub\httpd-acpb-dev\src\Httpd\obj\Debug\net6.0\Httpd.pdb

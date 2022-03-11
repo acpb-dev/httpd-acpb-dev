@@ -13,8 +13,11 @@ public class Server
     private string[] FilesInDirectory;
 
     private TcpListener _listenner;
+
+    private static int _requestCount = 0;
     
     public int Port { get; set; }
+    public Requests requests = new Requests();
     public Server(int port)
     {
         Port = port;
@@ -28,7 +31,6 @@ public class Server
         Console.WriteLine($"Server has started on port {Port}.");
         while (true)
         {
-            // Task<TcpClient> client = _listenner.AcceptTcpClientAsync();
             var client = await _listenner.AcceptTcpClientAsync();
             HandleRequest(client);
         }
@@ -38,29 +40,41 @@ public class Server
     {
         Thread.Sleep(50);
         var stream = client.GetStream();
+        requests.ManageRequest("temporary string");
+        
+        
         var socket = stream.Socket;
         var buffer = new byte[socket.Available];
-        
         stream.Read(buffer, 0, buffer.Length);
         
-        //Console.WriteLine(BitConverter.ToString(buffer));
         var data = Encoding.UTF8.GetString(buffer);
-        //Console.WriteLine(data);
-        string[] test = ReadHTMLFromRoute();
+        _requestCount++;
+        Console.WriteLine($"--- Request Count #{_requestCount} ---");
+        Console.WriteLine(data);
+        
+        Console.WriteLine($"--- End of request ---");
+        
+        string[] test = ReadHtmlFromRoute();
+        foreach (var VARIABLE in test)
+        {
+            //Console.WriteLine(VARIABLE);
+        }
+        var responsesByte = Encoding.UTF8.GetBytes(Html(test));
+        socket.Send(responsesByte);
+        socket.Close();
+    }
+
+    private string Html(string[] test)
+    {
         string text = "";
         bool valide = false;
         foreach (var VARIABLE in test)
         {
             var result = VARIABLE.Substring(VARIABLE.Length - 10);
-            //Console.WriteLine(result);
             if (result.Equals("index.html"))
             {
                 valide = true;
-
             }
-
-
-            //Console.WriteLine(VARIABLE);
         }
         if (valide)
         {
@@ -76,18 +90,10 @@ public class Server
         response += "Connection: close\r\n";
         response += "\r\n";
         response += text;
-        
-        
-        
-        //response += "<html><body><h1>It works!</h1></body></html>";
-        var responsesByte = Encoding.UTF8.GetBytes(response);
-        socket.Send(responsesByte);
-        socket.Close();
-
-          //  
+        return response;
     }
-    
-    public string[] ReadHTMLFromRoute()
+
+    private string[] ReadHtmlFromRoute()
     {
         CurrentDirectory = Directory.GetCurrentDirectory();
         FilesInDirectory = Directory.GetFiles(CurrentDirectory);

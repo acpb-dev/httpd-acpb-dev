@@ -1,0 +1,17 @@
+
+// $.get('https://www.cloudflare.com/cdn-cgi/trace', function(data) {
+//     console.log(data)
+// });
+
+// let apiKey = '1be9a6884abd4c3ea143b59ca317c6b2';
+// $.getJSON('https://ipgeolocation.abstractapi.com/v1/?api_key=' + apiKey, function(data) {
+//   console.log(JSON.stringify(data, null, 2));
+// });
+
+// var fh = fopen("MyFile.txt", 3); // Open the file for writing path
+// if(fh!=-1) // If the file has been successfully opened
+// {
+// var str = "Some text goes here...";
+// fwrite(fh, str); // Write the string to a file
+// fclose(fh); // Close the file
+// }
