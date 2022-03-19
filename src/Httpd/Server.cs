@@ -32,15 +32,20 @@ public class Server
     private void HandleRequest(TcpClient client)
     {
         Thread.Sleep(50);
+        Task test = HandledRequests(client);
+    }
+
+    private Task HandledRequests(TcpClient client)
+    {
         var stream = client.GetStream();
         var socket = stream.Socket;
         var buffer = new byte[socket.Available];
         stream.Read(buffer, 0, buffer.Length);
         var data = Encoding.UTF8.GetString(buffer);
         var responsesByte = _requests.ManageRequest(data);
-        
         socket.Send(responsesByte);
         socket.Close();
+        return Task.CompletedTask;
     }
 
 

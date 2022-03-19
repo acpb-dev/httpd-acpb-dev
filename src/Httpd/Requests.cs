@@ -5,7 +5,7 @@ using Httpd;
 public class Requests
 {
     
-    private readonly ReadHTML _readHtml = new ReadHTML();
+    private readonly ReadHTML _readHtml = new();
     public byte[] ManageRequest(string request)
     {
         var strReader = new StringReader(request);
@@ -30,8 +30,8 @@ public class Requests
         response += "Content-Type: text/html";
         response += "Connection: close\r\n";
         response += "\r\n";
-        byte[] temp = Encoding.UTF8.GetBytes(response);
-        byte[] z = new byte[temp.Length + text.Length];
+        var temp = Encoding.UTF8.GetBytes(response);
+        var z = new byte[temp.Length + text.Length];
         temp.CopyTo(z, 0);
         text.CopyTo(z, temp.Length);
         return z;
@@ -39,9 +39,9 @@ public class Requests
 
     private byte[] ReadSpecifiedFiles(string path)
     {
-        string[] temp = path.Split(".");
-        string extension = temp[^1];
-        if (extension.Equals("jpg"))
+        var temp = path.Split(".");
+        var extension = temp[^1];
+        if (!extension.Equals("js") && !extension.Equals("html") && !extension.Equals("txt") && !extension.Equals("css"))
         {
             path.TrimStart('/');
             return File.ReadAllBytes(path.TrimStart('/'));
@@ -55,20 +55,17 @@ public class Requests
 
     private byte[] SearchIndex()
     {
-        string[] test = _readHtml.ReadHtmlFromRoute();
-        bool valid = false;
+        var test = _readHtml.ReadHtmlFromRoute();
+        var valid = false;
         foreach (var variable in test)
         {
             var result = variable.Substring(variable.Length - 10);
-            if (result.Equals("index.html"))
+            if (result.Equals("home.html"))
             {
                 valid = true;
             }
         }
-        if (valid)
-        {
-            return Encoding.UTF8.GetBytes(File.ReadAllText("index.html"));
-        }
-        return Encoding.UTF8.GetBytes("<!DOCTYPE html> <html lang=\"en\"> <head> <meta charset=\"UTF-8\"> <meta http-equiv=\"X-UA-Compatible\" content=\"IE=edge\"> <meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\"> <title>404</title> </head> <body> <div class=\"div\">404 Page not found</div> </body> </html>");
+
+        return Encoding.UTF8.GetBytes(valid ? File.ReadAllText("home.html") : "<!DOCTYPE html> <html lang=\"en\"> <head> <meta charset=\"UTF-8\"> <meta http-equiv=\"X-UA-Compatible\" content=\"IE=edge\"> <meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\"> <title>404</title> </head> <body> <div class=\"div\">404 Page not found</div> </body> </html>");
     }
 }
