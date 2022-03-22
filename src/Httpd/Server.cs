@@ -32,13 +32,13 @@ public class Server
 
     private async Task HandleRequest(TcpClient client)
     {
-        await Task.Delay(100);
+        await Task.Delay(250);
         var stream = client.GetStream();
         var socket = stream.Socket;
         var buffer = new byte[socket.Available];
         stream.Read(buffer, 0, buffer.Length);
         var data = Encoding.UTF8.GetString(buffer);
-        Console.WriteLine(data);
+        // Console.WriteLine(data);
         var responsesByte = _requests.ManageRequest(data);
         socket.Send(responsesByte);
         socket.Close();
