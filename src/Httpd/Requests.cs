@@ -5,6 +5,7 @@ using Httpd;
 public class Requests
 {
     private readonly ReadHTML _readHtml = new();
+    private readonly HtmlBuilder _htmlBuilder = new();
     public byte[] ManageRequest(string request)
     {
         var strReader = new StringReader(request);
@@ -82,7 +83,7 @@ public class Requests
                 valid = true;
             }
         }
-        return Encoding.UTF8.GetBytes(valid ? File.ReadAllText("index.html") : "<!DOCTYPE html> <html lang=\"en\"> <head> <meta charset=\"UTF-8\"> <meta http-equiv=\"X-UA-Compatible\" content=\"IE=edge\"> <meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\"> <title>404</title> </head> <body> <div class=\"div\">404 Page not found</div> </body> </html>");
+        return Encoding.UTF8.GetBytes(valid ? File.ReadAllText("index.html") : _htmlBuilder.Page404());
     }
 
     private byte[] Htmlbuilder(string path)
@@ -92,8 +93,16 @@ public class Requests
         {
             path = "/";
         }
+        else
+        {
+            if (!Directory.Exists(path.Trim('/')))
+            {
+                return Encoding.UTF8.GetBytes(_htmlBuilder.Page404());
+            }
+        }
         IDictionary<string, string> fileNames = new Dictionary<string, string>();
         IDictionary<string, string> directoriesNames = new Dictionary<string, string>();
+
         var files = _readHtml.ReadFilesInSpecifiedDirectory(path);
         var directories = _readHtml.ReadSpecifiedDirectories(path);
         if (files.Length > 0)
@@ -101,7 +110,6 @@ public class Requests
             foreach (var file in files)
             {
                 string[] fileSplit = file.Split('\\');
-                // Console.WriteLine(fileSplit[^1]);
                 fileNames.Add(fileSplit[^1], file);
             }
         }
@@ -110,31 +118,25 @@ public class Requests
             foreach (var directory in directories)
             {
                 string[] directorySplit = directory.Split('\\');
-                // Console.WriteLine(directorySplit[^1]);
                 directoriesNames.Add(directorySplit[^1], directory);
             }
         }
 
-        if (directories.Length == 0 && files.Length == 0)
-        {
-            return Encoding.UTF8.GetBytes("<!DOCTYPE html> <html lang=\"en\"> <head> <meta charset=\"UTF-8\"> <meta http-equiv=\"X-UA-Compatible\" content=\"IE=edge\"> <meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\"> <title>404</title> </head> <body> <div class=\"div\">404 Page not found</div> </body> </html>");
-        }
-        string topHtml =
-            "<!DOCTYPE html> <html lang=\"en\"> <head> <meta charset=\"UTF-8\"> <meta name=\"viewport\" content=\"width=device-width, initial-scale=1, shrink-to-fit=no\"> <meta http-equiv=\"X-UA-Compatible\" content=\"ie=edge\"> <title id=\"pageTitle\">File Finder</title> </head> <body>";
-        string bottomHtml = "</body> </html>";
+        string topHtml = _htmlBuilder.Header();
+        string bottomHtml = _htmlBuilder.Footer();
         foreach (var dirNameKey in directoriesNames)
         {
-            topHtml += $"<div><a href=\"{CleanPth(dirNameKey.Value)}\">{dirNameKey.Key.ToUpper()}</a></div>";
+            topHtml += _htmlBuilder.Alink(CleanPath(dirNameKey.Value), dirNameKey.Key, true);
         }
 
         foreach (var fileNameKey in fileNames)
         {
-            topHtml += $"<div><a href=\"{CleanPth(fileNameKey.Value)}\">{fileNameKey.Key.ToLower()}</a></div>";
+            topHtml += _htmlBuilder.Alink(CleanPath(fileNameKey.Value), fileNameKey.Key, false);
         }
         return Encoding.UTF8.GetBytes(topHtml + bottomHtml);
     }
 
-    private string CleanPth(string sourceString)
+    private string CleanPath(string sourceString)
     {
         string test = Directory.GetCurrentDirectory();
         int index = sourceString.IndexOf(test);
