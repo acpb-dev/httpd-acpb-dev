@@ -87,6 +87,11 @@ public class Requests
 
     private byte[] Htmlbuilder(string path)
     {
+        Console.WriteLine(path);
+        if (path.Equals("/source"))
+        {
+            path = "/";
+        }
         IDictionary<string, string> fileNames = new Dictionary<string, string>();
         IDictionary<string, string> directoriesNames = new Dictionary<string, string>();
         var files = _readHtml.ReadFilesInSpecifiedDirectory(path);
