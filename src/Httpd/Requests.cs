@@ -4,7 +4,6 @@ using Httpd;
 
 public class Requests
 {
-    private readonly HtmlBuilder _htmlBuilder = new();
     private IDictionary<string, string> _requests = new Dictionary<string, string>();
     private bool _error404 = false;
     private string _valueType = "";
@@ -122,7 +121,7 @@ public class Requests
         var temp = path.Split(".");
         if (temp.Length < 2 || temp[0].Equals("/source"))
         {
-            return HtmlBuilder(path);
+            return HtmlBuilder2(path);
         }
         var extension = temp[^1];
 
@@ -135,7 +134,7 @@ public class Requests
                 return ByteReader.ConvertFileToByte(path.TrimStart('/'));
             }
             _error404 = true;
-            return ByteReader.ConvertFileToByte(_htmlBuilder.Page404());
+            return ByteReader.ConvertFileToByte(HtmlBuilder.Page404());
         }
         
         if (!CheckExtension(_imagesFormat, extension).Equals("N/A"))
@@ -148,7 +147,7 @@ public class Requests
         }
         
         return !ReadHTML.CheckFileExistance(path) ? 
-            ByteReader.ConvertTextToByte(_htmlBuilder.Page404()) : Array.Empty<byte>();
+            ByteReader.ConvertTextToByte(HtmlBuilder.Page404()) : Array.Empty<byte>();
     }
 
     private byte[] SearchIndex()
@@ -171,16 +170,16 @@ public class Requests
         else
         {
             _error404 = true;
-            return ByteReader.ConvertTextToByte(_htmlBuilder.Page404());
+            return ByteReader.ConvertTextToByte(HtmlBuilder.Page404());
         }
     }
 
-    private byte[] HtmlBuilder(string path)
+    private byte[] HtmlBuilder2(string path)
     {
         IDictionary<string, string> fileNames = new Dictionary<string, string>();
         IDictionary<string, string> directoriesNames = new Dictionary<string, string>();
-        var topHtml = _htmlBuilder.Header();
-        var bottomHtml = _htmlBuilder.Footer();
+        var topHtml = HtmlBuilder.Header();
+        var bottomHtml = HtmlBuilder.Footer();
         if (path.Equals("/source"))
         {
             path = "/";
@@ -190,7 +189,7 @@ public class Requests
             if (!Directory.Exists(path.Trim('/')))
             {
                 _error404 = true;
-                return ByteReader.ConvertTextToByte(_htmlBuilder.Page404());
+                return ByteReader.ConvertTextToByte(HtmlBuilder.Page404());
             }
         }
         var files = ReadHTML.ReadFilesInSpecifiedDirectory(path);
@@ -213,12 +212,12 @@ public class Requests
         }
         foreach (var (key, value) in directoriesNames)
         {
-            topHtml += _htmlBuilder.Alink(ReadHTML.CleanPath(value), ReadHTML.CleanString(key), true);
+            topHtml += HtmlBuilder.Alink(ReadHTML.CleanPath(value), ReadHTML.CleanString(key), true);
         }
 
         foreach (var (key, value) in fileNames)
         {
-            topHtml += _htmlBuilder.Alink(ReadHTML.CleanPath(value), ReadHTML.CleanString(key), false);
+            topHtml += HtmlBuilder.Alink(ReadHTML.CleanPath(value), ReadHTML.CleanString(key), false);
         }
         return Encoding.UTF8.GetBytes(topHtml + bottomHtml);
     }
