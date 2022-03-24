@@ -30,9 +30,10 @@ public class ReadHTML
         return directories;
     }
 
-    // public static bool CheckIfFileExists()
-    // {
-    //     
-    //     return File.Exists(curFile);
-    // }
+    public static bool CheckFileExistance(string fileName)
+    {
+        var currentDirectory = Directory.GetCurrentDirectory();
+        Console.WriteLine(currentDirectory + fileName);
+        return File.Exists(currentDirectory + fileName);
+    }
 }

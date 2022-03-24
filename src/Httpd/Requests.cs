@@ -8,6 +8,34 @@ public class Requests
     private readonly HtmlBuilder _htmlBuilder = new();
     private IDictionary<string, string> _requests = new Dictionary<string, string>();
     private bool _error404 = false;
+    private Dictionary<string, string> _imagesFormat = new Dictionary<string, string>
+    {
+        { "apng", "image/apng" },
+        { "avif", "image/avif" },
+        { "gif", "image/gif" },
+        { "jpg", "image/jpeg" },
+        { "jpeg", "image/jpeg" },
+        { "jfif", "image/jpeg" },
+        { "pjpeg", "image/jpeg" },
+        { "pjp", "image/jpeg" },
+        { "png", "image/png" },
+        { "svg", "image/svg+xml" },
+        { "bmp", "image/bmp" },
+        { "ico", "image/vnd.microsoft.icon" },
+        { "tif", "image/tiff" },
+        { "tiff", "image/tiff" },
+        { "webp", "image/webp" }
+    };
+    private Dictionary<string, string> _fileFormat = new Dictionary<string, string>
+    {
+        { "html", "text/html" },
+        { "htm", "text/html" },
+        { "js", "text/javascript" },
+        { "css", "text/css" },
+        { "mjs", "text/javascript" },
+        { "txt", "text/plain" },
+        { "php", "application/x-httpd-php" }
+    };
     
     public byte[] ManageRequest(string request)
     {
@@ -68,6 +96,7 @@ public class Requests
 
     private byte[] ReadSpecifiedFiles(string path)
     {
+        Console.WriteLine(ReadHTML.CheckFileExistance(path));
         var temp = path.Split(".");
         if (temp.Length < 2)
         {
@@ -80,7 +109,11 @@ public class Requests
         }
         if (extension.Equals("js") && extension.Equals("html") && extension.Equals("txt") && extension.Equals("css"))
         {
-            return Encoding.UTF8.GetBytes(File.ReadAllText(path.TrimStart('/')));
+            if (ReadHTML.CheckFileExistance(path))
+            {
+                return Encoding.UTF8.GetBytes(File.ReadAllText(path.TrimStart('/')));
+            }
+            
         }
         return File.ReadAllBytes(path.TrimStart('/'));
     }
@@ -102,7 +135,6 @@ public class Requests
 
     private byte[] HtmlBuilder(string path)
     {
-        
         IDictionary<string, string> fileNames = new Dictionary<string, string>();
         IDictionary<string, string> directoriesNames = new Dictionary<string, string>();
         var topHtml = _htmlBuilder.Header();
