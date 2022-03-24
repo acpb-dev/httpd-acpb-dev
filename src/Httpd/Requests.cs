@@ -6,12 +6,12 @@ public class Requests
 {
     private readonly ReadHTML _readHtml = new();
     private readonly HtmlBuilder _htmlBuilder = new();
-    private IDictionary<string, string> _resquest = new Dictionary<string, string>();
+    private IDictionary<string, string> _requests = new Dictionary<string, string>();
     private bool _error404 = false;
     
     public byte[] ManageRequest(string request)
     {
-        _resquest.Clear();
+        _requests.Clear();
         var strReader = new StringReader(request);
         // Console.WriteLine(request);
         var count = 0;
@@ -27,18 +27,14 @@ public class Requests
                 keyVal = request.Split(": ");
  
             }
-
             if (keyVal.Length > 1)
             {
-                // Console.WriteLine(keyVal.Length);
-                _resquest.Add(keyVal[0], keyVal[1]);
-                // Console.WriteLine("{0} // {1}", keyVal[0], keyVal[1]);
+                _requests.Add(keyVal[0], keyVal[1]);
             }
             count++;
         }
-
         var link = "";
-        foreach (var (key, value) in _resquest)
+        foreach (var (key, value) in _requests)
         {
             if (key.Equals("GET"))
             {
