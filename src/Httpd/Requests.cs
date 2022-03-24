@@ -6,6 +6,7 @@ public class Requests
 {
     private readonly ReadHTML _readHtml = new();
     private readonly HtmlBuilder _htmlBuilder = new();
+    public bool Error404 = false;
     public byte[] ManageRequest(string request)
     {
         var strReader = new StringReader(request);
@@ -27,17 +28,24 @@ public class Requests
 
     private byte[] Html(bool type, string path)
     {
+        Error404 = false;
         var text = type ? SearchIndex() : ReadSpecifiedFiles(path);
-        var response = @"HTTP/1.1 200 OK\r\n";
-        response += "Content-Length: " + text.Length;
-        response += "Content-Type: text/html";
-        response += "Connection: close\r\n";
-        response += "\r\n";
+        var response = Response(text.Length);
         var temp = Encoding.UTF8.GetBytes(response);
         var z = new byte[temp.Length + text.Length];
         temp.CopyTo(z, 0);
         text.CopyTo(z, temp.Length);
         return z;
+    }
+
+    private string Response(int length)
+    {
+        var response = !Error404 ? @"HTTP/1.1 200 OK\r\n" : @"HTTP/1.1 404 OK\r\n";
+        response += "Content-Length: " + length;
+        response += "Content-Type: text/html";
+        response += "Connection: close\r\n";
+        response += "\r\n";
+        return response;
     }
 
     private byte[] ReadSpecifiedFiles(string path)
@@ -50,7 +58,7 @@ public class Requests
         }
         else
         {
-            extension = "9119";
+            return HtmlBuilder(path);
         }
         if (extension.Equals("ico"))
         {
@@ -60,24 +68,16 @@ public class Requests
         {
             return Encoding.UTF8.GetBytes(File.ReadAllText(path.TrimStart('/')));
         }
-        if (extension.Equals("9119"))
-        {
-            Console.WriteLine(path);
-            return Htmlbuilder(path);
-        }
-        else
-        {
-            return File.ReadAllBytes(path.TrimStart('/'));
-        }
+        return File.ReadAllBytes(path.TrimStart('/'));
     }
 
     private byte[] SearchIndex()
     {
-        var test = _readHtml.ReadFilesInDirectory();
+        var test = ReadHTML.ReadFilesInDirectory();
         var valid = false;
         foreach (var variable in test)
         {
-            var result = variable.Substring(variable.Length - 10);
+            var result = variable[^10..];
             if (result.Equals("index.html"))
             {
                 valid = true;
@@ -86,9 +86,12 @@ public class Requests
         return Encoding.UTF8.GetBytes(valid ? File.ReadAllText("index.html") : _htmlBuilder.Page404());
     }
 
-    private byte[] Htmlbuilder(string path)
+    private byte[] HtmlBuilder(string path)
     {
-        Console.WriteLine(path);
+        IDictionary<string, string> fileNames = new Dictionary<string, string>();
+        IDictionary<string, string> directoriesNames = new Dictionary<string, string>();
+        var topHtml = _htmlBuilder.Header();
+        var bottomHtml = _htmlBuilder.Footer();
         if (path.Equals("/source"))
         {
             path = "/";
@@ -97,19 +100,17 @@ public class Requests
         {
             if (!Directory.Exists(path.Trim('/')))
             {
+                Error404 = true;
                 return Encoding.UTF8.GetBytes(_htmlBuilder.Page404());
             }
         }
-        IDictionary<string, string> fileNames = new Dictionary<string, string>();
-        IDictionary<string, string> directoriesNames = new Dictionary<string, string>();
-
-        var files = _readHtml.ReadFilesInSpecifiedDirectory(path);
-        var directories = _readHtml.ReadSpecifiedDirectories(path);
+        var files = ReadHTML.ReadFilesInSpecifiedDirectory(path);
+        var directories = ReadHTML.ReadSpecifiedDirectories(path);
         if (files.Length > 0)
         {
             foreach (var file in files)
             {
-                string[] fileSplit = file.Split('\\');
+                var fileSplit = file.Split('\\');
                 fileNames.Add(fileSplit[^1], file);
             }
         }
@@ -121,26 +122,23 @@ public class Requests
                 directoriesNames.Add(directorySplit[^1], directory);
             }
         }
-
-        string topHtml = _htmlBuilder.Header();
-        string bottomHtml = _htmlBuilder.Footer();
-        foreach (var dirNameKey in directoriesNames)
+        foreach (var (key, value) in directoriesNames)
         {
-            topHtml += _htmlBuilder.Alink(CleanPath(dirNameKey.Value), dirNameKey.Key, true);
+            topHtml += _htmlBuilder.Alink(CleanPath(value), key, true);
         }
 
-        foreach (var fileNameKey in fileNames)
+        foreach (var (key, value) in fileNames)
         {
-            topHtml += _htmlBuilder.Alink(CleanPath(fileNameKey.Value), fileNameKey.Key, false);
+            topHtml += _htmlBuilder.Alink(CleanPath(value), key, false);
         }
         return Encoding.UTF8.GetBytes(topHtml + bottomHtml);
     }
 
-    private string CleanPath(string sourceString)
+    private static string CleanPath(string sourceString)
     {
-        string test = Directory.GetCurrentDirectory();
-        int index = sourceString.IndexOf(test);
-        string cleanPath = (index < 0)
+        var test = Directory.GetCurrentDirectory();
+        var index = sourceString.IndexOf(test, StringComparison.Ordinal);
+        var cleanPath = (index < 0)
             ? sourceString
             : sourceString.Remove(index, test.Length);
         return cleanPath.TrimStart('\\');

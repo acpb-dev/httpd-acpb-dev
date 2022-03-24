@@ -32,7 +32,7 @@ public class Server
 
     private async Task HandleRequest(TcpClient client)
     {
-        await Task.Delay(250);
+        await Task.Delay(50);
         var stream = client.GetStream();
         var socket = stream.Socket;
         var buffer = new byte[socket.Available];

@@ -2,35 +2,37 @@ namespace Httpd;
 
 public class ReadHTML
 {
-    public string[] ReadFilesInDirectory()
+    public static string[] ReadFilesInDirectory()
     {
         var currentDirectory = Directory.GetCurrentDirectory();
-        Console.WriteLine(currentDirectory);
         var filesInDirectory = Directory.GetFiles(currentDirectory);
         return filesInDirectory;
     }
     
-    public string[] ReadDirectories()
+    public static string[] ReadDirectories()
     {
         var currentDirectory = Directory.GetCurrentDirectory();
-        Console.WriteLine(currentDirectory);
         var directories = Directory.GetDirectories(currentDirectory);
         return directories;
     }
     
-    public string[] ReadFilesInSpecifiedDirectory(string path)
+    public static string[] ReadFilesInSpecifiedDirectory(string path)
     {
         var currentDirectory = Directory.GetCurrentDirectory();
-        Console.WriteLine(path);
         var filesInDirectory = Directory.GetFiles(currentDirectory + path);
         return filesInDirectory;
     }
     
-    public string[] ReadSpecifiedDirectories(string path)
+    public static string[] ReadSpecifiedDirectories(string path)
     {
         var currentDirectory = Directory.GetCurrentDirectory();
-        Console.WriteLine(path);
         var directories = Directory.GetDirectories(currentDirectory + path);
         return directories;
     }
+
+    // public static bool CheckIfFileExists()
+    // {
+    //     
+    //     return File.Exists(curFile);
+    // }
 }
