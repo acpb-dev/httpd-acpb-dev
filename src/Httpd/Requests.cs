@@ -4,11 +4,10 @@ using Httpd;
 
 public class Requests
 {
-    private readonly ReadHTML _readHtml = new();
     private readonly HtmlBuilder _htmlBuilder = new();
     private IDictionary<string, string> _requests = new Dictionary<string, string>();
     private bool _error404 = false;
-    private Dictionary<string, string> _imagesFormat = new Dictionary<string, string>
+    private Dictionary<string, string> _imagesFormat = new()
     {
         { "apng", "image/apng" },
         { "avif", "image/avif" },
@@ -27,7 +26,7 @@ public class Requests
         { "webp", "image/webp" }//,
         // { "ico", "image/vnd.microsoft.icon" }
     };
-    private Dictionary<string, string> _fileFormat = new Dictionary<string, string>
+    private Dictionary<string, string> _fileFormat = new()
     {
         { "html", "text/html" },
         { "htm", "text/html" },
@@ -36,6 +35,8 @@ public class Requests
         { "mjs", "text/javascript" },
         { "txt", "text/plain" },
         { "php", "application/x-httpd-php" },
+        { "json", "application/json" },
+        { "jsonld", "application/ld+json" }
     };
     
     public byte[] ManageRequest(string request)
@@ -98,7 +99,7 @@ public class Requests
     private byte[] ReadSpecifiedFiles(string path)
     {
         var temp = path.Split(".");
-        if (temp.Length < 2)
+        if (temp.Length < 2 || temp[0].Equals("/source"))
         {
             return HtmlBuilder(path);
         }
@@ -111,8 +112,10 @@ public class Requests
             {
                 if (ReadHTML.CheckFileExistance(path))
                 {
-                    return Encoding.UTF8.GetBytes(File.ReadAllText(path.TrimStart('/')));
+                    return ByteReader.ConvertFileToByte(path.TrimStart('/'));
                 }
+                _error404 = true;
+                return ByteReader.ConvertFileToByte(_htmlBuilder.Page404());
             }
         }
         foreach (var(key, value) in _imagesFormat)
@@ -121,11 +124,12 @@ public class Requests
             {
                 if (ReadHTML.CheckFileExistance(path))
                 {
-                    return File.ReadAllBytes(path.TrimStart('/'));
+                    return ByteReader.ConvertBytes(path.TrimStart('/'));
                 }
             }
         }
-        return Array.Empty<byte>();
+        return !ReadHTML.CheckFileExistance(path) ? 
+            ByteReader.ConvertTextToByte(_htmlBuilder.Page404()) : Array.Empty<byte>();
     }
 
     private byte[] SearchIndex()
@@ -140,7 +144,15 @@ public class Requests
                 valid = true;
             }
         }
-        return Encoding.UTF8.GetBytes(valid ? File.ReadAllText("index.html") : _htmlBuilder.Page404());
+        if (valid)
+        {
+            return ByteReader.ConvertFileToByte("index.html");
+        }
+        else
+        {
+            _error404 = true;
+            return ByteReader.ConvertTextToByte(_htmlBuilder.Page404());
+        }
     }
 
     private byte[] HtmlBuilder(string path)
@@ -158,7 +170,7 @@ public class Requests
             if (!Directory.Exists(path.Trim('/')))
             {
                 _error404 = true;
-                return Encoding.UTF8.GetBytes(_htmlBuilder.Page404());
+                return ByteReader.ConvertTextToByte(_htmlBuilder.Page404());
             }
         }
         var files = ReadHTML.ReadFilesInSpecifiedDirectory(path);
@@ -181,12 +193,12 @@ public class Requests
         }
         foreach (var (key, value) in directoriesNames)
         {
-            topHtml += _htmlBuilder.Alink(CleanPath(value), key, true);
+            topHtml += _htmlBuilder.Alink(CleanPath(value), CleanPath(key), true);
         }
 
         foreach (var (key, value) in fileNames)
         {
-            topHtml += _htmlBuilder.Alink(CleanPath(value), key, false);
+            topHtml += _htmlBuilder.Alink(CleanPath(value), CleanPath(key), false);
         }
         return Encoding.UTF8.GetBytes(topHtml + bottomHtml);
     }
@@ -194,10 +206,7 @@ public class Requests
     private static string CleanPath(string sourceString)
     {
         var test = Directory.GetCurrentDirectory();
-        var index = sourceString.IndexOf(test, StringComparison.Ordinal);
-        var cleanPath = (index < 0)
-            ? sourceString
-            : sourceString.Remove(index, test.Length);
-        return cleanPath.TrimStart('\\');
+        var removed = sourceString.Remove(0, test.Length);
+        return removed;
     }
 }

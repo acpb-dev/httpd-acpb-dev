@@ -8,19 +8,19 @@
     "net6.0": []
   },
   "packageFolders": {
-    "C:\\Users\\willi\\.nuget\\packages\\": {}
+    "/Users/Admin/.nuget/packages/": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\willi\\Documents\\GitHub\\httpd-acpb-dev\\test\\Httpd.Tests\\Httpd.Tests.csproj",
+      "projectUniqueName": "/Users/Admin/Documents/GitHub/httpd-acpb-dev/test/Httpd.Tests/Httpd.Tests.csproj",
       "projectName": "Httpd.Tests",
-      "projectPath": "C:\\Users\\willi\\Documents\\GitHub\\httpd-acpb-dev\\test\\Httpd.Tests\\Httpd.Tests.csproj",
-      "packagesPath": "C:\\Users\\willi\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\willi\\Documents\\GitHub\\httpd-acpb-dev\\test\\Httpd.Tests\\obj\\",
+      "projectPath": "/Users/Admin/Documents/GitHub/httpd-acpb-dev/test/Httpd.Tests/Httpd.Tests.csproj",
+      "packagesPath": "/Users/Admin/.nuget/packages/",
+      "outputPath": "/Users/Admin/Documents/GitHub/httpd-acpb-dev/test/Httpd.Tests/obj/",
       "projectStyle": "PackageReference",
       "configFilePaths": [
-        "C:\\Users\\willi\\AppData\\Roaming\\NuGet\\NuGet.Config"
+        "/Users/Admin/.nuget/NuGet/NuGet.Config"
       ],
       "originalTargetFrameworks": [
         "net6.0"
@@ -58,7 +58,7 @@
             "privateAssets": "all"
           }
         },
-        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\6.0.200\\RuntimeIdentifierGraph.json"
+        "runtimeIdentifierGraphPath": "/usr/local/share/dotnet/sdk/6.0.101/RuntimeIdentifierGraph.json"
       }
     }
   }
