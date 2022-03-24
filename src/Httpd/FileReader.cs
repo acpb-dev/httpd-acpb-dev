@@ -42,7 +42,7 @@ public class FileReader
         var temp = path.Split(".");
         if (temp.Length < 2 || temp[0].Equals("/source"))
         {
-            return ResponseBuilder.HtmlBuilder2(path);
+            return ResponseBuilder.HtmlBuilder(path);
         }
         var extension = temp[^1];
 
@@ -50,8 +50,15 @@ public class FileReader
         if (!CheckExtension(_fileFormat, extension).Equals("N/A"))
         {
             ResponseBuilder.ValueType = CheckExtension(_fileFormat, extension);
-            return ByteReader.ConvertFileToByte(ReadHTML.CheckFileExistance(path) ? path.TrimStart('/') : HtmlStringBuilder.Page404());
-            // _error404 = true;
+            if (ReadHTML.CheckFileExistance(path))
+            {
+                return ByteReader.ConvertFileToByte(path.TrimStart('/'));
+            }
+            else
+            {
+                ResponseBuilder.Error404 = true;
+                return ByteReader.ConvertTextToByte(HtmlStringBuilder.Page404());
+            }
         }
         
         if (!CheckExtension(_imagesFormat, extension).Equals("N/A"))

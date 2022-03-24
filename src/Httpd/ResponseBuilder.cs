@@ -7,7 +7,7 @@ public class ResponseBuilder
     public static string ValueType = "";
     public static bool Error404 = false;
     
-    public static byte[] HtmlBuilder2(string path)
+    public static byte[] HtmlBuilder(string path)
     {
         IDictionary<string, string> fileNames = new Dictionary<string, string>();
         IDictionary<string, string> directoriesNames = new Dictionary<string, string>();
@@ -21,7 +21,7 @@ public class ResponseBuilder
         {
             if (!Directory.Exists(path.Trim('/')))
             {
-                // _error404 = true;
+                Error404 = true;
                 return ByteReader.ConvertTextToByte(HtmlStringBuilder.Page404());
             }
         }
@@ -85,7 +85,7 @@ public class ResponseBuilder
         }
         else
         {
-            // _error404 = true;
+            Error404 = true;
             return ByteReader.ConvertTextToByte(HtmlStringBuilder.Page404());
         }
     }

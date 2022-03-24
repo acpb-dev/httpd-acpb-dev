@@ -13,7 +13,7 @@ public class Requests
     {
         _requests.Clear();
         var strReader = new StringReader(request);
-        // Console.WriteLine(request);
+        Console.WriteLine(request);
         var count = 0;
         while (null != (request = strReader.ReadLine()))
         {
@@ -33,12 +33,12 @@ public class Requests
             }
             count++;
         }
-        var link = "";
+        var path = "";
         foreach (var (key, value) in _requests)
         {
             if (key.Equals("GET"))
             {
-                link = value;
+                path = value;
             }
 
             if (key.Equals("content"))
@@ -46,19 +46,18 @@ public class Requests
                 
             }
         }
-        return Html(link);
+        return ResponseCreator(path);
     }
 
-    private byte[] Html(string path)
+    private byte[] ResponseCreator(string path)
     {
-        
-        var text = path.Equals("/") ? ResponseBuilder.SearchIndex() : _fileReader.ReadSpecifiedFiles(path);
-        var response = ResponseBuilder.Response(text.Length);
-        var temp = Encoding.UTF8.GetBytes(response);
-        var z = new byte[temp.Length + text.Length];
-        temp.CopyTo(z, 0);
-        text.CopyTo(z, temp.Length);
-        return z;
+        var responseContent = path.Equals("/") ? ResponseBuilder.SearchIndex() : _fileReader.ReadSpecifiedFiles(path);
+        var responseHeader = ResponseBuilder.Response(responseContent.Length);
+        var byteResponse =  ByteReader.ConvertTextToByte(responseHeader);
+        var combinedResponse = new byte[byteResponse.Length + responseContent.Length];
+        byteResponse.CopyTo(combinedResponse, 0);
+        responseContent.CopyTo(combinedResponse, byteResponse.Length);
+        return combinedResponse;
     }
 
 
