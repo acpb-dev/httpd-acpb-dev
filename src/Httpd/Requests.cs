@@ -8,16 +8,8 @@ public class Requests
     private readonly HtmlBuilder _htmlBuilder = new();
     private IDictionary<string, string> _requests = new Dictionary<string, string>();
     private bool _error404 = false;
-    private Dictionary<string, string> _fileFormat = new Dictionary<string, string>
+    private Dictionary<string, string> _imagesFormat = new Dictionary<string, string>
     {
-        { "html", "text/html" },
-        { "htm", "text/html" },
-        { "js", "text/javascript" },
-        { "css", "text/css" },
-        { "mjs", "text/javascript" },
-        { "txt", "text/plain" },
-        { "php", "application/x-httpd-php" },
-        
         { "apng", "image/apng" },
         { "avif", "image/avif" },
         { "gif", "image/gif" },
@@ -29,10 +21,21 @@ public class Requests
         { "png", "image/png" },
         { "svg", "image/svg+xml" },
         { "bmp", "image/bmp" },
-        { "ico", "image/vnd.microsoft.icon" },
+        { "ttf", "font/ttf" },
         { "tif", "image/tiff" },
         { "tiff", "image/tiff" },
-        { "webp", "image/webp" }
+        { "webp", "image/webp" }//,
+        // { "ico", "image/vnd.microsoft.icon" }
+    };
+    private Dictionary<string, string> _fileFormat = new Dictionary<string, string>
+    {
+        { "html", "text/html" },
+        { "htm", "text/html" },
+        { "js", "text/javascript" },
+        { "css", "text/css" },
+        { "mjs", "text/javascript" },
+        { "txt", "text/plain" },
+        { "php", "application/x-httpd-php" },
     };
     
     public byte[] ManageRequest(string request)
@@ -94,26 +97,35 @@ public class Requests
 
     private byte[] ReadSpecifiedFiles(string path)
     {
-        Console.WriteLine(ReadHTML.CheckFileExistance(path));
         var temp = path.Split(".");
         if (temp.Length < 2)
         {
             return HtmlBuilder(path);
         }
         var extension = temp[^1];
-        if (extension.Equals("ico"))
+
+
+        foreach (var(key, value) in _fileFormat)
         {
-            return Array.Empty<byte>();
-        }
-        if (extension.Equals("js") && extension.Equals("html") && extension.Equals("txt") && extension.Equals("css"))
-        {
-            if (ReadHTML.CheckFileExistance(path))
+            if (key.Equals(extension))
             {
-                return Encoding.UTF8.GetBytes(File.ReadAllText(path.TrimStart('/')));
+                if (ReadHTML.CheckFileExistance(path))
+                {
+                    return Encoding.UTF8.GetBytes(File.ReadAllText(path.TrimStart('/')));
+                }
             }
-            
         }
-        return File.ReadAllBytes(path.TrimStart('/'));
+        foreach (var(key, value) in _imagesFormat)
+        {
+            if (key.Equals(extension))
+            {
+                if (ReadHTML.CheckFileExistance(path))
+                {
+                    return File.ReadAllBytes(path.TrimStart('/'));
+                }
+            }
+        }
+        return Array.Empty<byte>();
     }
 
     private byte[] SearchIndex()
