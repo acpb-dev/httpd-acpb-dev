@@ -6,30 +6,52 @@ public class Requests
 {
     private readonly ReadHTML _readHtml = new();
     private readonly HtmlBuilder _htmlBuilder = new();
-    public bool Error404 = false;
+    private IDictionary<string, string> _resquest = new Dictionary<string, string>();
+    private bool _error404 = false;
+    
     public byte[] ManageRequest(string request)
     {
+        _resquest.Clear();
         var strReader = new StringReader(request);
-        var aLine = strReader.ReadLine();
-        if (aLine != null)
+        // Console.WriteLine(request);
+        var count = 0;
+        while (null != (request = strReader.ReadLine()))
         {
-            var splitStream = aLine.Split();
-            if (splitStream[0].Equals("GET") && splitStream[1].Equals("/") || splitStream.Length == 0)
+            string[] keyVal;
+            if (count == 0)
             {
-                return Html(true, splitStream[1]);
+                keyVal = request.Split();
             }
             else
             {
-                return Html(false, splitStream[1]);
+                keyVal = request.Split(": ");
+ 
+            }
+
+            if (keyVal.Length > 1)
+            {
+                // Console.WriteLine(keyVal.Length);
+                _resquest.Add(keyVal[0], keyVal[1]);
+                // Console.WriteLine("{0} // {1}", keyVal[0], keyVal[1]);
+            }
+            count++;
+        }
+
+        var link = "";
+        foreach (var (key, value) in _resquest)
+        {
+            if (key.Equals("GET"))
+            {
+                link = value;
             }
         }
-        return Array.Empty<byte>();
+        return Html(link);
     }
 
-    private byte[] Html(bool type, string path)
+    private byte[] Html(string path)
     {
-        Error404 = false;
-        var text = type ? SearchIndex() : ReadSpecifiedFiles(path);
+        _error404 = false;
+        var text = path.Equals("/") ? SearchIndex() : ReadSpecifiedFiles(path);
         var response = Response(text.Length);
         var temp = Encoding.UTF8.GetBytes(response);
         var z = new byte[temp.Length + text.Length];
@@ -40,7 +62,7 @@ public class Requests
 
     private string Response(int length)
     {
-        var response = !Error404 ? @"HTTP/1.1 200 OK\r\n" : @"HTTP/1.1 404 OK\r\n";
+        var response = !_error404 ? @"HTTP/1.1 200 OK\r\n" : @"HTTP/1.1 404 OK\r\n";
         response += "Content-Length: " + length;
         response += "Content-Type: text/html";
         response += "Connection: close\r\n";
@@ -51,15 +73,11 @@ public class Requests
     private byte[] ReadSpecifiedFiles(string path)
     {
         var temp = path.Split(".");
-        string extension;
-        if (temp.Length > 1)
-        {
-            extension = temp[^1];
-        }
-        else
+        if (temp.Length < 2)
         {
             return HtmlBuilder(path);
         }
+        var extension = temp[^1];
         if (extension.Equals("ico"))
         {
             return Array.Empty<byte>();
@@ -88,6 +106,7 @@ public class Requests
 
     private byte[] HtmlBuilder(string path)
     {
+        
         IDictionary<string, string> fileNames = new Dictionary<string, string>();
         IDictionary<string, string> directoriesNames = new Dictionary<string, string>();
         var topHtml = _htmlBuilder.Header();
@@ -100,7 +119,7 @@ public class Requests
         {
             if (!Directory.Exists(path.Trim('/')))
             {
-                Error404 = true;
+                _error404 = true;
                 return Encoding.UTF8.GetBytes(_htmlBuilder.Page404());
             }
         }
@@ -118,7 +137,7 @@ public class Requests
         {
             foreach (var directory in directories)
             {
-                string[] directorySplit = directory.Split('\\');
+                var directorySplit = directory.Split('\\');
                 directoriesNames.Add(directorySplit[^1], directory);
             }
         }
