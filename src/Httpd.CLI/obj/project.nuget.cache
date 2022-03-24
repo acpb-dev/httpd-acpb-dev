@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "0KrM33LpQ9bYHRwTHMgXJtP4TtKmEx5/t8Jn6SzD1g6perSHEQk6uv41HRwApizuUMZjW0WS7hadZCG3doeCYw==",
+  "dgSpecHash": "5FEie8uEO5qhKMt9cWrcdNOWW7MPHsy1pgcYSBpHAVj7WW1Wj6PF30NcKmwNm4L8wxY+itdDe6RfANGdmkh33w==",
   "success": true,
-  "projectFilePath": "/Users/Admin/Documents/GitHub/httpd-acpb-dev/src/Httpd.CLI/Httpd.CLI.csproj",
+  "projectFilePath": "C:\\Users\\willi\\Documents\\GitHub\\httpd-acpb-dev\\src\\Httpd.CLI\\Httpd.CLI.csproj",
   "expectedPackageFiles": [],
   "logs": []
 }

@@ -35,4 +35,17 @@ public class ReadHTML
         var currentDirectory = Directory.GetCurrentDirectory();
         return File.Exists(currentDirectory + fileName);
     }
+    
+    public static string CleanPath(string sourceString)
+    {
+        var test = Directory.GetCurrentDirectory();
+        var removed = sourceString.Remove(0, test.Length);
+        return removed;
+    }
+
+    public static string CleanString(string sourceString)
+    {
+        var splitted = sourceString.Split('/');
+        return splitted[^1];
+    }
 }

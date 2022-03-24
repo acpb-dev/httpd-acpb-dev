@@ -1,20 +1,20 @@
 {
   "format": 1,
   "restore": {
-    "/Users/Admin/Documents/GitHub/httpd-acpb-dev/src/Httpd.CLI/Httpd.CLI.csproj": {}
+    "C:\\Users\\willi\\Documents\\GitHub\\httpd-acpb-dev\\src\\Httpd.CLI\\Httpd.CLI.csproj": {}
   },
   "projects": {
-    "/Users/Admin/Documents/GitHub/httpd-acpb-dev/src/Httpd.CLI/Httpd.CLI.csproj": {
+    "C:\\Users\\willi\\Documents\\GitHub\\httpd-acpb-dev\\src\\Httpd.CLI\\Httpd.CLI.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "/Users/Admin/Documents/GitHub/httpd-acpb-dev/src/Httpd.CLI/Httpd.CLI.csproj",
+        "projectUniqueName": "C:\\Users\\willi\\Documents\\GitHub\\httpd-acpb-dev\\src\\Httpd.CLI\\Httpd.CLI.csproj",
         "projectName": "Httpd.CLI",
-        "projectPath": "/Users/Admin/Documents/GitHub/httpd-acpb-dev/src/Httpd.CLI/Httpd.CLI.csproj",
-        "packagesPath": "/Users/Admin/.nuget/packages/",
-        "outputPath": "/Users/Admin/Documents/GitHub/httpd-acpb-dev/src/Httpd.CLI/obj/",
+        "projectPath": "C:\\Users\\willi\\Documents\\GitHub\\httpd-acpb-dev\\src\\Httpd.CLI\\Httpd.CLI.csproj",
+        "packagesPath": "C:\\Users\\willi\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\willi\\Documents\\GitHub\\httpd-acpb-dev\\src\\Httpd.CLI\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
-          "/Users/Admin/.nuget/NuGet/NuGet.Config"
+          "C:\\Users\\willi\\AppData\\Roaming\\NuGet\\NuGet.Config"
         ],
         "originalTargetFrameworks": [
           "net6.0"
@@ -26,8 +26,8 @@
           "net6.0": {
             "targetAlias": "net6.0",
             "projectReferences": {
-              "/Users/Admin/Documents/GitHub/httpd-acpb-dev/src/Httpd/Httpd.csproj": {
-                "projectPath": "/Users/Admin/Documents/GitHub/httpd-acpb-dev/src/Httpd/Httpd.csproj"
+              "C:\\Users\\willi\\Documents\\GitHub\\httpd-acpb-dev\\src\\Httpd\\Httpd.csproj": {
+                "projectPath": "C:\\Users\\willi\\Documents\\GitHub\\httpd-acpb-dev\\src\\Httpd\\Httpd.csproj"
               }
             }
           }
@@ -56,7 +56,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "/usr/local/share/dotnet/sdk/6.0.101/RuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\6.0.200\\RuntimeIdentifierGraph.json"
         }
       },
       "runtimes": {
@@ -65,17 +65,17 @@
         }
       }
     },
-    "/Users/Admin/Documents/GitHub/httpd-acpb-dev/src/Httpd/Httpd.csproj": {
+    "C:\\Users\\willi\\Documents\\GitHub\\httpd-acpb-dev\\src\\Httpd\\Httpd.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "/Users/Admin/Documents/GitHub/httpd-acpb-dev/src/Httpd/Httpd.csproj",
+        "projectUniqueName": "C:\\Users\\willi\\Documents\\GitHub\\httpd-acpb-dev\\src\\Httpd\\Httpd.csproj",
         "projectName": "Httpd",
-        "projectPath": "/Users/Admin/Documents/GitHub/httpd-acpb-dev/src/Httpd/Httpd.csproj",
-        "packagesPath": "/Users/Admin/.nuget/packages/",
-        "outputPath": "/Users/Admin/Documents/GitHub/httpd-acpb-dev/src/Httpd/obj/",
+        "projectPath": "C:\\Users\\willi\\Documents\\GitHub\\httpd-acpb-dev\\src\\Httpd\\Httpd.csproj",
+        "packagesPath": "C:\\Users\\willi\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\willi\\Documents\\GitHub\\httpd-acpb-dev\\src\\Httpd\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
-          "/Users/Admin/.nuget/NuGet/NuGet.Config"
+          "C:\\Users\\willi\\AppData\\Roaming\\NuGet\\NuGet.Config"
         ],
         "originalTargetFrameworks": [
           "net6.0"
@@ -113,7 +113,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "/usr/local/share/dotnet/sdk/6.0.101/RuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\6.0.200\\RuntimeIdentifierGraph.json"
         }
       }
     }

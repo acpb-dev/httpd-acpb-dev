@@ -1,4 +1,6 @@
-﻿namespace Httpd;
+﻿using System.Diagnostics;
+
+namespace Httpd;
 
 public class HtmlBuilder
 {
@@ -29,5 +31,17 @@ public class HtmlBuilder
         {
             return $"<div><a href=\"{href}\">{value.ToLower()}</a></div>";
         }
+    }
+
+    public string Debug(IDictionary<string, string> request)
+    {
+        string html = "";
+        foreach (var (key, value) in request)
+        {
+            html += $"<div><a>{key}</a>\t<a>{value}</a></div>";
+        }
+
+        Console.WriteLine(html);
+        return html;
     }
 }

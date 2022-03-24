@@ -7,6 +7,7 @@ public class Requests
     private readonly HtmlBuilder _htmlBuilder = new();
     private IDictionary<string, string> _requests = new Dictionary<string, string>();
     private bool _error404 = false;
+    private string _valueType = "";
     private Dictionary<string, string> _imagesFormat = new()
     {
         { "apng", "image/apng" },
@@ -70,6 +71,11 @@ public class Requests
             {
                 link = value;
             }
+
+            if (key.Equals("content"))
+            {
+                
+            }
         }
         return Html(link);
     }
@@ -78,6 +84,7 @@ public class Requests
     {
         _error404 = false;
         var text = path.Equals("/") ? SearchIndex() : ReadSpecifiedFiles(path);
+        Console.WriteLine(_valueType);
         var response = Response(text.Length);
         var temp = Encoding.UTF8.GetBytes(response);
         var z = new byte[temp.Length + text.Length];
@@ -89,24 +96,25 @@ public class Requests
     private string Response(int length)
     {
         var response = !_error404 ? @"HTTP/1.1 200 OK\r\n" : @"HTTP/1.1 404 OK\r\n";
-        response += "Content-Length: " + length;
-        response += "Content-Type: text/html";
+        response += $"Content-Length: {length}\t\n";
+        response += $"Content-Type: {_valueType}\r\n";
         response += "Connection: close\r\n";
         response += "\r\n";
+        Console.WriteLine(response);
         return response;
     }
 
 
-    private bool CheckExtension(Dictionary<string, string> dictionary, string extension)
+    private string CheckExtension(Dictionary<string, string> dictionary, string extension)
     {
         foreach (var (key, value) in dictionary)
         {
             if (key.Equals(extension))
             {
-                return true;
+                return value;
             }
         }
-        return false;
+        return "N/A";
     }
 
     private byte[] ReadSpecifiedFiles(string path)
@@ -117,9 +125,11 @@ public class Requests
             return HtmlBuilder(path);
         }
         var extension = temp[^1];
+
         
-        if (CheckExtension(_fileFormat, extension))
+        if (!CheckExtension(_fileFormat, extension).Equals("N/A"))
         {
+            _valueType = CheckExtension(_fileFormat, extension);
             if (ReadHTML.CheckFileExistance(path))
             {
                 return ByteReader.ConvertFileToByte(path.TrimStart('/'));
@@ -128,8 +138,9 @@ public class Requests
             return ByteReader.ConvertFileToByte(_htmlBuilder.Page404());
         }
         
-        if (CheckExtension(_imagesFormat, extension))
+        if (!CheckExtension(_imagesFormat, extension).Equals("N/A"))
         {
+            _valueType = CheckExtension(_imagesFormat, extension);
             if (ReadHTML.CheckFileExistance(path))
             {
                 return ByteReader.ConvertBytes(path.TrimStart('/'));
@@ -142,6 +153,7 @@ public class Requests
 
     private byte[] SearchIndex()
     {
+        _valueType = "text/html";
         var test = ReadHTML.ReadFilesInDirectory();
         var valid = false;
         foreach (var variable in test)
@@ -201,20 +213,15 @@ public class Requests
         }
         foreach (var (key, value) in directoriesNames)
         {
-            topHtml += _htmlBuilder.Alink(CleanPath(value), CleanPath(key), true);
+            topHtml += _htmlBuilder.Alink(ReadHTML.CleanPath(value), ReadHTML.CleanString(key), true);
         }
 
         foreach (var (key, value) in fileNames)
         {
-            topHtml += _htmlBuilder.Alink(CleanPath(value), CleanPath(key), false);
+            topHtml += _htmlBuilder.Alink(ReadHTML.CleanPath(value), ReadHTML.CleanString(key), false);
         }
         return Encoding.UTF8.GetBytes(topHtml + bottomHtml);
     }
 
-    private static string CleanPath(string sourceString)
-    {
-        var test = Directory.GetCurrentDirectory();
-        var removed = sourceString.Remove(0, test.Length);
-        return removed;
-    }
+
 }
