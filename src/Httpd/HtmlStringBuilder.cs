@@ -2,7 +2,7 @@
 
 namespace Httpd;
 
-public static class HtmlBuilder
+public static class HtmlStringBuilder
 {
     public static string Page404()
     {
