@@ -8,8 +8,16 @@ public class Requests
     private readonly HtmlBuilder _htmlBuilder = new();
     private IDictionary<string, string> _requests = new Dictionary<string, string>();
     private bool _error404 = false;
-    private Dictionary<string, string> _imagesFormat = new Dictionary<string, string>
+    private Dictionary<string, string> _fileFormat = new Dictionary<string, string>
     {
+        { "html", "text/html" },
+        { "htm", "text/html" },
+        { "js", "text/javascript" },
+        { "css", "text/css" },
+        { "mjs", "text/javascript" },
+        { "txt", "text/plain" },
+        { "php", "application/x-httpd-php" },
+        
         { "apng", "image/apng" },
         { "avif", "image/avif" },
         { "gif", "image/gif" },
@@ -25,16 +33,6 @@ public class Requests
         { "tif", "image/tiff" },
         { "tiff", "image/tiff" },
         { "webp", "image/webp" }
-    };
-    private Dictionary<string, string> _fileFormat = new Dictionary<string, string>
-    {
-        { "html", "text/html" },
-        { "htm", "text/html" },
-        { "js", "text/javascript" },
-        { "css", "text/css" },
-        { "mjs", "text/javascript" },
-        { "txt", "text/plain" },
-        { "php", "application/x-httpd-php" }
     };
     
     public byte[] ManageRequest(string request)
