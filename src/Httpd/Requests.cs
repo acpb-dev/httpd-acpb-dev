@@ -96,6 +96,19 @@ public class Requests
         return response;
     }
 
+
+    private bool CheckExtension(Dictionary<string, string> dictionary, string extension)
+    {
+        foreach (var (key, value) in dictionary)
+        {
+            if (key.Equals(extension))
+            {
+                return true;
+            }
+        }
+        return false;
+    }
+
     private byte[] ReadSpecifiedFiles(string path)
     {
         var temp = path.Split(".");
@@ -104,30 +117,25 @@ public class Requests
             return HtmlBuilder(path);
         }
         var extension = temp[^1];
-
-
-        foreach (var(key, value) in _fileFormat)
+        
+        if (CheckExtension(_fileFormat, extension))
         {
-            if (key.Equals(extension))
+            if (ReadHTML.CheckFileExistance(path))
             {
-                if (ReadHTML.CheckFileExistance(path))
-                {
-                    return ByteReader.ConvertFileToByte(path.TrimStart('/'));
-                }
-                _error404 = true;
-                return ByteReader.ConvertFileToByte(_htmlBuilder.Page404());
+                return ByteReader.ConvertFileToByte(path.TrimStart('/'));
+            }
+            _error404 = true;
+            return ByteReader.ConvertFileToByte(_htmlBuilder.Page404());
+        }
+        
+        if (CheckExtension(_imagesFormat, extension))
+        {
+            if (ReadHTML.CheckFileExistance(path))
+            {
+                return ByteReader.ConvertBytes(path.TrimStart('/'));
             }
         }
-        foreach (var(key, value) in _imagesFormat)
-        {
-            if (key.Equals(extension))
-            {
-                if (ReadHTML.CheckFileExistance(path))
-                {
-                    return ByteReader.ConvertBytes(path.TrimStart('/'));
-                }
-            }
-        }
+        
         return !ReadHTML.CheckFileExistance(path) ? 
             ByteReader.ConvertTextToByte(_htmlBuilder.Page404()) : Array.Empty<byte>();
     }
