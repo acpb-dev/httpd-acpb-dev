@@ -4,16 +4,13 @@ using Httpd;
 public class Requests
 {
     private FileReader _fileReader = new FileReader();
-    private IDictionary<string, string> _requests = new Dictionary<string, string>();
-    
-    
-
+    public static IDictionary<string, string> _requests = new Dictionary<string, string>();
     
     public byte[] ManageRequest(string request)
     {
         _requests.Clear();
         var strReader = new StringReader(request);
-        Console.WriteLine(request);
+        // Console.WriteLine(request);
         var count = 0;
         while (null != (request = strReader.ReadLine()))
         {
