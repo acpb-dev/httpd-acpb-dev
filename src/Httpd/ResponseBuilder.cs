@@ -1,6 +1,4 @@
-﻿using System.Text;
-
-namespace Httpd;
+﻿namespace Httpd;
 
 public class ResponseBuilder
 {
@@ -13,6 +11,7 @@ public class ResponseBuilder
         IDictionary<string, string> directoriesNames = new Dictionary<string, string>();
         var topHtml = HtmlStringBuilder.Header();
         var bottomHtml = HtmlStringBuilder.Footer();
+        //Console.WriteLine(path + "/\\/\\");
         if (path.Equals("/source"))
         {
             path = "/";

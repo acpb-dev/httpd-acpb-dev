@@ -1,6 +1,4 @@
-﻿using System.Diagnostics;
-
-namespace Httpd;
+﻿namespace Httpd;
 
 public static class HtmlStringBuilder
 {
@@ -31,7 +29,7 @@ public static class HtmlStringBuilder
         var html = "";
         foreach (var (key, value) in request)
         {
-            html += $"<div><a>{key}</a>\t<a>{value}</a></div>";
+            html += $"<div><a>{key}</a>\t<a>{value}</a></div><br>";
         }
         return html;
     }

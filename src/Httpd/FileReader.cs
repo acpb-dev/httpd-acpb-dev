@@ -2,8 +2,7 @@
 
 public class FileReader
 {
-    
-    private Dictionary<string, string> _imagesFormat = new()
+    private readonly Dictionary<string, string> _imagesFormat = new()
     {
         { "apng", "image/apng" },
         { "avif", "image/avif" },
@@ -22,7 +21,7 @@ public class FileReader
         { "webp", "image/webp" }//,
         // { "ico", "image/vnd.microsoft.icon" }
     };
-    private Dictionary<string, string> _fileFormat = new()
+    private readonly Dictionary<string, string> _fileFormat = new()
     {
         { "html", "text/html" },
         { "htm", "text/html" },
@@ -44,61 +43,58 @@ public class FileReader
             var test = path.Remove(0, path.Length-debug.Length);
             if (test.Equals(debug))
             {
-                
-                //Console.WriteLine(pathUpdated);
                 return true;
             }
-            
         }
         return false;
     }
     
     public byte[] ReadSpecifiedFiles(string path)
     {
-        //Console.WriteLine(path);
-        
-        if (!DebugMode(path))
+        ResponseBuilder.Error404 = false;
+        if (DebugMode(path))
         {
-            ResponseBuilder.Error404 = false;
-            var temp = path.Split(".");
-            if (temp.Length < 2 || temp[0].Equals("/source"))
-            {
-                return ResponseBuilder.HtmlBuilder(path);
-            }
-            var extension = temp[^1];
-
-        
-            if (!CheckExtension(_fileFormat, extension).Equals("N/A"))
-            {
-                ResponseBuilder.ValueType = CheckExtension(_fileFormat, extension);
-                if (ReadHTML.CheckFileExistance(path))
-                {
-                    return ByteReader.ConvertFileToByte(path.TrimStart('/'));
-                }
-                else
-                {
-                    ResponseBuilder.Error404 = true;
-                    return ByteReader.ConvertTextToByte(HtmlStringBuilder.Page404());
-                }
-            }
-        
-            if (!CheckExtension(_imagesFormat, extension).Equals("N/A"))
-            {
-                ResponseBuilder.ValueType = CheckExtension(_imagesFormat, extension);
-                if (ReadHTML.CheckFileExistance(path))
-                {
-                    return ByteReader.ConvertBytes(path.TrimStart('/'));
-                }
-            }
-        
-            return !ReadHTML.CheckFileExistance(path) ? 
-                ByteReader.ConvertTextToByte(HtmlStringBuilder.Page404()) : Array.Empty<byte>();
+            var topHtml = HtmlStringBuilder.Header();
+            var bottomHtml = HtmlStringBuilder.Footer();
+            topHtml += HtmlStringBuilder.Debug(Requests._requests);
+            ResponseBuilder.ValueType = "text/html";
+            return ByteReader.ConvertTextToByte(topHtml + bottomHtml);
         }
-        Console.WriteLine(path);
-        var topHtml = HtmlStringBuilder.Header();
-        var bottomHtml = HtmlStringBuilder.Footer();
-        topHtml += HtmlStringBuilder.Debug(Requests._requests);
-        return ByteReader.ConvertTextToByte(topHtml + bottomHtml);
+        var temp = path.Split(".");
+        if (temp[0].Equals("/source"))
+        {
+            return ResponseBuilder.HtmlBuilder(path);
+        }
+        var extension = temp[^1];
+        if (!CheckExtension(_fileFormat, extension).Equals("N/A"))
+        {
+            ResponseBuilder.ValueType = CheckExtension(_fileFormat, extension);
+            if (ReadHTML.CheckFileExistance(path))
+            {
+                return ByteReader.ConvertFileToByte(path.TrimStart('/'));
+            }
+            else
+            {
+                ResponseBuilder.Error404 = true;
+                return ByteReader.ConvertTextToByte(HtmlStringBuilder.Page404());
+            }
+        }
+        
+        if (!CheckExtension(_imagesFormat, extension).Equals("N/A"))
+        {
+            ResponseBuilder.ValueType = CheckExtension(_imagesFormat, extension);
+            if (ReadHTML.CheckFileExistance(path))
+            {
+                return ByteReader.ConvertBytes(path.TrimStart('/'));
+            }
+        }
+        // if (!ReadHTML.CheckFileExistance(path))
+        // {
+        //     ResponseBuilder.Error404 = true;
+        // }
+        //return
+        ResponseBuilder.ValueType = "text/html";
+        return ByteReader.ConvertTextToByte(HtmlStringBuilder.Page404());
     }
     
     private static string CheckExtension(Dictionary<string, string> dictionary, string extension)

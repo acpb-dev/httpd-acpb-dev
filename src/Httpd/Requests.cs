@@ -1,16 +1,15 @@
-﻿using System.Text;
-using Httpd;
+﻿namespace Httpd;
 
 public class Requests
 {
-    private FileReader _fileReader = new FileReader();
+    private readonly FileReader _fileReader = new FileReader();
     public static IDictionary<string, string> _requests = new Dictionary<string, string>();
     
     public byte[] ManageRequest(string request)
     {
         _requests.Clear();
         var strReader = new StringReader(request);
-        // Console.WriteLine(request);
+        Console.WriteLine(request);
         var count = 0;
         while (null != (request = strReader.ReadLine()))
         {
@@ -50,6 +49,7 @@ public class Requests
     {
         var responseContent = path.Equals("/") ? ResponseBuilder.SearchIndex() : _fileReader.ReadSpecifiedFiles(path);
         var responseHeader = ResponseBuilder.Response(responseContent.Length);
+        // Console.WriteLine(responseHeader);
         var byteResponse =  ByteReader.ConvertTextToByte(responseHeader);
         var combinedResponse = new byte[byteResponse.Length + responseContent.Length];
         byteResponse.CopyTo(combinedResponse, 0);
