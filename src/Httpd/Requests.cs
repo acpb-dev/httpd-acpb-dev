@@ -52,11 +52,4 @@ public class Requests
         var byteResponse = _responseBuilder.Response(path, _requests);
         return byteResponse;
     }
-
-
-
-
-
-
-
 }

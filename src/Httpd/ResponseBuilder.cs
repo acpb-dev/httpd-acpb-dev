@@ -5,7 +5,6 @@ namespace Httpd;
 public class ResponseBuilder
 {
     private readonly FileReader _fileReader = new FileReader();
-    private string _valueType = "";
     private bool _error404 = false;
     
     public static byte[] HtmlBuilder(string path)
@@ -14,7 +13,6 @@ public class ResponseBuilder
         IDictionary<string, string> directoriesNames = new Dictionary<string, string>();
         var topHtml = HtmlStringBuilder.Header();
         var bottomHtml = HtmlStringBuilder.Footer();
-        //Console.WriteLine(path + "/\\/\\");
         if (path.Equals("/source"))
         {
             path = "/";
@@ -23,7 +21,6 @@ public class ResponseBuilder
         {
             if (!Directory.Exists(path.Trim('/')))
             {
-                //_error404 = true;
                 return ByteReader.ConvertTextToByte(HtmlStringBuilder.Page404());
             }
         }
@@ -59,7 +56,7 @@ public class ResponseBuilder
     
     public byte[] Response(string path, IDictionary<string, string> request)
     {
-        string contentType = "";
+        string contentType = CheckFileExtension(path);;
         byte[] responseBytes;
         if (path.Equals("/"))
         {
@@ -69,12 +66,10 @@ public class ResponseBuilder
         else
         {
             responseBytes = _fileReader.ReadSpecifiedFiles(path, request);
-            contentType = CheckFileExtension(path);
             if (contentType.Equals("N/A"))
             {
-                
+                contentType = "text/html";
             }
-
         }
         var response = !_error404 ? "HTTP/1.1 200 OK\r\n" : "HTTP/1.1 404 OK\r\n";
         response += $"Content-Length: {responseBytes.Length}\r\n";
@@ -94,8 +89,6 @@ public class ResponseBuilder
     
     private static byte[] SearchIndex(IDictionary<string, string> request)
     {
-        // _error404 = false;
-        //_valueType = "text/html";
         var test = ReadHTML.ReadFilesInDirectory();
         foreach (var variable in test)
         {

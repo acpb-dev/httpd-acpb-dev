@@ -22,7 +22,6 @@ public class Server
         {
             var client = await _listener.AcceptTcpClientAsync();
             await HandleRequest(client);
-            
         }
     }
 
