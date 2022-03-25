@@ -2,7 +2,7 @@
 
 public class FileReader
 {
-    private readonly Dictionary<string, string> _imagesFormat = new()
+    public static readonly Dictionary<string, string> ImagesFormat = new()
     {
         { "apng", "image/apng" },
         { "avif", "image/avif" },
@@ -21,7 +21,7 @@ public class FileReader
         { "webp", "image/webp" }//,
         // { "ico", "image/vnd.microsoft.icon" }
     };
-    private readonly Dictionary<string, string> _fileFormat = new()
+    public static readonly Dictionary<string, string> FileFormat = new()
     {
         { "html", "text/html" },
         { "htm", "text/html" },
@@ -39,7 +39,7 @@ public class FileReader
         var debug = "/debug";
         if (path.Length >= debug.Length)
         {
-            var pathUpdated = path.Remove(path.Length - debug.Length, debug.Length);
+            // var pathUpdated = path.Remove(path.Length - debug.Length, debug.Length);
             var test = path.Remove(0, path.Length-debug.Length);
             if (test.Equals(debug))
             {
@@ -49,55 +49,46 @@ public class FileReader
         return false;
     }
     
-    public byte[] ReadSpecifiedFiles(string path)
+    public byte[] ReadSpecifiedFiles(string path, IDictionary<string, string> requests)
     {
-        ResponseBuilder.Error404 = false;
+        Console.WriteLine(path);
         if (DebugMode(path))
         {
             var topHtml = HtmlStringBuilder.Header();
             var bottomHtml = HtmlStringBuilder.Footer();
-            topHtml += HtmlStringBuilder.Debug(Requests._requests);
-            ResponseBuilder.ValueType = "text/html";
+            topHtml += HtmlStringBuilder.Debug(requests);
             return ByteReader.ConvertTextToByte(topHtml + bottomHtml);
         }
         var temp = path.Split(".");
-        if (temp[0].Equals("/source"))
+        Console.WriteLine();
+        if (temp[0].Equals("/source") || temp.Length < 2)
         {
             return ResponseBuilder.HtmlBuilder(path);
         }
         var extension = temp[^1];
-        if (!CheckExtension(_fileFormat, extension).Equals("N/A"))
+        if (!CheckExtension(FileFormat, extension).Equals("N/A"))
         {
-            ResponseBuilder.ValueType = CheckExtension(_fileFormat, extension);
             if (ReadHTML.CheckFileExistance(path))
             {
                 return ByteReader.ConvertFileToByte(path.TrimStart('/'));
             }
             else
             {
-                ResponseBuilder.Error404 = true;
                 return ByteReader.ConvertTextToByte(HtmlStringBuilder.Page404());
             }
         }
         
-        if (!CheckExtension(_imagesFormat, extension).Equals("N/A"))
+        if (!CheckExtension(ImagesFormat, extension).Equals("N/A"))
         {
-            ResponseBuilder.ValueType = CheckExtension(_imagesFormat, extension);
             if (ReadHTML.CheckFileExistance(path))
             {
                 return ByteReader.ConvertBytes(path.TrimStart('/'));
             }
         }
-        // if (!ReadHTML.CheckFileExistance(path))
-        // {
-        //     ResponseBuilder.Error404 = true;
-        // }
-        //return
-        ResponseBuilder.ValueType = "text/html";
         return ByteReader.ConvertTextToByte(HtmlStringBuilder.Page404());
     }
     
-    private static string CheckExtension(Dictionary<string, string> dictionary, string extension)
+    public static string CheckExtension(Dictionary<string, string> dictionary, string extension)
     {
         foreach (var (key, value) in dictionary)
         {

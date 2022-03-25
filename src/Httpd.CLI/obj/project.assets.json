@@ -27,32 +27,34 @@
     ]
   },
   "packageFolders": {
-    "C:\\Users\\willi\\.nuget\\packages\\": {}
+    "C:\\Users\\1739316\\.nuget\\packages\\": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\willi\\Documents\\GitHub\\httpd-acpb-dev\\src\\Httpd.CLI\\Httpd.CLI.csproj",
+      "projectUniqueName": "\\\\sfs03\\etudiants$\\1739316\\Documents\\GitHub\\httpd-acpb-dev\\src\\Httpd.CLI\\Httpd.CLI.csproj",
       "projectName": "Httpd.CLI",
-      "projectPath": "C:\\Users\\willi\\Documents\\GitHub\\httpd-acpb-dev\\src\\Httpd.CLI\\Httpd.CLI.csproj",
-      "packagesPath": "C:\\Users\\willi\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\willi\\Documents\\GitHub\\httpd-acpb-dev\\src\\Httpd.CLI\\obj\\",
+      "projectPath": "\\\\sfs03\\etudiants$\\1739316\\Documents\\GitHub\\httpd-acpb-dev\\src\\Httpd.CLI\\Httpd.CLI.csproj",
+      "packagesPath": "C:\\Users\\1739316\\.nuget\\packages\\",
+      "outputPath": "\\\\sfs03\\etudiants$\\1739316\\Documents\\GitHub\\httpd-acpb-dev\\src\\Httpd.CLI\\obj\\",
       "projectStyle": "PackageReference",
       "configFilePaths": [
-        "C:\\Users\\willi\\AppData\\Roaming\\NuGet\\NuGet.Config"
+        "C:\\Users\\1739316\\AppData\\Roaming\\NuGet\\NuGet.Config",
+        "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
       ],
       "originalTargetFrameworks": [
         "net6.0"
       ],
       "sources": {
+        "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
         "https://api.nuget.org/v3/index.json": {}
       },
       "frameworks": {
         "net6.0": {
           "targetAlias": "net6.0",
           "projectReferences": {
-            "C:\\Users\\willi\\Documents\\GitHub\\httpd-acpb-dev\\src\\Httpd\\Httpd.csproj": {
-              "projectPath": "C:\\Users\\willi\\Documents\\GitHub\\httpd-acpb-dev\\src\\Httpd\\Httpd.csproj"
+            "\\\\sfs03\\etudiants$\\1739316\\Documents\\GitHub\\httpd-acpb-dev\\src\\Httpd\\Httpd.csproj": {
+              "projectPath": "\\\\sfs03\\etudiants$\\1739316\\Documents\\GitHub\\httpd-acpb-dev\\src\\Httpd\\Httpd.csproj"
             }
           }
         }
@@ -81,7 +83,7 @@
             "privateAssets": "all"
           }
         },
-        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\6.0.200\\RuntimeIdentifierGraph.json"
+        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\6.0.201\\RuntimeIdentifierGraph.json"
       }
     },
     "runtimes": {

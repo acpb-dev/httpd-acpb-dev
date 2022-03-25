@@ -1,9 +1,12 @@
-﻿namespace Httpd;
+﻿using System.Text;
+
+namespace Httpd;
 
 public class ResponseBuilder
 {
-    public static string ValueType = "";
-    public static bool Error404 = false;
+    private readonly FileReader _fileReader = new FileReader();
+    private string _valueType = "";
+    private bool _error404 = false;
     
     public static byte[] HtmlBuilder(string path)
     {
@@ -20,7 +23,7 @@ public class ResponseBuilder
         {
             if (!Directory.Exists(path.Trim('/')))
             {
-                Error404 = true;
+                //_error404 = true;
                 return ByteReader.ConvertTextToByte(HtmlStringBuilder.Page404());
             }
         }
@@ -54,38 +57,71 @@ public class ResponseBuilder
         return ByteReader.ConvertTextToByte(topHtml + bottomHtml);
     }
     
-    public static string Response(int length)
+    public byte[] Response(string path, IDictionary<string, string> request)
     {
-        var response = !Error404 ? @"HTTP/1.1 200 OK\r\n" : @"HTTP/1.1 404 OK\r\n";
-        response += $"Content-Length: {length}\t\n";
-        response += $"Content-Type: {ValueType}\r\n";
+        string contentType = "";
+        byte[] responseBytes;
+        if (path.Equals("/"))
+        {
+            contentType = "text/html";
+            responseBytes = SearchIndex(request);
+        }
+        else
+        {
+            responseBytes = _fileReader.ReadSpecifiedFiles(path, request);
+            contentType = CheckFileExtension(path);
+            if (contentType.Equals("N/A"))
+            {
+                
+            }
+
+        }
+        var response = !_error404 ? "HTTP/1.1 200 OK\r\n" : "HTTP/1.1 404 OK\r\n";
+        response += $"Content-Length: {responseBytes.Length}\r\n";
+        response += $"Content-Type: {contentType}\r\n";
         response += "Connection: close\r\n";
         response += "\r\n";
-        return response;
+        return AddTwoByteArrays(ByteReader.ConvertTextToByte(response), responseBytes);
+    }   
+
+    private byte[] AddTwoByteArrays(byte[] array1, byte[] array2)
+    {
+        var z = new byte[array1.Length + array2.Length];
+        array1.CopyTo(z, 0);
+        array2.CopyTo(z, array1.Length);
+        return z;
     }
     
-    public static byte[] SearchIndex()
+    private static byte[] SearchIndex(IDictionary<string, string> request)
     {
-        Error404 = false;
-        ValueType = "text/html";
+        // _error404 = false;
+        //_valueType = "text/html";
         var test = ReadHTML.ReadFilesInDirectory();
-        var valid = false;
         foreach (var variable in test)
         {
             var result = variable[^10..];
             if (result.Equals("index.html"))
             {
-                valid = true;
+                return ByteReader.ConvertFileToByte(result);
             }
         }
-        if (valid)
+        return Array.Empty<byte>();
+    }
+
+    private string CheckFileExtension(string path)
+    {
+        var temp = path.Split(".");
+        var extension = temp[^1];
+        var fileExtension = FileReader.CheckExtension(FileReader.ImagesFormat, extension);
+        if (!fileExtension.Equals("N/A"))
         {
-            return ByteReader.ConvertFileToByte("index.html");
+            return fileExtension;
         }
-        else
+        fileExtension = FileReader.CheckExtension(FileReader.FileFormat, extension);
+        if(!fileExtension.Equals("N/A"))
         {
-            Error404 = true;
-            return ByteReader.ConvertTextToByte(HtmlStringBuilder.Page404());
+            return fileExtension;
         }
+        return "text/html";
     }
 }

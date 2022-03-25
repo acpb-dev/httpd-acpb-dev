@@ -3,8 +3,6 @@ using System.Text;
 
 namespace Httpd;
 
-
-
 public class Server
 {
     private readonly TcpListener _listener;
@@ -36,7 +34,6 @@ public class Server
         var buffer = new byte[socket.Available];
         stream.Read(buffer, 0, buffer.Length);
         var data = Encoding.UTF8.GetString(buffer);
-        // Console.WriteLine(data);
         var responsesByte = _requests.ManageRequest(data);
         socket.Send(responsesByte);
         socket.Close();

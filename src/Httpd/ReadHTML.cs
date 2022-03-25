@@ -30,6 +30,11 @@ public class ReadHTML
         return directories;
     }
 
+    public static bool CheckDirectoryExists(string path)
+    {
+        return Directory.Exists(path);
+    }
+
     public static bool CheckFileExistance(string fileName)
     {
         var currentDirectory = Directory.GetCurrentDirectory();

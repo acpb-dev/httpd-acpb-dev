@@ -1,15 +1,17 @@
-﻿namespace Httpd;
+﻿using System.Text;
+
+namespace Httpd;
 
 public class Requests
 {
-    private readonly FileReader _fileReader = new FileReader();
-    public static IDictionary<string, string> _requests = new Dictionary<string, string>();
+    private ResponseBuilder _responseBuilder = new ResponseBuilder();
+    public IDictionary<string, string> _requests = new Dictionary<string, string>();
     
     public byte[] ManageRequest(string request)
     {
         _requests.Clear();
         var strReader = new StringReader(request);
-        Console.WriteLine(request);
+        // Console.WriteLine(request);
         var count = 0;
         while (null != (request = strReader.ReadLine()))
         {
@@ -47,14 +49,8 @@ public class Requests
 
     private byte[] ResponseCreator(string path)
     {
-        var responseContent = path.Equals("/") ? ResponseBuilder.SearchIndex() : _fileReader.ReadSpecifiedFiles(path);
-        var responseHeader = ResponseBuilder.Response(responseContent.Length);
-        // Console.WriteLine(responseHeader);
-        var byteResponse =  ByteReader.ConvertTextToByte(responseHeader);
-        var combinedResponse = new byte[byteResponse.Length + responseContent.Length];
-        byteResponse.CopyTo(combinedResponse, 0);
-        responseContent.CopyTo(combinedResponse, byteResponse.Length);
-        return combinedResponse;
+        var byteResponse = _responseBuilder.Response(path, _requests);
+        return byteResponse;
     }
 
 
