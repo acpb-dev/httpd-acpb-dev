@@ -21,20 +21,32 @@ public class Server
         while (true)
         {
             var client = await _listener.AcceptTcpClientAsync();
-            HandleRequest(client);
+            await Task.Run(() => HandleRequest(client));
         }
     }
 
-    private async void HandleRequest(TcpClient client)
+    private void HandleRequest(TcpClient client)
     {
-        Thread.Sleep(25);
-        var stream = client.GetStream();
-        Socket socket = stream.Socket;
-        var buffer = new byte[socket.Available];
-        stream.Read(buffer, 0, buffer.Length);
-        var data = Encoding.UTF8.GetString(buffer);
-        var responsesByte = _requests.ManageRequest(data);
-        socket.Send(responsesByte);
-        socket.Close();
+        NetworkStream stream = client.GetStream();
+        
+        using(var bufferedStream = new BufferedStream(stream))
+        using(var streamReader = new StreamReader(bufferedStream))
+        {
+            string request = "";
+            while(!streamReader.EndOfStream)
+            {
+                string currentLine = streamReader.ReadLine();
+                if (currentLine.Equals(""))
+                {
+                    var responsesByte2 = _requests.ManageRequest(request);
+                    stream.Socket.Send(responsesByte2);
+                    request = "";
+                }
+                else
+                {
+                    request = request + currentLine + "\r\n";
+                }
+            }
+        }
     }
 }

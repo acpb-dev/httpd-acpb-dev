@@ -44,13 +44,15 @@ public class ResponseBuilder
         {
             DirectoryInfo dir = new DirectoryInfo(value);
             
-            topHtml += HtmlStringBuilder.Alink(ReadHTML.CleanPath(value), ReadHTML.CleanString(key), true, dir.LastAccessTime);
+            topHtml += HtmlStringBuilder.Alink(ReadHTML.CleanPath(value), ReadHTML.CleanString(key), true, dir.LastAccessTime, 0);
         }
 
         foreach (var (key, value) in fileNames)
         {
             DirectoryInfo dir = new DirectoryInfo(value);
-            topHtml += HtmlStringBuilder.Alink(ReadHTML.CleanPath(value), ReadHTML.CleanString(key), false, dir.LastAccessTime);
+            var fi1 = new FileInfo(value);
+            
+            topHtml += HtmlStringBuilder.Alink(ReadHTML.CleanPath(value), ReadHTML.CleanString(key), false, dir.LastAccessTime, fi1.Length);
         }
         return ByteReader.ConvertTextToByte(topHtml + bottomHtml);
     }

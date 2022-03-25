@@ -6,12 +6,17 @@ public class Requests
 {
     private ResponseBuilder _responseBuilder = new ResponseBuilder();
     public IDictionary<string, string> _requests = new Dictionary<string, string>();
-    
+
+
+    // public byte[] HandleRequest(string verb, string ressource, IDictionary<string, string> headers, string body)
+    // {
+    //     
+    // }
     public byte[] ManageRequest(string request)
     {
         _requests.Clear();
         var strReader = new StringReader(request);
-        // Console.WriteLine(request);
+        Console.WriteLine(request);
         var count = 0;
         while (null != (request = strReader.ReadLine()))
         {
