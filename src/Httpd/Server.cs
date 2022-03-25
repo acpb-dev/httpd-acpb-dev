@@ -21,15 +21,15 @@ public class Server
         while (true)
         {
             var client = await _listener.AcceptTcpClientAsync();
-            await HandleRequest(client);
+            HandleRequest(client);
         }
     }
 
-    private async Task HandleRequest(TcpClient client)
+    private async void HandleRequest(TcpClient client)
     {
-        await Task.Delay(50);
+        Thread.Sleep(25);
         var stream = client.GetStream();
-        var socket = stream.Socket;
+        Socket socket = stream.Socket;
         var buffer = new byte[socket.Available];
         stream.Read(buffer, 0, buffer.Length);
         var data = Encoding.UTF8.GetString(buffer);

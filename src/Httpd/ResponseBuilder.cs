@@ -1,11 +1,9 @@
-﻿using System.Text;
-
-namespace Httpd;
+﻿namespace Httpd;
 
 public class ResponseBuilder
 {
-    private readonly FileReader _fileReader = new FileReader();
-    private bool _error404 = false;
+    private readonly FileReader _fileReader = new();
+    public static bool _error404 = false;
     
     public static byte[] HtmlBuilder(string path)
     {
@@ -44,12 +42,15 @@ public class ResponseBuilder
         }
         foreach (var (key, value) in directoriesNames)
         {
-            topHtml += HtmlStringBuilder.Alink(ReadHTML.CleanPath(value), ReadHTML.CleanString(key), true);
+            DirectoryInfo dir = new DirectoryInfo(value);
+            
+            topHtml += HtmlStringBuilder.Alink(ReadHTML.CleanPath(value), ReadHTML.CleanString(key), true, dir.LastAccessTime);
         }
 
         foreach (var (key, value) in fileNames)
         {
-            topHtml += HtmlStringBuilder.Alink(ReadHTML.CleanPath(value), ReadHTML.CleanString(key), false);
+            DirectoryInfo dir = new DirectoryInfo(value);
+            topHtml += HtmlStringBuilder.Alink(ReadHTML.CleanPath(value), ReadHTML.CleanString(key), false, dir.LastAccessTime);
         }
         return ByteReader.ConvertTextToByte(topHtml + bottomHtml);
     }
@@ -101,7 +102,7 @@ public class ResponseBuilder
         return Array.Empty<byte>();
     }
 
-    private string CheckFileExtension(string path)
+    private static string CheckFileExtension(string path)
     {
         var temp = path.Split(".");
         var extension = temp[^1];

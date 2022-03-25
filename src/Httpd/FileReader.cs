@@ -1,38 +1,12 @@
-﻿namespace Httpd;
+﻿using System.Configuration;
+
+namespace Httpd;
 
 public class FileReader
 {
-    public static readonly Dictionary<string, string> ImagesFormat = new()
-    {
-        { "apng", "image/apng" },
-        { "avif", "image/avif" },
-        { "gif", "image/gif" },
-        { "jpg", "image/jpeg" },
-        { "jpeg", "image/jpeg" },
-        { "jfif", "image/jpeg" },
-        { "pjpeg", "image/jpeg" },
-        { "pjp", "image/jpeg" },
-        { "png", "image/png" },
-        { "svg", "image/svg+xml" },
-        { "bmp", "image/bmp" },
-        { "ttf", "font/ttf" },
-        { "tif", "image/tiff" },
-        { "tiff", "image/tiff" },
-        { "webp", "image/webp" }//,
-        // { "ico", "image/vnd.microsoft.icon" }
-    };
-    public static readonly Dictionary<string, string> FileFormat = new()
-    {
-        { "html", "text/html" },
-        { "htm", "text/html" },
-        { "js", "text/javascript" },
-        { "css", "text/css" },
-        { "mjs", "text/javascript" },
-        { "txt", "text/plain" },
-        { "php", "application/x-httpd-php" },
-        { "json", "application/json" },
-        { "jsonld", "application/ld+json" }
-    };
+    public static Dictionary<string, string> ImagesFormat = new();
+    public static Dictionary<string, string> FileFormat = new();
+    public static bool DirectoryListing = false;
 
     private bool DebugMode(string path)
     {
@@ -48,10 +22,33 @@ public class FileReader
         }
         return false;
     }
-    
+
+    public static void ReadAppConfig()
+    {
+        var fileSupported = ConfigurationManager.AppSettings["fileSupported"];
+        var splitFileSupported = fileSupported.Split();
+        for (int i = 0; i < splitFileSupported.Length; i++)
+        {
+            var split = splitFileSupported[i].Split(':');
+            ImagesFormat.Add(split[0], split[1]);
+        }
+        fileSupported = ConfigurationManager.AppSettings["testFileSupported"];
+        splitFileSupported = fileSupported.Split();
+        for (int i = 0; i < splitFileSupported.Length; i++)
+        {
+            var split = splitFileSupported[i].Split(':');
+            FileFormat.Add(split[0], split[1]);
+        }
+        var directoryListing = ConfigurationManager.AppSettings["Directory_Listing"];
+        if (directoryListing.Equals("true"))
+        {
+            DirectoryListing = true;
+        }
+    }
+
     public byte[] ReadSpecifiedFiles(string path, IDictionary<string, string> requests)
     {
-        Console.WriteLine(path);
+        // Console.WriteLine(path);
         if (DebugMode(path))
         {
             var topHtml = HtmlStringBuilder.Header();
@@ -60,10 +57,14 @@ public class FileReader
             return ByteReader.ConvertTextToByte(topHtml + bottomHtml);
         }
         var temp = path.Split(".");
-        Console.WriteLine();
         if (temp[0].Equals("/source") || temp.Length < 2)
         {
-            return ResponseBuilder.HtmlBuilder(path);
+            if (DirectoryListing)
+            {
+                return ResponseBuilder.HtmlBuilder(path);
+            }
+            ResponseBuilder._error404 = true;
+            return ByteReader.ConvertTextToByte(HtmlStringBuilder.Page404()); 
         }
         var extension = temp[^1];
         if (!CheckExtension(FileFormat, extension).Equals("N/A"))
@@ -74,6 +75,7 @@ public class FileReader
             }
             else
             {
+                ResponseBuilder._error404 = true;
                 return ByteReader.ConvertTextToByte(HtmlStringBuilder.Page404());
             }
         }
@@ -85,6 +87,7 @@ public class FileReader
                 return ByteReader.ConvertBytes(path.TrimStart('/'));
             }
         }
+        ResponseBuilder._error404 = true;
         return ByteReader.ConvertTextToByte(HtmlStringBuilder.Page404());
     }
     

@@ -1,8 +1,15 @@
 {
   "version": 2,
-  "dgSpecHash": "jrZBA/3RJed2S/l0FNsPcLckeWwI5TKXI51irj3PkTjDkjXsqGM+EX5zr2jhkFSlnEDovSAwHxX8daDrLrHGOQ==",
+  "dgSpecHash": "tLaqzVgZ4mVx7Lku0A3B6ldEn723m23wGH0z17NPGuwe/P9jipUisCRfl5eUjBSEydFevMInkX0gBi2K9ZdAQA==",
   "success": true,
-  "projectFilePath": "\\\\sfs03\\etudiants$\\1739316\\Documents\\GitHub\\httpd-acpb-dev\\src\\Httpd.CLI\\Httpd.CLI.csproj",
-  "expectedPackageFiles": [],
+  "projectFilePath": "C:\\Users\\willi\\Documents\\GitHub\\httpd-acpb-dev\\src\\Httpd.CLI\\Httpd.CLI.csproj",
+  "expectedPackageFiles": [
+    "C:\\Users\\willi\\.nuget\\packages\\microsoft.win32.systemevents\\7.0.0-preview.2.22152.2\\microsoft.win32.systemevents.7.0.0-preview.2.22152.2.nupkg.sha512",
+    "C:\\Users\\willi\\.nuget\\packages\\system.configuration.configurationmanager\\7.0.0-preview.2.22152.2\\system.configuration.configurationmanager.7.0.0-preview.2.22152.2.nupkg.sha512",
+    "C:\\Users\\willi\\.nuget\\packages\\system.drawing.common\\7.0.0-preview.2.22152.2\\system.drawing.common.7.0.0-preview.2.22152.2.nupkg.sha512",
+    "C:\\Users\\willi\\.nuget\\packages\\system.security.cryptography.protecteddata\\7.0.0-preview.2.22152.2\\system.security.cryptography.protecteddata.7.0.0-preview.2.22152.2.nupkg.sha512",
+    "C:\\Users\\willi\\.nuget\\packages\\system.security.permissions\\7.0.0-preview.2.22152.2\\system.security.permissions.7.0.0-preview.2.22152.2.nupkg.sha512",
+    "C:\\Users\\willi\\.nuget\\packages\\system.windows.extensions\\7.0.0-preview.2.22152.2\\system.windows.extensions.7.0.0-preview.2.22152.2.nupkg.sha512"
+  ],
   "logs": []
 }

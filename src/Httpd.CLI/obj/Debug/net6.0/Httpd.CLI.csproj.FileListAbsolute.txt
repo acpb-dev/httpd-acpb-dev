@@ -52,3 +52,15 @@ C:\Users\willi\Documents\GitHub\httpd-acpb-dev\src\Httpd.CLI\obj\Debug\net6.0\Ht
 C:\Users\willi\Documents\GitHub\httpd-acpb-dev\src\Httpd.CLI\obj\Debug\net6.0\Httpd.CLI.genruntimeconfig.cache
 C:\Users\willi\Documents\GitHub\httpd-acpb-dev\src\Httpd.CLI\obj\Debug\net6.0\ref\Httpd.CLI.dll
 \\sfs03\etudiants$\1739316\Documents\GitHub\httpd-acpb-dev\src\Httpd.CLI\obj\Debug\net6.0\refint\Httpd.CLI.dll
+C:\Users\willi\Documents\GitHub\httpd-acpb-dev\src\Httpd.CLI\bin\Debug\net6.0\Httpd.CLI.dll.config
+C:\Users\willi\Documents\GitHub\httpd-acpb-dev\src\Httpd.CLI\bin\Debug\net6.0\Microsoft.Win32.SystemEvents.dll
+C:\Users\willi\Documents\GitHub\httpd-acpb-dev\src\Httpd.CLI\bin\Debug\net6.0\System.Configuration.ConfigurationManager.dll
+C:\Users\willi\Documents\GitHub\httpd-acpb-dev\src\Httpd.CLI\bin\Debug\net6.0\System.Drawing.Common.dll
+C:\Users\willi\Documents\GitHub\httpd-acpb-dev\src\Httpd.CLI\bin\Debug\net6.0\System.Security.Cryptography.ProtectedData.dll
+C:\Users\willi\Documents\GitHub\httpd-acpb-dev\src\Httpd.CLI\bin\Debug\net6.0\System.Security.Permissions.dll
+C:\Users\willi\Documents\GitHub\httpd-acpb-dev\src\Httpd.CLI\bin\Debug\net6.0\System.Windows.Extensions.dll
+C:\Users\willi\Documents\GitHub\httpd-acpb-dev\src\Httpd.CLI\bin\Debug\net6.0\runtimes\win\lib\net6.0\Microsoft.Win32.SystemEvents.dll
+C:\Users\willi\Documents\GitHub\httpd-acpb-dev\src\Httpd.CLI\bin\Debug\net6.0\runtimes\unix\lib\net6.0\System.Drawing.Common.dll
+C:\Users\willi\Documents\GitHub\httpd-acpb-dev\src\Httpd.CLI\bin\Debug\net6.0\runtimes\win\lib\net6.0\System.Drawing.Common.dll
+C:\Users\willi\Documents\GitHub\httpd-acpb-dev\src\Httpd.CLI\bin\Debug\net6.0\runtimes\win\lib\net6.0\System.Security.Cryptography.ProtectedData.dll
+C:\Users\willi\Documents\GitHub\httpd-acpb-dev\src\Httpd.CLI\bin\Debug\net6.0\runtimes\win\lib\net6.0\System.Windows.Extensions.dll

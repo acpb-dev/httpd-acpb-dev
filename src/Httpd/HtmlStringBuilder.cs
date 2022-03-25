@@ -19,9 +19,10 @@ public static class HtmlStringBuilder
         return "</body> </html>";
     }
 
-    public static string Alink(string href, string value, bool toUpper)
+    public static string Alink(string href, string value, bool toUpper, DateTime date)
     {
-        return toUpper ? $"<div><a href=\"{href}\">{value.ToUpper()}</a></div>" : $"<div><a href=\"{href}\">{value.ToLower()}</a></div>";
+        var test =  toUpper ? $"<div><a href=\"{href}\">{value.ToUpper()}</a>" : $"<div><a href=\"{href}\">{value.ToLower()}</a>";
+        return test + $"\n<a>{date}</a></div>";
     }
 
     public static string Debug(IDictionary<string, string> request)

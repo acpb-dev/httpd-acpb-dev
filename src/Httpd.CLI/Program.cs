@@ -1,6 +1,14 @@
 ﻿using Httpd;
+using System.Configuration;
 
+
+FileReader.ReadAppConfig();
 Console.WriteLine("My Httpd server!");
+var port = ConfigurationManager.AppSettings["port"];
 
-var server = new Server(3000);
+if (port.Equals(""))
+{
+    port = "3000";
+}
+var server = new Server(int.Parse(port));
 await server.Start();

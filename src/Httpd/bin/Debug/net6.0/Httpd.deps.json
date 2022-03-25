@@ -7,8 +7,110 @@
   "targets": {
     ".NETCoreApp,Version=v6.0": {
       "Httpd/1.0.0": {
+        "dependencies": {
+          "System.Configuration.ConfigurationManager": "7.0.0-preview.2.22152.2"
+        },
         "runtime": {
           "Httpd.dll": {}
+        }
+      },
+      "Microsoft.Win32.SystemEvents/7.0.0-preview.2.22152.2": {
+        "runtime": {
+          "lib/net6.0/Microsoft.Win32.SystemEvents.dll": {
+            "assemblyVersion": "7.0.0.0",
+            "fileVersion": "7.0.22.15202"
+          }
+        },
+        "runtimeTargets": {
+          "runtimes/win/lib/net6.0/Microsoft.Win32.SystemEvents.dll": {
+            "rid": "win",
+            "assetType": "runtime",
+            "assemblyVersion": "7.0.0.0",
+            "fileVersion": "7.0.22.15202"
+          }
+        }
+      },
+      "System.Configuration.ConfigurationManager/7.0.0-preview.2.22152.2": {
+        "dependencies": {
+          "System.Security.Cryptography.ProtectedData": "7.0.0-preview.2.22152.2",
+          "System.Security.Permissions": "7.0.0-preview.2.22152.2"
+        },
+        "runtime": {
+          "lib/net6.0/System.Configuration.ConfigurationManager.dll": {
+            "assemblyVersion": "7.0.0.0",
+            "fileVersion": "7.0.22.15202"
+          }
+        }
+      },
+      "System.Drawing.Common/7.0.0-preview.2.22152.2": {
+        "dependencies": {
+          "Microsoft.Win32.SystemEvents": "7.0.0-preview.2.22152.2"
+        },
+        "runtime": {
+          "lib/net6.0/System.Drawing.Common.dll": {
+            "assemblyVersion": "7.0.0.0",
+            "fileVersion": "7.0.22.15202"
+          }
+        },
+        "runtimeTargets": {
+          "runtimes/unix/lib/net6.0/System.Drawing.Common.dll": {
+            "rid": "unix",
+            "assetType": "runtime",
+            "assemblyVersion": "7.0.0.0",
+            "fileVersion": "7.0.22.15202"
+          },
+          "runtimes/win/lib/net6.0/System.Drawing.Common.dll": {
+            "rid": "win",
+            "assetType": "runtime",
+            "assemblyVersion": "7.0.0.0",
+            "fileVersion": "7.0.22.15202"
+          }
+        }
+      },
+      "System.Security.Cryptography.ProtectedData/7.0.0-preview.2.22152.2": {
+        "runtime": {
+          "lib/net6.0/System.Security.Cryptography.ProtectedData.dll": {
+            "assemblyVersion": "7.0.0.0",
+            "fileVersion": "7.0.22.15202"
+          }
+        },
+        "runtimeTargets": {
+          "runtimes/win/lib/net6.0/System.Security.Cryptography.ProtectedData.dll": {
+            "rid": "win",
+            "assetType": "runtime",
+            "assemblyVersion": "7.0.0.0",
+            "fileVersion": "7.0.22.15202"
+          }
+        }
+      },
+      "System.Security.Permissions/7.0.0-preview.2.22152.2": {
+        "dependencies": {
+          "System.Windows.Extensions": "7.0.0-preview.2.22152.2"
+        },
+        "runtime": {
+          "lib/net6.0/System.Security.Permissions.dll": {
+            "assemblyVersion": "7.0.0.0",
+            "fileVersion": "7.0.22.15202"
+          }
+        }
+      },
+      "System.Windows.Extensions/7.0.0-preview.2.22152.2": {
+        "dependencies": {
+          "System.Drawing.Common": "7.0.0-preview.2.22152.2"
+        },
+        "runtime": {
+          "lib/net6.0/System.Windows.Extensions.dll": {
+            "assemblyVersion": "7.0.0.0",
+            "fileVersion": "7.0.22.15202"
+          }
+        },
+        "runtimeTargets": {
+          "runtimes/win/lib/net6.0/System.Windows.Extensions.dll": {
+            "rid": "win",
+            "assetType": "runtime",
+            "assemblyVersion": "7.0.0.0",
+            "fileVersion": "7.0.22.15202"
+          }
         }
       }
     }
@@ -18,6 +120,48 @@
       "type": "project",
       "serviceable": false,
       "sha512": ""
+    },
+    "Microsoft.Win32.SystemEvents/7.0.0-preview.2.22152.2": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-NV7GH8Qtd2dD4FIAqbMSGVBFwiPBNF4Vz7VaL7JWolwQeYwtGoDLh3UHjnObc1uGiDMi29mA0kAC/DTRZRcdqA==",
+      "path": "microsoft.win32.systemevents/7.0.0-preview.2.22152.2",
+      "hashPath": "microsoft.win32.systemevents.7.0.0-preview.2.22152.2.nupkg.sha512"
+    },
+    "System.Configuration.ConfigurationManager/7.0.0-preview.2.22152.2": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-JQSqrmVXT5d77yYDhl1pSAbVpqwFXcmDF1LEN6NnZiZNT9uUpG10xo1hJfiMrLR+YlxZNdPTKPwwTGKQBmA7NQ==",
+      "path": "system.configuration.configurationmanager/7.0.0-preview.2.22152.2",
+      "hashPath": "system.configuration.configurationmanager.7.0.0-preview.2.22152.2.nupkg.sha512"
+    },
+    "System.Drawing.Common/7.0.0-preview.2.22152.2": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-QLmKaZB39HNfXxwzjwGqWtwA1etowiqxapov2APt7hqq73IT2Mbf3Qi5LqXs7CTNHTItvElERAKYNVnwebUZLQ==",
+      "path": "system.drawing.common/7.0.0-preview.2.22152.2",
+      "hashPath": "system.drawing.common.7.0.0-preview.2.22152.2.nupkg.sha512"
+    },
+    "System.Security.Cryptography.ProtectedData/7.0.0-preview.2.22152.2": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-zyoIjyvgq7GIhbadaxw/iW16RlCvnkwUZmNNBP1x1zoqNxEi5G+654Lv6wdngnk0A8chCgSQRLJCERfghbcDlg==",
+      "path": "system.security.cryptography.protecteddata/7.0.0-preview.2.22152.2",
+      "hashPath": "system.security.cryptography.protecteddata.7.0.0-preview.2.22152.2.nupkg.sha512"
+    },
+    "System.Security.Permissions/7.0.0-preview.2.22152.2": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-qB3V5vrTM+Hb5QX3H5A6CC7IklNnfkmidYPADvDuAhQ+4a5ysAhTOiSxBBQ0C6wqRiE0Pc1JBUk88QZtfhNPew==",
+      "path": "system.security.permissions/7.0.0-preview.2.22152.2",
+      "hashPath": "system.security.permissions.7.0.0-preview.2.22152.2.nupkg.sha512"
+    },
+    "System.Windows.Extensions/7.0.0-preview.2.22152.2": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-ogDvGfhziQaLWhYLTJH88L/WR+8GxLnPBaBkQE5yS7fXShYktpH2fBZA0TMMcXTLf1YtJKg0gM2hNX3WEvk3fw==",
+      "path": "system.windows.extensions/7.0.0-preview.2.22152.2",
+      "hashPath": "system.windows.extensions.7.0.0-preview.2.22152.2.nupkg.sha512"
     }
   }
 }
