@@ -36,7 +36,7 @@ public class Server
             string currentLine = streamReader.ReadLine();
             if (currentLine.Equals(""))
             {
-                var responsesByte2 = _requests.SeperateRequest(request);
+                var responsesByte2 = _requests.SeparatedRequest(request);
                 stream.Socket.Send(responsesByte2);
                 request = "";
             }
