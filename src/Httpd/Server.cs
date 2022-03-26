@@ -68,10 +68,4 @@ public class Server
         }
         stream.Socket.Close();
     }
-
-    private static void Serilog(long start, long end, string request)
-    {
-        
-    }
-    
 }

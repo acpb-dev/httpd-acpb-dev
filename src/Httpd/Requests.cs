@@ -9,19 +9,6 @@ public class Requests
 {
     private readonly ResponseBuilder _responseBuilder = new();
     private readonly IDictionary<string, string> _requests = new Dictionary<string, string>();
-    
-    private byte[] HandleRequest(string verb, string ressource, IDictionary<string, string> headers, string body)
-    {
-        return verb switch
-        {
-            "GET" => GetResponseCreator(ressource),
-            "POST" => PostResponseCreator(),
-            "PUT" => PutResponseCreator(),
-            "PATCH" => PatchResponseCreator(),
-            "DELETE" => DeleteResponseCreator(),
-            _ => GetResponseCreator(ressource)
-        };
-    }
     public byte[] SeparatedRequest(string request, SeriLog serilog)
     {
         
@@ -64,35 +51,45 @@ public class Requests
             }
             count++;
         }
-
         var response = HandleRequest(verb, resource, _requests, body);
         serilog.HttpMethod = verb;
         serilog.Path = resource;
-        serilog.STATUS = ResponseBuilder.Error404 ? "404" : "200";
-        ResponseBuilder.Error404 = false;
-        return response;
+        serilog.STATUS = response.Item2;
+        return response.Item1;
+    }
+    
+    private (byte[], string) HandleRequest(string verb, string resource, IDictionary<string, string> headers, string body)
+    {
+        return verb switch
+        {
+            "GET" => GetResponseCreator(resource),
+            "POST" => PostResponseCreator(),
+            "PUT" => PutResponseCreator(),
+            "PATCH" => PatchResponseCreator(),
+            "DELETE" => DeleteResponseCreator(),
+            _ => GetResponseCreator(resource)
+        };
     }
 
-
-    private byte[] GetResponseCreator(string path)
+    private (byte[], string) GetResponseCreator(string path)
     {
-        var byteResponse = _responseBuilder.Response(path, _requests);
+        var byteResponse = _responseBuilder.ResponseManager(path, _requests);
         return byteResponse;
     }
-    private byte[] PostResponseCreator()
+    private (byte[], string) PostResponseCreator()
     {
-        return Array.Empty<byte>();
+        return(ByteReader.ConvertTextToByte(HtmlStringBuilder.Page404()), "404");
     }
-    private byte[] PutResponseCreator()
+    private (byte[], string) PutResponseCreator()
     {
-        return Array.Empty<byte>();
+        return(ByteReader.ConvertTextToByte(HtmlStringBuilder.Page404()), "404");
     }
-    private byte[] PatchResponseCreator()
+    private (byte[], string) PatchResponseCreator()
     {
-        return Array.Empty<byte>();
+        return(ByteReader.ConvertTextToByte(HtmlStringBuilder.Page404()), "404");
     }
-    private byte[] DeleteResponseCreator()
+    private (byte[], string) DeleteResponseCreator()
     {
-        return Array.Empty<byte>();
+        return(ByteReader.ConvertTextToByte(HtmlStringBuilder.Page404()), "404");
     }
 }

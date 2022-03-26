@@ -7,7 +7,66 @@ namespace Httpd;
 public class ResponseBuilder
 {
     private readonly FileReader _fileReader = new();
-    public static bool Error404 = false;
+    
+    public (byte[], string) ResponseManager(string path, IDictionary<string, string> request)
+    {
+        Console.WriteLine(path);
+        (byte[], string, string) responseBytes;
+        if (DebugMode(path))
+        {
+            responseBytes = DebugBuilder(request);
+        }
+        else if (path.Equals("/"))
+        {
+            responseBytes = SearchIndex();
+        }
+        else
+        {
+            responseBytes = _fileReader.ReadSpecifiedFiles(path);
+
+        }
+        return (AddTwoByteArrays(ResponseHeader(responseBytes.Item1, responseBytes.Item2, responseBytes.Item3), responseBytes.Item1), responseBytes.Item2);
+    }
+
+
+    
+
+    private byte[] ResponseHeader(byte[] responseBytes, string error, string contentType)
+    {
+        var response = $"HTTP/1.1 {error} OK\r\n";
+        response += $"Content-Length: {responseBytes.Length}\r\n";
+        response += $"Content-Type: {contentType}\r\n";
+        response += "Connection: close\r\n";
+        response += "\r\n";
+        return ByteReader.ConvertTextToByte(response);
+    }
+
+    (byte[], string, string) DebugBuilder(IDictionary<string, string> request)
+    {
+        var topHtml = HtmlStringBuilder.Header();
+        var bottomHtml = HtmlStringBuilder.Footer();
+        topHtml += HtmlStringBuilder.Debug(request);
+        return (ByteReader.ConvertTextToByte(topHtml + bottomHtml), "200", "text/html");
+    }
+
+    (byte[], string, string) SearchIndex()
+    {
+        var test = ReadHTML.ReadFilesInDirectory();
+        foreach (var variable in test)
+        {
+            var result = variable[^10..];
+            if (result.Equals("index.html"))
+            {
+                return (ByteReader.ConvertFileToByte(result), "200", "text/html");
+            }
+        }
+        if (FileReader._directoryListing)
+        {
+            return _fileReader.ReadSpecifiedFiles("/");
+        }
+        return (ByteReader.ConvertTextToByte(HtmlStringBuilder.Page404()), "404", "text/html");
+    }
+    
     
     public static byte[] HtmlBuilder(string path)
     {
@@ -15,16 +74,9 @@ public class ResponseBuilder
         IDictionary<string, string> directoriesNames = new Dictionary<string, string>();
         var topHtml = HtmlStringBuilder.HeaderDl();
         var bottomHtml = HtmlStringBuilder.Footer();
-        if (path.Equals("/source"))
+        if (!Directory.Exists(path.Trim('/')))
         {
-            path = "/";
-        }
-        else
-        {
-            if (!Directory.Exists(path.Trim('/')))
-            {
-                return ByteReader.ConvertTextToByte(HtmlStringBuilder.Page404());
-            }
+            return ByteReader.ConvertTextToByte(HtmlStringBuilder.Page404());
         }
         var files = ReadHTML.ReadFilesInSpecifiedDirectory(path);
         var directories = ReadHTML.ReadSpecifiedDirectories(path);
@@ -78,11 +130,9 @@ public class ResponseBuilder
     
     private bool DebugMode(string path)
     {
-        //Console.WriteLine(path);
-        var debug = "/debug";
+        const string debug = "/debug";
         if (path.Length >= debug.Length)
         {
-            // var pathUpdated = path.Remove(path.Length - debug.Length, debug.Length);
             var test = path.Remove(0, path.Length-debug.Length);
             if (test.Equals(debug))
             {
@@ -92,60 +142,12 @@ public class ResponseBuilder
         return false;
     }
     
-    public byte[] Response(string path, IDictionary<string, string> request)
-    {
-        
-        var contentType = CheckFileExtension(path);;
-        byte[] responseBytes;
-
-        if (path.Equals("/"))
-        {
-            contentType = "text/html";
-            responseBytes = SearchIndex(request);
-        }
-        else if (DebugMode(path))
-        {
-            var topHtml = HtmlStringBuilder.Header();
-            var bottomHtml = HtmlStringBuilder.Footer();
-            topHtml += HtmlStringBuilder.Debug(request);
-            responseBytes =  ByteReader.ConvertTextToByte(topHtml + bottomHtml);
-        }
-        else
-        {
-            responseBytes = _fileReader.ReadSpecifiedFiles(path, request);
-            if (contentType.Equals("N/A"))
-            {
-                contentType = "text/html";
-            }
-        }
-        var response = !Error404 ? "HTTP/1.1 200 OK\r\n" : "HTTP/1.1 404 OK\r\n";
-        response += $"Content-Length: {responseBytes.Length}\r\n";
-        response += $"Content-Type: {contentType}\r\n";
-        response += "Connection: close\r\n";
-        response += "\r\n";
-        return AddTwoByteArrays(ByteReader.ConvertTextToByte(response), responseBytes);
-    }   
-
     private byte[] AddTwoByteArrays(byte[] array1, byte[] array2)
     {
         var z = new byte[array1.Length + array2.Length];
         array1.CopyTo(z, 0);
         array2.CopyTo(z, array1.Length);
         return z;
-    }
-    
-    private static byte[] SearchIndex(IDictionary<string, string> request)
-    {
-        var test = ReadHTML.ReadFilesInDirectory();
-        foreach (var variable in test)
-        {
-            var result = variable[^10..];
-            if (result.Equals("index.html"))
-            {
-                return ByteReader.ConvertFileToByte(result);
-            }
-        }
-        return Array.Empty<byte>();
     }
 
     private static string CheckFileExtension(string path)
