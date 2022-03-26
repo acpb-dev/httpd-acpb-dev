@@ -9,7 +9,7 @@ public class ResponseBuilder
     {
         IDictionary<string, string> fileNames = new Dictionary<string, string>();
         IDictionary<string, string> directoriesNames = new Dictionary<string, string>();
-        var topHtml = HtmlStringBuilder.Header();
+        var topHtml = HtmlStringBuilder.HeaderDl();
         var bottomHtml = HtmlStringBuilder.Footer();
         if (path.Equals("/source"))
         {
@@ -40,6 +40,16 @@ public class ResponseBuilder
                 directoriesNames.Add(directorySplit[^1], directory);
             }
         }
+
+        var test = path.TrimEnd('/');
+        var index = test.LastIndexOf('/');
+        Console.WriteLine(index);
+        test = test.Substring(0, index);
+        if (test.Equals(""))
+        {
+            test = "/";
+        }
+        topHtml += HtmlStringBuilder.ParentDirectory(test, "Parent Directory");
         foreach (var (key, value) in directoriesNames)
         {
             DirectoryInfo dir = new DirectoryInfo(value);
@@ -57,14 +67,41 @@ public class ResponseBuilder
         return ByteReader.ConvertTextToByte(topHtml + bottomHtml);
     }
     
+    private bool DebugMode(string path)
+    {
+        //Console.WriteLine(path);
+        var debug = "/debug";
+        if (path.Length >= debug.Length)
+        {
+            // var pathUpdated = path.Remove(path.Length - debug.Length, debug.Length);
+            var test = path.Remove(0, path.Length-debug.Length);
+            if (test.Equals(debug))
+            {
+                return true;
+            }
+        }
+        return false;
+    }
+    
     public byte[] Response(string path, IDictionary<string, string> request)
     {
+        
+
+        
         string contentType = CheckFileExtension(path);;
         byte[] responseBytes;
+
         if (path.Equals("/"))
         {
             contentType = "text/html";
             responseBytes = SearchIndex(request);
+        }
+        else if (DebugMode(path))
+        {
+            var topHtml = HtmlStringBuilder.Header();
+            var bottomHtml = HtmlStringBuilder.Footer();
+            topHtml += HtmlStringBuilder.Debug(request);
+            responseBytes =  ByteReader.ConvertTextToByte(topHtml + bottomHtml);
         }
         else
         {

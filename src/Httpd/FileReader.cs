@@ -8,20 +8,7 @@ public class FileReader
     public static Dictionary<string, string> FileFormat = new();
     public static bool DirectoryListing = false;
 
-    private bool DebugMode(string path)
-    {
-        var debug = "/debug";
-        if (path.Length >= debug.Length)
-        {
-            // var pathUpdated = path.Remove(path.Length - debug.Length, debug.Length);
-            var test = path.Remove(0, path.Length-debug.Length);
-            if (test.Equals(debug))
-            {
-                return true;
-            }
-        }
-        return false;
-    }
+
 
     public static void ReadAppConfig()
     {
@@ -48,13 +35,6 @@ public class FileReader
 
     public byte[] ReadSpecifiedFiles(string path, IDictionary<string, string> requests)
     {
-        if (DebugMode(path))
-        {
-            var topHtml = HtmlStringBuilder.Header();
-            var bottomHtml = HtmlStringBuilder.Footer();
-            topHtml += HtmlStringBuilder.Debug(requests);
-            return ByteReader.ConvertTextToByte(topHtml + bottomHtml);
-        }
         var temp = path.Split(".");
         if (temp[0].Equals("/source") || temp.Length < 2)
         {
