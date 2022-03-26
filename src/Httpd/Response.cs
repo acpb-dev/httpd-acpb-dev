@@ -22,7 +22,6 @@ public class ResponseBuilder
         else
         {
             responseBytes = _fileReader.ReadSpecifiedFiles(path);
-
         }
         return (AddTwoByteArrays(ResponseHeader(responseBytes.Item1, responseBytes.Item2, responseBytes.Item3), responseBytes.Item1), responseBytes.Item2);
     }
@@ -105,7 +104,6 @@ public class ResponseBuilder
             topHtml += HtmlStringBuilder.ParentDirectory(test, "Parent Directory");
         }
 
-        
         foreach (var (key, value) in directoriesNames)
         {
             DirectoryInfo dir = new DirectoryInfo(value);

@@ -14,7 +14,6 @@ public class FileReader
     public (byte[], string, string) ReadSpecifiedFiles(string path)
     {
         var temp = path.Split(".");
-        Console.WriteLine(temp.Length);
         if (temp.Length < 2)
         {
             Console.WriteLine(DirectoryListing);

@@ -1,5 +1,8 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.Configuration;
 using System.IO;
+using System.IO.Compression;
 
 namespace Httpd;
 
@@ -49,10 +52,47 @@ public class Requests
             count++;
         }
         var (bytes, status) = HandleRequest(verb, resource, _requests, body);
+        Console.WriteLine(body);
         serilog.HttpMethod = verb;
         serilog.Path = resource;
         serilog.Status = status;
+        // if (CheckGZip())
+        // {
+        //     return Compress(bytes);
+        // }
+
+
         return bytes;
+    }
+
+    // private bool CheckGZip()
+    // {
+    //     foreach (var (key, value) in _requests)
+    //     {
+    //         //Console.WriteLine(key + " " + value);
+    //         if (key.Equals("Accept-Encoding"))
+    //         {
+    //             var split = value.Split(",");
+    //             foreach (var val in split)
+    //             {
+    //                 var valTrimmed = val.Trim();
+    //                 if (valTrimmed.Equals("gzip"))
+    //                 {
+    //                     return true;
+    //                 }
+    //             }
+    //         }
+    //     }
+    //     return false;
+    // }
+    
+    private static byte[] Compress(byte[] data)
+    {
+        using var compressedStream = new MemoryStream();
+        using var zipStream = new GZipStream(compressedStream, CompressionMode.Compress);
+        zipStream.Write(data, 0, data.Length);
+        zipStream.Close();
+        return compressedStream.ToArray();
     }
     
     private (byte[], string) HandleRequest(string verb, string resource, IDictionary<string, string> headers, string body)
