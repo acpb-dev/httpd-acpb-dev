@@ -41,15 +41,20 @@ public class ResponseBuilder
             }
         }
 
-        var test = path.TrimEnd('/');
-        var index = test.LastIndexOf('/');
-        Console.WriteLine(index);
-        test = test.Substring(0, index);
-        if (test.Equals(""))
+        if (!path.Equals("/"))
         {
-            test = "/";
+            var test = path.TrimEnd('/');
+            var index = test.LastIndexOf('/');
+            Console.WriteLine(index);
+            test = test.Substring(0, index);
+            if (test.Equals(""))
+            {
+                test = "/";
+            }
+            topHtml += HtmlStringBuilder.ParentDirectory(test, "Parent Directory");
         }
-        topHtml += HtmlStringBuilder.ParentDirectory(test, "Parent Directory");
+
+        
         foreach (var (key, value) in directoriesNames)
         {
             DirectoryInfo dir = new DirectoryInfo(value);
