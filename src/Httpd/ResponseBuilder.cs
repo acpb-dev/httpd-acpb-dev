@@ -1,4 +1,8 @@
-﻿namespace Httpd;
+﻿using System;
+using System.Collections.Generic;
+using System.IO;
+
+namespace Httpd;
 
 public class ResponseBuilder
 {
