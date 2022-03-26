@@ -17,7 +17,7 @@ public static class HtmlStringBuilder
         return "</div><script src=\"https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js\" integrity=\"sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p\" crossorigin=\"anonymous\"></script> </body> </html>";
     }
 
-    public static string Alink(string href, string value, bool toUpper, DateTime date, long size)
+    public static string Alink(string href, string value, bool toUpper, DateTime date, double size)
     {
         var sizeString = "";
         if (size == 0)
@@ -26,7 +26,7 @@ public static class HtmlStringBuilder
         }
         else
         {
-            sizeString = (size/1000).ToString() + "K";
+            sizeString = Math.Round((size/1000), 1) + "K";
         }
         value = toUpper ? value.ToUpper() : value.ToLower();
         return $"<div class=\"row\"> <div class=\"col-6\"> <div> <a href=\"{href}\">{value}</a> </div> </div> <div class=\"col-4\"> <div> <a>{date} PM</a> </div> </div> <div class=\"col-2\"><div><a>{sizeString}</a></div></div></div>";

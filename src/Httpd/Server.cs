@@ -27,25 +27,22 @@ public class Server
 
     private void HandleRequest(TcpClient client)
     {
-        NetworkStream stream = client.GetStream();
-        
-        using(var bufferedStream = new BufferedStream(stream))
-        using(var streamReader = new StreamReader(bufferedStream))
+        var stream = client.GetStream();
+        using var bufferedStream = new BufferedStream(stream);
+        using var streamReader = new StreamReader(bufferedStream);
+        string request = "";
+        while(!streamReader.EndOfStream)
         {
-            string request = "";
-            while(!streamReader.EndOfStream)
+            string currentLine = streamReader.ReadLine();
+            if (currentLine.Equals(""))
             {
-                string currentLine = streamReader.ReadLine();
-                if (currentLine.Equals(""))
-                {
-                    var responsesByte2 = _requests.ManageRequest(request);
-                    stream.Socket.Send(responsesByte2);
-                    request = "";
-                }
-                else
-                {
-                    request = request + currentLine + "\r\n";
-                }
+                var responsesByte2 = _requests.SeperateRequest(request);
+                stream.Socket.Send(responsesByte2);
+                request = "";
+            }
+            else
+            {
+                request = request + currentLine + "\r\n";
             }
         }
     }

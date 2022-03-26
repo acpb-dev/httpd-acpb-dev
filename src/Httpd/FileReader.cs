@@ -48,7 +48,6 @@ public class FileReader
 
     public byte[] ReadSpecifiedFiles(string path, IDictionary<string, string> requests)
     {
-        // Console.WriteLine(path);
         if (DebugMode(path))
         {
             var topHtml = HtmlStringBuilder.Header();
@@ -64,6 +63,7 @@ public class FileReader
                 return ResponseBuilder.HtmlBuilder(path);
             }
             ResponseBuilder._error404 = true;
+            
             return ByteReader.ConvertTextToByte(HtmlStringBuilder.Page404()); 
         }
         var extension = temp[^1];
@@ -76,6 +76,7 @@ public class FileReader
             else
             {
                 ResponseBuilder._error404 = true;
+                
                 return ByteReader.ConvertTextToByte(HtmlStringBuilder.Page404());
             }
         }
@@ -88,6 +89,7 @@ public class FileReader
             }
         }
         ResponseBuilder._error404 = true;
+        
         return ByteReader.ConvertTextToByte(HtmlStringBuilder.Page404());
     }
     
