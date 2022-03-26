@@ -19,13 +19,15 @@ public class Requests
             _ => GetResponseCreator(ressource)
         };
     }
-    public byte[] SeparatedRequest(string request)
+    public byte[] SeparatedRequest(string request, SeriLog serilog)
     {
+        
         _requests.Clear();
         var strReader = new StringReader(request);
         var verb = "";
         var resource = "";
         var body = "";
+        var contentLenght = 0;
         var count = 0;
         var isContent = false;
         while (null != (request = strReader.ReadLine()))
@@ -48,6 +50,7 @@ public class Requests
             }
             else
             {
+                contentLenght = request.Length;
                 keyVal = request.Split(": ");
  
             }
@@ -58,8 +61,15 @@ public class Requests
             }
             count++;
         }
-        return HandleRequest(verb, resource, _requests, body);
+
+        var response = HandleRequest(verb, resource, _requests, body);
+        serilog.HttpMethod = verb;
+        serilog.Path = resource;
+        serilog.STATUS = ResponseBuilder.Error404 ? "404" : "200";
+        ResponseBuilder.Error404 = false;
+        return response;
     }
+
 
     private byte[] GetResponseCreator(string path)
     {

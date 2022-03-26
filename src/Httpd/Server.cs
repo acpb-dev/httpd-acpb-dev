@@ -1,10 +1,14 @@
-﻿using System.Net.Sockets;
+﻿using System.Diagnostics;
+using System.Net;
+using System.Net.Sockets;
 using System.Text;
+using Serilog;
 
 namespace Httpd;
 
 public class Server
 {
+    public static Stopwatch TimerStart = new();
     private readonly TcpListener _listener;
     private int Port { get; set; }
     private readonly Requests _requests = new();
@@ -18,26 +22,40 @@ public class Server
     {
         _listener.Start();
         Console.WriteLine($"Server has started on port {Port}.");
+        StartTimer();
+        
         while (true)
         {
             var client = await _listener.AcceptTcpClientAsync();
             await Task.Run(() => HandleRequest(client));
         }
     }
+    
+    private static void StartTimer()
+    {
+        TimerStart = Stopwatch.StartNew();
+    }
 
     private void HandleRequest(TcpClient client)
     {
+        var timerStart = TimerStart.ElapsedMilliseconds;
         var stream = client.GetStream();
         using var bufferedStream = new BufferedStream(stream);
         using var streamReader = new StreamReader(bufferedStream);
-        string request = "";
+        var request = "";
+        var seriLog = new SeriLog();
+        
+        // crashes here if spammed -v-v-v-
         while(!streamReader.EndOfStream)
         {
-            string currentLine = streamReader.ReadLine();
+            
+            var currentLine = streamReader.ReadLine();
             if (currentLine.Equals(""))
             {
-                var responsesByte2 = _requests.SeparatedRequest(request);
-                stream.Socket.Send(responsesByte2);
+                var responsesByte = _requests.SeparatedRequest(request, seriLog);
+                stream.Socket.Send(responsesByte);
+                var totalTime = TimerStart.ElapsedMilliseconds - timerStart;
+                seriLog.SeriLogger(totalTime, responsesByte.Length);
                 request = "";
             }
             else
@@ -45,5 +63,12 @@ public class Server
                 request = request + currentLine + "\r\n";
             }
         }
+        stream.Socket.Close();
     }
+
+    private static void Serilog(long start, long end, string request)
+    {
+        
+    }
+    
 }

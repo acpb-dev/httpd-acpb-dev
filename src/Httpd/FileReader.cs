@@ -42,7 +42,7 @@ public class FileReader
             {
                 return ResponseBuilder.HtmlBuilder(path);
             }
-            ResponseBuilder._error404 = true;
+            ResponseBuilder.Error404 = true;
             
             return ByteReader.ConvertTextToByte(HtmlStringBuilder.Page404()); 
         }
@@ -55,7 +55,7 @@ public class FileReader
             }
             else
             {
-                ResponseBuilder._error404 = true;
+                ResponseBuilder.Error404 = true;
                 
                 return ByteReader.ConvertTextToByte(HtmlStringBuilder.Page404());
             }
@@ -68,7 +68,7 @@ public class FileReader
                 return ByteReader.ConvertBytes(path.TrimStart('/'));
             }
         }
-        ResponseBuilder._error404 = true;
+        ResponseBuilder.Error404 = true;
         
         return ByteReader.ConvertTextToByte(HtmlStringBuilder.Page404());
     }

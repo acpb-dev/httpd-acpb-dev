@@ -64,3 +64,7 @@ C:\Users\willi\Documents\GitHub\httpd-acpb-dev\src\Httpd.CLI\bin\Debug\net6.0\ru
 C:\Users\willi\Documents\GitHub\httpd-acpb-dev\src\Httpd.CLI\bin\Debug\net6.0\runtimes\win\lib\net6.0\System.Drawing.Common.dll
 C:\Users\willi\Documents\GitHub\httpd-acpb-dev\src\Httpd.CLI\bin\Debug\net6.0\runtimes\win\lib\net6.0\System.Security.Cryptography.ProtectedData.dll
 C:\Users\willi\Documents\GitHub\httpd-acpb-dev\src\Httpd.CLI\bin\Debug\net6.0\runtimes\win\lib\net6.0\System.Windows.Extensions.dll
+C:\Users\willi\Documents\GitHub\httpd-acpb-dev\src\Httpd.CLI\bin\Debug\net6.0\Serilog.dll
+C:\Users\willi\Documents\GitHub\httpd-acpb-dev\src\Httpd.CLI\bin\Debug\net6.0\Serilog.Sinks.Debug.dll
+C:\Users\willi\Documents\GitHub\httpd-acpb-dev\src\Httpd.CLI\bin\Debug\net6.0\Serilog.Sinks.File.dll
+C:\Users\willi\Documents\GitHub\httpd-acpb-dev\src\Httpd.CLI\bin\Debug\net6.0\Serilog.Sinks.Console.dll

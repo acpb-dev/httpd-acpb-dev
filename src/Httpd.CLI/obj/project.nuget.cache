@@ -1,10 +1,14 @@
 {
   "version": 2,
-  "dgSpecHash": "tLaqzVgZ4mVx7Lku0A3B6ldEn723m23wGH0z17NPGuwe/P9jipUisCRfl5eUjBSEydFevMInkX0gBi2K9ZdAQA==",
+  "dgSpecHash": "cuHVIjbaKULMtwqCpFDTRIwm9KFBMNMl1f4/0ET9FWEBx7aekYyk3She0Z47B4iBSPVGHQLDjaN++rgjpVKkmQ==",
   "success": true,
   "projectFilePath": "C:\\Users\\willi\\Documents\\GitHub\\httpd-acpb-dev\\src\\Httpd.CLI\\Httpd.CLI.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\willi\\.nuget\\packages\\microsoft.win32.systemevents\\7.0.0-preview.2.22152.2\\microsoft.win32.systemevents.7.0.0-preview.2.22152.2.nupkg.sha512",
+    "C:\\Users\\willi\\.nuget\\packages\\serilog\\2.11.0-dev-01380\\serilog.2.11.0-dev-01380.nupkg.sha512",
+    "C:\\Users\\willi\\.nuget\\packages\\serilog.sinks.console\\4.0.2-dev-00890\\serilog.sinks.console.4.0.2-dev-00890.nupkg.sha512",
+    "C:\\Users\\willi\\.nuget\\packages\\serilog.sinks.debug\\2.0.0\\serilog.sinks.debug.2.0.0.nupkg.sha512",
+    "C:\\Users\\willi\\.nuget\\packages\\serilog.sinks.file\\5.0.1-dev-00947\\serilog.sinks.file.5.0.1-dev-00947.nupkg.sha512",
     "C:\\Users\\willi\\.nuget\\packages\\system.configuration.configurationmanager\\7.0.0-preview.2.22152.2\\system.configuration.configurationmanager.7.0.0-preview.2.22152.2.nupkg.sha512",
     "C:\\Users\\willi\\.nuget\\packages\\system.drawing.common\\7.0.0-preview.2.22152.2\\system.drawing.common.7.0.0-preview.2.22152.2.nupkg.sha512",
     "C:\\Users\\willi\\.nuget\\packages\\system.security.cryptography.protecteddata\\7.0.0-preview.2.22152.2\\system.security.cryptography.protecteddata.7.0.0-preview.2.22152.2.nupkg.sha512",

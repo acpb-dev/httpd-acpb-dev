@@ -3,7 +3,7 @@
 public class ResponseBuilder
 {
     private readonly FileReader _fileReader = new();
-    public static bool _error404 = false;
+    public static bool Error404 = false;
     
     public static byte[] HtmlBuilder(string path)
     {
@@ -91,9 +91,7 @@ public class ResponseBuilder
     public byte[] Response(string path, IDictionary<string, string> request)
     {
         
-
-        
-        string contentType = CheckFileExtension(path);;
+        var contentType = CheckFileExtension(path);;
         byte[] responseBytes;
 
         if (path.Equals("/"))
@@ -116,7 +114,7 @@ public class ResponseBuilder
                 contentType = "text/html";
             }
         }
-        var response = !_error404 ? "HTTP/1.1 200 OK\r\n" : "HTTP/1.1 404 OK\r\n";
+        var response = !Error404 ? "HTTP/1.1 200 OK\r\n" : "HTTP/1.1 404 OK\r\n";
         response += $"Content-Length: {responseBytes.Length}\r\n";
         response += $"Content-Type: {contentType}\r\n";
         response += "Connection: close\r\n";

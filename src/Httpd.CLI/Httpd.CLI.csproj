@@ -15,6 +15,10 @@
     </ItemGroup>
 
     <ItemGroup>
+      <PackageReference Include="Serilog" Version="2.11.0-dev-01380" />
+      <PackageReference Include="Serilog.Sinks.Console" Version="4.0.2-dev-00890" />
+      <PackageReference Include="Serilog.Sinks.Debug" Version="2.0.0" />
+      <PackageReference Include="Serilog.Sinks.File" Version="5.0.1-dev-00947" />
       <PackageReference Include="System.Configuration.ConfigurationManager" Version="7.0.0-preview.2.22152.2" />
     </ItemGroup>
 
