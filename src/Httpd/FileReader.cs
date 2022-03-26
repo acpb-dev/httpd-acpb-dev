@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Configuration;
 
 namespace Httpd;
@@ -7,17 +8,19 @@ public class FileReader
 {
     public static Dictionary<string, string> ImagesFormat = new();
     public static Dictionary<string, string> FileFormat = new();
-    public static bool _directoryListing = false;
+    public static bool DirectoryListing;
 
 
     public (byte[], string, string) ReadSpecifiedFiles(string path)
     {
         var temp = path.Split(".");
-        if (temp[0].Equals("/source") || temp.Length < 2)
+        Console.WriteLine(temp.Length);
+        if (temp.Length < 2)
         {
-            if (_directoryListing)
+            Console.WriteLine(DirectoryListing);
+            if (DirectoryListing)
             {
-                return (ResponseBuilder.HtmlBuilder(path),"200", "text/html");
+                return ResponseBuilder.HtmlBuilder(path);
             }
             return (ByteReader.ConvertTextToByte(HtmlStringBuilder.Page404()), "404", "text/html"); 
         }
@@ -63,7 +66,7 @@ public class FileReader
         var directoryListing = ConfigurationManager.AppSettings["Directory_Listing"];
         if (directoryListing.Equals("true"))
         {
-            _directoryListing = true;
+            DirectoryListing = true;
         }
     }
     

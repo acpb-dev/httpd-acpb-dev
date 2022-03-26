@@ -1,7 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.IO;
-using System.Text;
 
 namespace Httpd;
 
@@ -11,7 +9,6 @@ public class Requests
     private readonly IDictionary<string, string> _requests = new Dictionary<string, string>();
     public byte[] SeparatedRequest(string request, SeriLog serilog)
     {
-        
         _requests.Clear();
         var strReader = new StringReader(request);
         var verb = "";
@@ -51,11 +48,11 @@ public class Requests
             }
             count++;
         }
-        var response = HandleRequest(verb, resource, _requests, body);
+        var (bytes, status) = HandleRequest(verb, resource, _requests, body);
         serilog.HttpMethod = verb;
         serilog.Path = resource;
-        serilog.STATUS = response.Item2;
-        return response.Item1;
+        serilog.Status = status;
+        return bytes;
     }
     
     private (byte[], string) HandleRequest(string verb, string resource, IDictionary<string, string> headers, string body)

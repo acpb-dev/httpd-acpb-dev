@@ -10,7 +10,6 @@ public class ResponseBuilder
     
     public (byte[], string) ResponseManager(string path, IDictionary<string, string> request)
     {
-        Console.WriteLine(path);
         (byte[], string, string) responseBytes;
         if (DebugMode(path))
         {
@@ -27,10 +26,7 @@ public class ResponseBuilder
         }
         return (AddTwoByteArrays(ResponseHeader(responseBytes.Item1, responseBytes.Item2, responseBytes.Item3), responseBytes.Item1), responseBytes.Item2);
     }
-
-
     
-
     private byte[] ResponseHeader(byte[] responseBytes, string error, string contentType)
     {
         var response = $"HTTP/1.1 {error} OK\r\n";
@@ -41,7 +37,7 @@ public class ResponseBuilder
         return ByteReader.ConvertTextToByte(response);
     }
 
-    (byte[], string, string) DebugBuilder(IDictionary<string, string> request)
+    private (byte[], string, string) DebugBuilder(IDictionary<string, string> request)
     {
         var topHtml = HtmlStringBuilder.Header();
         var bottomHtml = HtmlStringBuilder.Footer();
@@ -49,7 +45,7 @@ public class ResponseBuilder
         return (ByteReader.ConvertTextToByte(topHtml + bottomHtml), "200", "text/html");
     }
 
-    (byte[], string, string) SearchIndex()
+    private (byte[], string, string) SearchIndex()
     {
         var test = ReadHTML.ReadFilesInDirectory();
         foreach (var variable in test)
@@ -60,7 +56,7 @@ public class ResponseBuilder
                 return (ByteReader.ConvertFileToByte(result), "200", "text/html");
             }
         }
-        if (FileReader._directoryListing)
+        if (FileReader.DirectoryListing)
         {
             return _fileReader.ReadSpecifiedFiles("/");
         }
@@ -68,15 +64,15 @@ public class ResponseBuilder
     }
     
     
-    public static byte[] HtmlBuilder(string path)
+    public static (byte[], string, string) HtmlBuilder(string path)
     {
         IDictionary<string, string> fileNames = new Dictionary<string, string>();
         IDictionary<string, string> directoriesNames = new Dictionary<string, string>();
         var topHtml = HtmlStringBuilder.HeaderDl();
         var bottomHtml = HtmlStringBuilder.Footer();
-        if (!Directory.Exists(path.Trim('/')))
+        if (!Directory.Exists(path.Trim('/')) && !path.Equals("/"))
         {
-            return ByteReader.ConvertTextToByte(HtmlStringBuilder.Page404());
+            return (ByteReader.ConvertTextToByte(HtmlStringBuilder.Page404()), "404", "text/html");
         }
         var files = ReadHTML.ReadFilesInSpecifiedDirectory(path);
         var directories = ReadHTML.ReadSpecifiedDirectories(path);
@@ -101,7 +97,6 @@ public class ResponseBuilder
         {
             var test = path.TrimEnd('/');
             var index = test.LastIndexOf('/');
-            Console.WriteLine(index);
             test = test.Substring(0, index);
             if (test.Equals(""))
             {
@@ -125,7 +120,7 @@ public class ResponseBuilder
             
             topHtml += HtmlStringBuilder.Alink(ReadHTML.CleanPath(value), ReadHTML.CleanString(key), false, dir.LastAccessTime, fi1.Length);
         }
-        return ByteReader.ConvertTextToByte(topHtml + bottomHtml);
+        return (ByteReader.ConvertTextToByte(topHtml + bottomHtml), "200", "text/html");
     }
     
     private bool DebugMode(string path)
