@@ -807,3 +807,4 @@ $RECYCLE.BIN/
 
 # End of https://www.toptal.com/developers/gitignore/api/csharp,visualstudio,visualstudiocode,rider,jetbrains,windows,macos
 .idea/.idea.Httpd/.idea/projectSettingsUpdater.xml
+.idea/.idea.Httpd/.idea/.name

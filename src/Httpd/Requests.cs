@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Configuration;
-using System.IO;
-using System.IO.Compression;
+﻿using System.IO.Compression;
 
 namespace Httpd;
 
@@ -40,7 +36,6 @@ public class Requests
             }
             else
             {
-                contentLenght = request.Length;
                 keyVal = request.Split(": ");
  
             }
@@ -52,7 +47,6 @@ public class Requests
             count++;
         }
         var (bytes, status) = HandleRequest(verb, resource, _requests, body);
-        Console.WriteLine(body);
         serilog.HttpMethod = verb;
         serilog.Path = resource;
         serilog.Status = status;

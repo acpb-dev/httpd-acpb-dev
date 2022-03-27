@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Configuration;
+﻿using System.Configuration;
 
 namespace Httpd;
 
@@ -10,13 +8,11 @@ public class FileReader
     public static Dictionary<string, string> FileFormat = new();
     public static bool DirectoryListing;
 
-
     public (byte[], string, string) ReadSpecifiedFiles(string path)
     {
         var temp = path.Split(".");
         if (temp.Length < 2)
         {
-            Console.WriteLine(DirectoryListing);
             if (DirectoryListing)
             {
                 return ResponseBuilder.HtmlBuilder(path);

@@ -48,23 +48,31 @@ public class Server
         var seriLog = new SeriLog();
         
         // crashes here if spammed -v-v-v-
-        while(!streamReader.EndOfStream)
+        try
         {
-            
-            var currentLine = streamReader.ReadLine();
-            if (currentLine.Equals(""))
+            while(!streamReader.EndOfStream)
             {
-                var responsesByte = _requests.SeparatedRequest(request, seriLog);
-                stream.Socket.Send(responsesByte);
-                var totalTime = TimerStart.ElapsedMilliseconds - timerStart;
-                seriLog.SeriLogger(totalTime, responsesByte.Length);
-                request = "";
-            }
-            else
-            {
-                request = request + currentLine + "\r\n";
+
+                var currentLine = streamReader.ReadLine();
+                if (currentLine.Equals(""))
+                {
+                    var responsesByte = _requests.SeparatedRequest(request, seriLog);
+                    stream.Socket.Send(responsesByte);
+                    var totalTime = TimerStart.ElapsedMilliseconds - timerStart;
+                    seriLog.SeriLogger(totalTime, responsesByte.Length);
+                    request = "";
+                }
+                else
+                {
+                    request = request + currentLine + "\r\n";
+                }
             }
         }
-        stream.Socket.Close();
+        catch (Exception e)
+        {
+            //Console.WriteLine(e);
+            stream.Socket.Close();
+            throw;
+        }
     }
 }
