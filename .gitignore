@@ -806,3 +806,4 @@ $RECYCLE.BIN/
 # Additional files built by Visual Studio
 
 # End of https://www.toptal.com/developers/gitignore/api/csharp,visualstudio,visualstudiocode,rider,jetbrains,windows,macos
+.idea/.idea.Httpd/.idea/projectSettingsUpdater.xml
