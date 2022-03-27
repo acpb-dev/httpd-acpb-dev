@@ -46,7 +46,9 @@ public class Requests
             }
             count++;
         }
+        Console.WriteLine(body);
         var (bytes, status) = HandleRequest(verb, resource, _requests, body);
+        
         serilog.HttpMethod = verb;
         serilog.Path = resource;
         serilog.Status = status;
@@ -94,7 +96,7 @@ public class Requests
         return verb switch
         {
             "GET" => GetResponseCreator(resource),
-            "POST" => PostResponseCreator(),
+            "POST" => PostResponseCreator(headers),
             "PUT" => PutResponseCreator(),
             "PATCH" => PatchResponseCreator(),
             "DELETE" => DeleteResponseCreator(),
@@ -107,8 +109,13 @@ public class Requests
         var byteResponse = _responseBuilder.ResponseManager(path, _requests);
         return byteResponse;
     }
-    private (byte[], string) PostResponseCreator()
+    private (byte[], string) PostResponseCreator(IDictionary<string, string> body)
     {
+        //Console.WriteLine(body);
+        foreach (var (key, value) in body)
+        {
+            //Console.WriteLine(key + "\t " + value);
+        }
         return(ByteReader.ConvertTextToByte(HtmlStringBuilder.Page404()), "404");
     }
     private (byte[], string) PutResponseCreator()

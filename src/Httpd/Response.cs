@@ -1,16 +1,14 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-
-namespace Httpd;
+﻿namespace Httpd;
 
 public class ResponseBuilder
 {
     private readonly FileReader _fileReader = new();
-    
+    public Dictionary<string, string> Parameters = new();
+
     public (byte[], string) ResponseManager(string path, IDictionary<string, string> request)
     {
         (byte[], string, string) responseBytes;
+        path = Params(path);
         if (DebugMode(path))
         {
             responseBytes = DebugBuilder(request);
@@ -133,6 +131,40 @@ public class ResponseBuilder
             }
         }
         return false;
+    }
+
+    private string Params(string path)
+    {
+        var index = path.LastIndexOf('?');
+        if (index > -1)
+        {
+            var param = path.Remove(0, index);
+            path = path.Remove(index);
+            Console.WriteLine(path);
+            WriteParams(param);
+            return path;
+        }
+        return path;
+    }
+
+    private void WriteParams(string param)
+    {
+        var seperated = param.Split('&');
+        Console.WriteLine(seperated.Length);
+        if (seperated.Length > 1)
+        {
+            
+        }
+        foreach (var separate in seperated)
+        {
+            var temp = separate.Split('=');
+            if (Parameters.TryAdd(temp[0], temp[1]))
+            {
+                
+            }
+
+
+        }
     }
     
     private byte[] AddTwoByteArrays(byte[] array1, byte[] array2)

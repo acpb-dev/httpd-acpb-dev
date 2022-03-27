@@ -1,10 +1,6 @@
-﻿using System;
-using System.Diagnostics;
-using System.IO;
+﻿using System.Diagnostics;
 using System.Net.Sockets;
 using System.Text;
-using System.Threading.Tasks;
-
 
 namespace Httpd;
 
@@ -45,17 +41,17 @@ public class Server
         using var bufferedStream = new BufferedStream(stream);
         using var streamReader = new StreamReader(bufferedStream);
         var request = "";
+        var request2 = "";
         var seriLog = new SeriLog();
-        
-        // crashes here if spammed -v-v-v-
+        var count = 0;
         try
         {
             while(!streamReader.EndOfStream)
             {
-
                 var currentLine = streamReader.ReadLine();
                 if (currentLine.Equals(""))
                 {
+                    // Console.WriteLine(request);
                     var responsesByte = _requests.SeparatedRequest(request, seriLog);
                     stream.Socket.Send(responsesByte);
                     var totalTime = TimerStart.ElapsedMilliseconds - timerStart;
@@ -72,5 +68,6 @@ public class Server
         {
             Console.WriteLine(e);
         }
+        
     }
 }
