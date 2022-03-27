@@ -70,9 +70,7 @@ public class Server
         }
         catch (Exception e)
         {
-            //Console.WriteLine(e);
-            stream.Socket.Close();
-            throw;
+            Console.WriteLine(e);
         }
     }
 }
