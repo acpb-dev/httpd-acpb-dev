@@ -1,6 +1,6 @@
 namespace Httpd;
 
-public class ReadHTML
+public static class DirectoryFileReader
 {
     public static string[] ReadFilesInDirectory()
     {

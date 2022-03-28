@@ -22,7 +22,7 @@ public class FileReader
         var extension = temp[^1];
         if (!CheckExtension(FileFormat, extension).Equals("N/A"))
         {
-            if (ReadHTML.CheckFileExistance(path))
+            if (DirectoryFileReader.CheckFileExistance(path))
             {
                 return (ByteReader.ConvertFileToByte(path.TrimStart('/')), "200", CheckExtension(FileFormat, extension));
             }
@@ -34,7 +34,7 @@ public class FileReader
         
         if (!CheckExtension(ImagesFormat, extension).Equals("N/A"))
         {
-            if (ReadHTML.CheckFileExistance(path))
+            if (DirectoryFileReader.CheckFileExistance(path))
             {
                 return (ByteReader.ConvertBytes(path.TrimStart('/')), "200", CheckExtension(ImagesFormat, extension));
             }
