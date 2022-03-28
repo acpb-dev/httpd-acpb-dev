@@ -1,5 +1,3 @@
-using System.IO;
-
 namespace Httpd;
 
 public class ReadHTML

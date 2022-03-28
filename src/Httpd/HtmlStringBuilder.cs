@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-
-namespace Httpd;
+﻿namespace Httpd;
 
 public static class HtmlStringBuilder
 {

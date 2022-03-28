@@ -5,6 +5,7 @@ namespace Httpd;
 public static class Gzip
 {
     const int BUFFER_SIZE = 0x4000;
+    
     private static void Compress(Stream inputStream, Stream outputStream)
     {
         byte[] buffer = new byte[BUFFER_SIZE];
