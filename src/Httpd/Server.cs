@@ -25,8 +25,9 @@ public class Server
         while (true)
         {
             var client = await _listener.AcceptTcpClientAsync();
-            await Task.Run(() => HandleRequest(client));
+            var t = Task.Run(() => HandleRequest(client));
         }
+        // ReSharper disable once FunctionNeverReturns
     }
     
     private static void StartTimer()
@@ -36,27 +37,27 @@ public class Server
 
     private void HandleRequest(TcpClient client)
     {
+        
         var timerStart = TimerStart.ElapsedMilliseconds;
         var stream = client.GetStream();
         using var bufferedStream = new BufferedStream(stream);
         using var streamReader = new StreamReader(bufferedStream);
         var request = "";
-        var request2 = "";
         var seriLog = new SeriLog();
-        var count = 0;
         try
         {
             while(!streamReader.EndOfStream)
             {
                 var currentLine = streamReader.ReadLine();
+                
                 if (currentLine.Equals(""))
                 {
                     // Console.WriteLine(request);
                     var responsesByte = _requests.SeparatedRequest(request, seriLog);
+                    request = "";
                     stream.Socket.Send(responsesByte);
                     var totalTime = TimerStart.ElapsedMilliseconds - timerStart;
                     seriLog.SeriLogger(totalTime, responsesByte.Length);
-                    request = "";
                 }
                 else
                 {
@@ -68,6 +69,7 @@ public class Server
         {
             Console.WriteLine(e);
         }
+
         
     }
 }

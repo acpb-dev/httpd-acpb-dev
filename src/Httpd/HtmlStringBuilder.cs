@@ -23,9 +23,19 @@ public static class HtmlStringBuilder
         return "</div><script src=\"https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js\" integrity=\"sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p\" crossorigin=\"anonymous\"></script> </body> </html>";
     }
 
+    public static string Params(IDictionary<string, string> param)
+    {
+        var html = "<h1 style=\"padding-top: .5rem;\">Params</h1> <div class=\"row\"> <div class=\"col-6\"> <h5> <a>Key</a> </h5> </div> <div class=\"col-6\"> <h5> <a>Value</a> </h5> </div> </div> <div class=\"row\"> ----------------------------------------------------------------------------------------------------------------------------------------- </div>";
+        foreach (var (key, value) in param)
+        {
+            html += $"<div class=\"row\"  style=\"margin-top: .2rem;\"> <div class=\"col-6\"> <div> <a>{key} :</a> </div> </div> <div class=\"col-6\"> <div> <a>{value}</a> </div> </div></div>";
+        }
+        return html;
+    }
+
     public static string Alink(string href, string value, bool toUpper, DateTime date, double size)
     {
-        var sizeString = "";
+        string sizeString;
         if (size == 0)
         {
             sizeString = "-";
@@ -48,7 +58,7 @@ public static class HtmlStringBuilder
         var html = "";
         foreach (var (key, value) in request)
         {
-            html += $"<div class=\"row\"  style=\"margin-top: .2rem;\"> <div class=\"col-6\"> <div> <a>{key}:</a> </div> </div> <div class=\"col-6\"> <div> <a>{value}</a> </div> </div></div>";
+            html += $"<div class=\"row\"  style=\"margin-top: .2rem;\"> <div class=\"col-6\"> <div> <a>{key} :</a> </div> </div> <div class=\"col-6\"> <div> <a>{value}</a> </div> </div></div>";
         }
         return html;
     }

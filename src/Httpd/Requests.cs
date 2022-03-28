@@ -5,7 +5,7 @@ namespace Httpd;
 public class Requests
 {
     private readonly ResponseBuilder _responseBuilder = new();
-    private readonly IDictionary<string, string> _requests = new Dictionary<string, string>();
+    private IDictionary<string, string> _requests = new Dictionary<string, string>();
     public byte[] SeparatedRequest(string request, SeriLog serilog)
     {
         _requests.Clear();
@@ -46,7 +46,6 @@ public class Requests
             }
             count++;
         }
-        Console.WriteLine(body);
         var (bytes, status) = HandleRequest(verb, resource, _requests, body);
         
         serilog.HttpMethod = verb;
@@ -112,10 +111,10 @@ public class Requests
     private (byte[], string) PostResponseCreator(IDictionary<string, string> body)
     {
         //Console.WriteLine(body);
-        foreach (var (key, value) in body)
-        {
-            //Console.WriteLine(key + "\t " + value);
-        }
+        // foreach (var (key, value) in body)
+        // {
+        //     Console.WriteLine(key + "\t " + value);
+        // }
         return(ByteReader.ConvertTextToByte(HtmlStringBuilder.Page404()), "404");
     }
     private (byte[], string) PutResponseCreator()

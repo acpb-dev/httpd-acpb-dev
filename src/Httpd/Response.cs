@@ -3,12 +3,17 @@
 public class ResponseBuilder
 {
     private readonly FileReader _fileReader = new();
-    public Dictionary<string, string> Parameters = new();
+    private IDictionary<string, string> Parameters = new Dictionary<string, string>();
 
     public (byte[], string) ResponseManager(string path, IDictionary<string, string> request)
     {
+        Parameters.Clear();
         (byte[], string, string) responseBytes;
-        path = Params(path);
+        if (path.Contains('?'))
+        {
+            path = Params(path);
+        }
+        
         if (DebugMode(path))
         {
             responseBytes = DebugBuilder(request);
@@ -39,6 +44,11 @@ public class ResponseBuilder
         var topHtml = HtmlStringBuilder.Header();
         var bottomHtml = HtmlStringBuilder.Footer();
         topHtml += HtmlStringBuilder.Debug(request);
+        if (Parameters.Count > 0)
+        {
+            topHtml += HtmlStringBuilder.Params(Parameters);
+        }
+        
         return (ByteReader.ConvertTextToByte(topHtml + bottomHtml), "200", "text/html");
     }
 
@@ -135,14 +145,29 @@ public class ResponseBuilder
 
     private string Params(string path)
     {
-        var index = path.LastIndexOf('?');
-        if (index > -1)
+        var indexQ = path.LastIndexOf('?'); // 12
+        var indexS = path.LastIndexOf('/'); // 21
+        if (indexS > indexQ)
         {
-            var param = path.Remove(0, index);
-            path = path.Remove(index);
-            Console.WriteLine(path);
-            WriteParams(param);
-            return path;
+            
+            if (indexQ > -1 && indexS > 1)
+            {
+                var param = path.Remove(indexS);
+                param = param.Remove(0, indexQ+1);
+                path = path.Remove(indexQ, indexS - indexQ);
+                WriteParams(param);
+                return path;
+            }
+        }
+        else
+        {
+            if (indexQ > -1)
+            {
+                var param = path.Remove(0, indexQ+1);
+                path = path.Remove(indexQ);
+                WriteParams(param);
+                return path;
+            }
         }
         return path;
     }
@@ -150,20 +175,14 @@ public class ResponseBuilder
     private void WriteParams(string param)
     {
         var seperated = param.Split('&');
-        Console.WriteLine(seperated.Length);
-        if (seperated.Length > 1)
-        {
-            
-        }
         foreach (var separate in seperated)
         {
             var temp = separate.Split('=');
-            if (Parameters.TryAdd(temp[0], temp[1]))
+            if (temp.Length > 1)
             {
-                
+                Parameters.TryAdd(temp[0], temp[1]);
+                //Console.WriteLine(temp[0] + ": " + temp[1]);
             }
-
-
         }
     }
     
