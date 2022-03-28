@@ -72,11 +72,14 @@ public class Requests
     }
     private (byte[], string) PostResponseCreator(IDictionary<string, string> header, char[] body)
     {
+        var bodyS = new string(body);
+        Console.WriteLine(bodyS);
         //Console.WriteLine(body);
         // foreach (var (key, value) in body)
         // {
         //     Console.WriteLine(key + "\t " + value);
         // }
+        return (Array.Empty<byte>(), "404");
         return(ByteReader.ConvertTextToByte(HtmlStringBuilder.Page404()), "404");
     }
     private (byte[], string) PutResponseCreator()

@@ -63,22 +63,19 @@ public class Server
                     timerStart = TimerStart.ElapsedMilliseconds;
                     // Get request // post
                 }
-                if (currentLine.Split().Length == 3)
+                if (currentLine.Split().Length == 3 && currentLine.Contains("HTTP/1.1"))
                 {
-                    //Console.WriteLine(currentLine);
                     var split = currentLine.Split();
-                    if (split[2].Equals("HTTP/1.1"))
-                    {
-                        verb = split[0];
-                        resource = split[1];
-                    }
+                    verb = split[0];
+                    resource = split[1];
                 }
-                else if (currentLine.Split(": ").Length > 2)
+                else if (currentLine.Split(":").Length > 1)
                 {
-                    var split = currentLine.Split(": ");
+                    var split = currentLine.Split(":");
                     if (split[0] is "Content-Length")
                     {
-                        contentLength = int.Parse(split[1]); 
+                        contentLength = int.Parse(split[1]);
+                        // Console.WriteLine(contentLength);
                     }
                     requesttDictionary.Add(split[0], split[1]);
                 }
@@ -86,7 +83,6 @@ public class Server
                 {
                     var body = new char[contentLength];
                     streamReader.ReadBlock(body, 0, contentLength);
-                    // Console.WriteLine(body);
                     var responsesByte = _requests.HandleRequest(verb, resource, requesttDictionary, body, seriLog);
                     stream.Socket.Send(responsesByte);
                     var totalTime = TimerStart.ElapsedMilliseconds - timerStart;
