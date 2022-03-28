@@ -1,29 +1,31 @@
-﻿namespace Httpd;
+﻿using System.IO.Compression;
+
+namespace Httpd;
 
 public class Requests
 {
     private readonly ResponseBuilder _responseBuilder = new();
+    private IDictionary<string, string> _requests = new Dictionary<string, string>();
     
-    public byte[] HandleRequest(string verb, string resource, IDictionary<string, string> requesttDictionary, char[] body, SeriLog serilog)
+    public byte[] HandleRequest(string verb, string resource, IDictionary<string, string> header, char[] body, SeriLog serilog)
     {
         if (verb is "GET")
         {
-            var (bytes, status) = GetResponseCreator(resource, requesttDictionary);
+            var (bytes, status) = GetResponseCreator(resource);
             serilog.HttpMethod = verb;
             serilog.Path = resource;
             serilog.Status = status;
             return bytes;
-            return Gzip.CheckGZip(requesttDictionary, bytes);
         }
         else if (verb is "POST")
         {
             
-            var (bytes, status) = PostResponseCreator(resource, requesttDictionary, body);
+            var (bytes, status) = PostResponseCreator(header, body);
             serilog.HttpMethod = verb;
             serilog.Path = resource;
             serilog.Status = status;
             return bytes;
-            return Gzip.CheckGZip(requesttDictionary, bytes);
+            
         }
         else if (verb is "PUT")
         {
@@ -31,7 +33,8 @@ public class Requests
             serilog.HttpMethod = verb;
             serilog.Path = resource;
             serilog.Status = status;
-            return Gzip.CheckGZip(requesttDictionary, bytes);
+            return bytes;
+            
         }
         else if (verb is "PATCH")
         {
@@ -39,7 +42,8 @@ public class Requests
             serilog.HttpMethod = verb;
             serilog.Path = resource;
             serilog.Status = status;
-            return Gzip.CheckGZip(requesttDictionary, bytes);
+            return bytes;
+            
         }
         else if (verb is "DELETE")
         {
@@ -47,30 +51,36 @@ public class Requests
             serilog.HttpMethod = verb;
             serilog.Path = resource;
             serilog.Status = status;
-            return Gzip.CheckGZip(requesttDictionary, bytes);
+            return bytes;
+            
         }
         else
         {
-            var (bytes, status) = GetResponseCreator(resource, requesttDictionary);
+            var (bytes, status) = GetResponseCreator(resource);
             serilog.HttpMethod = verb;
             serilog.Path = resource;
             serilog.Status = status;
-            return Gzip.CheckGZip(requesttDictionary, bytes);
+            return bytes;
         }
-
-
+        return Array.Empty<byte>();
     }
 
-    private (byte[], string) GetResponseCreator(string path, IDictionary<string, string> request)
+    private (byte[], string) GetResponseCreator(string path)
     {
-        var byteResponse = _responseBuilder.ResponseManager(path, request, "");
+        var byteResponse = _responseBuilder.ResponseManager(path, _requests);
         return byteResponse;
     }
-    private (byte[], string) PostResponseCreator(string path, IDictionary<string, string> request, char[] body)
+    private (byte[], string) PostResponseCreator(IDictionary<string, string> header, char[] body)
     {
         var bodyS = new string(body);
-        var byteResponse = _responseBuilder.ResponseManager(path, request, bodyS);
-        return byteResponse;
+        Console.WriteLine(bodyS);
+        //Console.WriteLine(body);
+        // foreach (var (key, value) in body)
+        // {
+        //     Console.WriteLine(key + "\t " + value);
+        // }
+        return (Array.Empty<byte>(), "404");
+        return(ByteReader.ConvertTextToByte(HtmlStringBuilder.Page404()), "404");
     }
     private (byte[], string) PutResponseCreator()
     {
@@ -84,4 +94,34 @@ public class Requests
     {
         return(ByteReader.ConvertTextToByte(HtmlStringBuilder.Page404()), "404");
     }
+    
+    private static byte[] Compress(byte[] data)
+    {
+        using var compressedStream = new MemoryStream();
+        using var zipStream = new GZipStream(compressedStream, CompressionMode.Compress);
+        zipStream.Write(data, 0, data.Length);
+        zipStream.Close();
+        return compressedStream.ToArray();
+    }
+    
+    // private bool CheckGZip()
+    // {
+    //     foreach (var (key, value) in _requests)
+    //     {
+    //         //Console.WriteLine(key + " " + value);
+    //         if (key.Equals("Accept-Encoding"))
+    //         {
+    //             var split = value.Split(",");
+    //             foreach (var val in split)
+    //             {
+    //                 var valTrimmed = val.Trim();
+    //                 if (valTrimmed.Equals("gzip"))
+    //                 {
+    //                     return true;
+    //                 }
+    //             }
+    //         }
+    //     }
+    //     return false;
+    // }
 }

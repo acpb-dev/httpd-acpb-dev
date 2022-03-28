@@ -2,10 +2,10 @@
 
 public class ResponseBuilder
 {
+    private readonly FileReader _fileReader = new();
     private IDictionary<string, string> Parameters = new Dictionary<string, string>();
-    private IDictionary<string, string> PostValues = new Dictionary<string, string>();
 
-    public (byte[], string) ResponseManager(string path, IDictionary<string, string> request, string postResponse)
+    public (byte[], string) ResponseManager(string path, IDictionary<string, string> request)
     {
         Parameters.Clear();
         (byte[], string, string) responseBytes;
@@ -24,7 +24,7 @@ public class ResponseBuilder
         }
         else
         {
-            responseBytes = FileReader.ReadSpecifiedFiles(path);
+            responseBytes = _fileReader.ReadSpecifiedFiles(path);
         }
         return (AddTwoByteArrays(ResponseHeader(responseBytes.Item1, responseBytes.Item2, responseBytes.Item3), responseBytes.Item1), responseBytes.Item2);
     }
@@ -34,7 +34,6 @@ public class ResponseBuilder
         var response = $"HTTP/1.1 {error} OK\r\n";
         response += $"Content-Length: {responseBytes.Length}\r\n";
         response += $"Content-Type: {contentType}\r\n";
-        // response += "Content-Encoding: gzip\r\n";
         // response += "Connection: close\r\n";
         response += "\r\n";
         return ByteReader.ConvertTextToByte(response);
@@ -66,7 +65,7 @@ public class ResponseBuilder
         }
         if (FileReader.DirectoryListing)
         {
-            return FileReader.ReadSpecifiedFiles("/");
+            return _fileReader.ReadSpecifiedFiles("/");
         }
         return (ByteReader.ConvertTextToByte(HtmlStringBuilder.Page404()), "404", "text/html");
     }
@@ -146,8 +145,8 @@ public class ResponseBuilder
 
     private string Params(string path)
     {
-        var indexQ = path.LastIndexOf('?');
-        var indexS = path.LastIndexOf('/');
+        var indexQ = path.LastIndexOf('?'); // 12
+        var indexS = path.LastIndexOf('/'); // 21
         if (indexS > indexQ)
         {
             
@@ -156,7 +155,7 @@ public class ResponseBuilder
                 var param = path.Remove(indexS);
                 param = param.Remove(0, indexQ+1);
                 path = path.Remove(indexQ, indexS - indexQ);
-                WriteParamsOrPost(param, true);
+                WriteParams(param);
                 return path;
             }
         }
@@ -166,14 +165,14 @@ public class ResponseBuilder
             {
                 var param = path.Remove(0, indexQ+1);
                 path = path.Remove(indexQ);
-                WriteParamsOrPost(param, true);
+                WriteParams(param);
                 return path;
             }
         }
         return path;
     }
 
-    private void WriteParamsOrPost(string param, bool isParam)
+    private void WriteParams(string param)
     {
         var seperated = param.Split('&');
         foreach (var separate in seperated)
@@ -181,14 +180,8 @@ public class ResponseBuilder
             var temp = separate.Split('=');
             if (temp.Length > 1)
             {
-                if (isParam)
-                {
-                    Parameters.TryAdd(temp[0], temp[1]);
-                }
-                else
-                {
-                    PostValues.TryAdd(temp[0], temp[1]);
-                }
+                Parameters.TryAdd(temp[0], temp[1]);
+                //Console.WriteLine(temp[0] + ": " + temp[1]);
             }
         }
     }
@@ -199,5 +192,22 @@ public class ResponseBuilder
         array1.CopyTo(z, 0);
         array2.CopyTo(z, array1.Length);
         return z;
+    }
+
+    private static string CheckFileExtension(string path)
+    {
+        var temp = path.Split(".");
+        var extension = temp[^1];
+        var fileExtension = FileReader.CheckExtension(FileReader.ImagesFormat, extension);
+        if (!fileExtension.Equals("N/A"))
+        {
+            return fileExtension;
+        }
+        fileExtension = FileReader.CheckExtension(FileReader.FileFormat, extension);
+        if(!fileExtension.Equals("N/A"))
+        {
+            return fileExtension;
+        }
+        return "text/html";
     }
 }

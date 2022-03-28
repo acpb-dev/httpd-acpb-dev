@@ -4,11 +4,11 @@ namespace Httpd;
 
 public class FileReader
 {
-    private static Dictionary<string, string> ImagesFormat = new();
-    private static Dictionary<string, string> FileFormat = new();
+    public static Dictionary<string, string> ImagesFormat = new();
+    public static Dictionary<string, string> FileFormat = new();
     public static bool DirectoryListing;
 
-    public static (byte[], string, string) ReadSpecifiedFiles(string path)
+    public (byte[], string, string) ReadSpecifiedFiles(string path)
     {
         var temp = path.Split(".");
         if (temp.Length < 2)
