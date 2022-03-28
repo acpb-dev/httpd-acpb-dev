@@ -34,7 +34,7 @@ public class ResponseBuilder
         var response = $"HTTP/1.1 {error} OK\r\n";
         response += $"Content-Length: {responseBytes.Length}\r\n";
         response += $"Content-Type: {contentType}\r\n";
-        response += "Connection: close\r\n";
+        // response += "Connection: close\r\n";
         response += "\r\n";
         return ByteReader.ConvertTextToByte(response);
     }
