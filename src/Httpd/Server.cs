@@ -37,7 +37,6 @@ public class Server
 
     private void HandleRequest(TcpClient client)
     {
-        
         var timerStart = TimerStart.ElapsedMilliseconds;
         var stream = client.GetStream();
         using var bufferedStream = new BufferedStream(stream);
@@ -49,15 +48,14 @@ public class Server
             while(!streamReader.EndOfStream)
             {
                 var currentLine = streamReader.ReadLine();
-                
-                if (currentLine.Equals(""))
+                if (currentLine is "")
                 {
                     // Console.WriteLine(request);
                     var responsesByte = _requests.SeparatedRequest(request, seriLog);
-                    request = "";
                     stream.Socket.Send(responsesByte);
                     var totalTime = TimerStart.ElapsedMilliseconds - timerStart;
                     seriLog.SeriLogger(totalTime, responsesByte.Length);
+                    request = "";
                 }
                 else
                 {
@@ -67,9 +65,7 @@ public class Server
         }
         catch (Exception e)
         {
-            Console.WriteLine(e);
+            // Console.WriteLine(e);
         }
-
-        
     }
 }

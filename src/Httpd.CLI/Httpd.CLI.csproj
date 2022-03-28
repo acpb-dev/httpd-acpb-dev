@@ -21,6 +21,10 @@
       <PackageReference Include="Serilog.Sinks.File" Version="5.0.1-dev-00947" />
       <PackageReference Include="System.Configuration.ConfigurationManager" Version="7.0.0-preview.2.22152.2" />
     </ItemGroup>
+
+    <ItemGroup>
+      <Folder Include="Config" />
+    </ItemGroup>
     
 
 </Project>

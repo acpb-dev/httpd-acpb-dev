@@ -51,13 +51,15 @@ public class Requests
         serilog.HttpMethod = verb;
         serilog.Path = resource;
         serilog.Status = status;
+        //Console.WriteLine(5);
+        return bytes;
         // if (CheckGZip())
         // {
         //     return Compress(bytes);
         // }
 
 
-        return bytes;
+        
     }
 
     // private bool CheckGZip()
