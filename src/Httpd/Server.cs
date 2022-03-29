@@ -5,12 +5,12 @@ namespace Httpd;
 
 public class Server
 {
-    public static Stopwatch TimerStart = new();
+    private static Stopwatch _timer = new();
     private readonly TcpListener _listener;
     private int Port { get; set; }
-    private readonly Requests _requests = new();
-    public static int ThreadCount = 0;
-    public static int id = 1;
+    
+    private static int _threadCount = 0;
+    private static int _id = 1;
     public Server(int port)
     {
         Port = port;
@@ -33,76 +33,47 @@ public class Server
     
     private static void StartTimer()
     {
-        TimerStart = Stopwatch.StartNew();
+        _timer = Stopwatch.StartNew();
     }
 
     private void HandleRequest(TcpClient client)
     {
-        var idd = id++;
-        ThreadCount++;
-        var pagesServed = 0;
-        // Console.WriteLine("Enter Thread " + idd + " " + ThreadCount);
-        var timerStart = TimerStart.ElapsedMilliseconds;
-        var stream = client.GetStream();
-        using var bufferedStream = new BufferedStream(stream);
-        using var streamReader = new StreamReader(bufferedStream);
-        var request = "";
-        var seriLog = new SeriLog();
-        var verb = "";
-        var resource = "";
-        var contentLength = 0;
-        IDictionary<string, string> requesttDictionary = new Dictionary<string, string>();
-        try
+        using (var manage = new ManageRequest())
         {
-            while(!streamReader.EndOfStream)
+            var idd = _id++;
+            _threadCount++;
+            var pagesServed = 0;
+            // Console.WriteLine("Enter Thread " + idd + " " + ThreadCount);
+            using var bufferedStream = new BufferedStream(manage.GetStream(client));
+            using var streamReader = new StreamReader(bufferedStream);
+            try
             {
-                var currentLine = streamReader.ReadLine();
-                if (request is "")
+                while (!streamReader.EndOfStream)
                 {
-                    timerStart = TimerStart.ElapsedMilliseconds;
-                    // Get request // post
-                }
-                if (currentLine.Split().Length == 3 && currentLine.Contains("HTTP/1.1"))
-                {
-                    var split = currentLine.Split();
-                    verb = split[0];
-                    resource = split[1];
-                }
-                else if (currentLine.Split(":").Length > 1)
-                {
-                    var split = currentLine.Split(":");
-                    if (split[0] is "Content-Length")
+                    manage.InitialiseStartTime(_timer);
+                    var currentLine = streamReader.ReadLine();
+                    manage.CheckLine(currentLine, _timer);
+                    if (currentLine is "")
                     {
-                        contentLength = int.Parse(split[1]);
-                        // Console.WriteLine(contentLength);
+                        var responsesByte = manage.CreateResponse(streamReader);
+                        manage.Stream.Socket.Send(responsesByte);
+                        manage.PrintSeriLog(responsesByte.Length, _timer);
+                        manage.Dispose();
+                        // pagesServed++;
                     }
-                    requesttDictionary.Add(split[0], split[1]);
-                }
-                if (currentLine is "")
-                {
-                    var body = new char[contentLength];
-                    streamReader.ReadBlock(body, 0, contentLength);
-                    var responsesByte = _requests.HandleRequest(verb, resource, requesttDictionary, body, seriLog);
-                    stream.Socket.Send(responsesByte);
-                    var totalTime = TimerStart.ElapsedMilliseconds - timerStart;
-                    seriLog.SeriLogger(totalTime, responsesByte.Length);
-                    request = "";
-                    contentLength= 0;
-                    pagesServed++;
-                    requesttDictionary.Clear();
-                }
-                else
-                {
-                    request = request + currentLine + "\r\n";
+                    else
+                    {
+                        manage.Request = manage.Request + currentLine + "\r\n";
+                    }
                 }
             }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+            }
+            _threadCount--;
+            //Console.WriteLine("Exit Thread " + idd + " Count " + ThreadCount + " Page served " + pagesServed);
         }
-        catch (Exception e)
-        {
-            Console.WriteLine(e);
-        }
-
-        ThreadCount--;
-        //Console.WriteLine("Exit Thread " + idd + " Count " + ThreadCount + " Page served " + pagesServed);
     }
+    
 }

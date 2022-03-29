@@ -50,7 +50,6 @@ public class FileReader
         
         foreach (var (key, value) in fileDictionary)
         {
-            Console.WriteLine(key + " " + value);
             ImagesFormat.Add(key, value);
         }
 
@@ -59,7 +58,6 @@ public class FileReader
         Dictionary<string,string> textDictionary = textSupported.Cast<DictionaryEntry>().ToDictionary(d => (string)d.Key, d => (string)d.Value);
         foreach (var (key, value) in textDictionary)
         {
-            Console.WriteLine(key + " " + value);
             FileFormat.Add(key, value);
         }
         var directoryListing = ConfigurationManager.AppSettings["Directory_Listing"];
