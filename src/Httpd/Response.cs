@@ -9,6 +9,10 @@ public class ResponseBuilder
     {
         Parameters.Clear();
         (byte[], string, string) responseBytes;
+        if (!postResponse.Equals(""))
+        {
+            WriteParamsOrPost(postResponse, true);
+        }
         if (path.Contains('?'))
         {
             path = Params(path);
@@ -46,6 +50,11 @@ public class ResponseBuilder
         var bottomHtml = HtmlStringBuilder.Footer();
         topHtml += HtmlStringBuilder.Debug(request);
         if (Parameters.Count > 0)
+        {
+            topHtml += HtmlStringBuilder.Params(Parameters);
+        }
+
+        if (PostValues.Count > 0)
         {
             topHtml += HtmlStringBuilder.Params(Parameters);
         }
@@ -187,6 +196,7 @@ public class ResponseBuilder
                 }
                 else
                 {
+                    Console.WriteLine(temp[0] + " & " + temp[1]);
                     PostValues.TryAdd(temp[0], temp[1]);
                 }
             }
