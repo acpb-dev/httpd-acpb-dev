@@ -13,7 +13,6 @@ public class Requests
             serilog.Path = resource;
             serilog.Status = status;
             return bytes;
-            return Gzip.CheckGZip(requesttDictionary, bytes);
         }
         else if (verb is "POST")
         {
@@ -23,7 +22,6 @@ public class Requests
             serilog.Path = resource;
             serilog.Status = status;
             return bytes;
-            return Gzip.CheckGZip(requesttDictionary, bytes);
         }
         else if (verb is "PUT")
         {
@@ -31,7 +29,7 @@ public class Requests
             serilog.HttpMethod = verb;
             serilog.Path = resource;
             serilog.Status = status;
-            return Gzip.CheckGZip(requesttDictionary, bytes);
+            return bytes;
         }
         else if (verb is "PATCH")
         {
@@ -39,7 +37,7 @@ public class Requests
             serilog.HttpMethod = verb;
             serilog.Path = resource;
             serilog.Status = status;
-            return Gzip.CheckGZip(requesttDictionary, bytes);
+            return bytes;
         }
         else if (verb is "DELETE")
         {
@@ -47,7 +45,7 @@ public class Requests
             serilog.HttpMethod = verb;
             serilog.Path = resource;
             serilog.Status = status;
-            return Gzip.CheckGZip(requesttDictionary, bytes);
+            return bytes;
         }
         else
         {
@@ -55,10 +53,8 @@ public class Requests
             serilog.HttpMethod = verb;
             serilog.Path = resource;
             serilog.Status = status;
-            return Gzip.CheckGZip(requesttDictionary, bytes);
+            return bytes;
         }
-
-
     }
 
     private (byte[], string) GetResponseCreator(string path, IDictionary<string, string> request)
@@ -69,6 +65,7 @@ public class Requests
     private (byte[], string) PostResponseCreator(string path, IDictionary<string, string> request, char[] body)
     {
         var bodyS = new string(body);
+        Console.WriteLine(bodyS);
         var byteResponse = _responseBuilder.ResponseManager(path, request, bodyS);
         return byteResponse;
     }
