@@ -30,15 +30,24 @@ public class ResponseBuilder
         {
             responseBytes = FileReader.ReadSpecifiedFiles(path);
         }
-        return (AddTwoByteArrays(ResponseHeader(responseBytes.Item1, responseBytes.Item2, responseBytes.Item3), responseBytes.Item1), responseBytes.Item2);
+
+        if (Gzip.IsGzipEncode(request))
+        {
+            responseBytes.Item1 = Gzip.GZip(responseBytes.Item1);
+        }
+        
+        return (AddTwoByteArrays(ResponseHeader(responseBytes.Item1, responseBytes.Item2, responseBytes.Item3, Gzip.IsGzipEncode(request)), responseBytes.Item1), responseBytes.Item2);
     }
     
-    private byte[] ResponseHeader(byte[] responseBytes, string error, string contentType)
+    private byte[] ResponseHeader(byte[] responseBytes, string error, string contentType, bool gzip)
     {
         var response = $"HTTP/1.1 {error} OK\r\n";
         response += $"Content-Length: {responseBytes.Length}\r\n";
         response += $"Content-Type: {contentType}\r\n";
-        // response += "Content-Encoding: gzip\r\n";
+        if (gzip)
+        {
+            response += "Content-Encoding: gzip\r\n";
+        }
         // response += "Connection: close\r\n";
         response += "\r\n";
         return ByteReader.ConvertTextToByte(response);
