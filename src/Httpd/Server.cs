@@ -22,7 +22,6 @@ public class Server
         _listener.Start();
         Console.WriteLine($"Server has started on port {Port}.");
         StartTimer();
-        
         while (true)
         {
             var client = await _listener.AcceptTcpClientAsync();

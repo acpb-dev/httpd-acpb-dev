@@ -7,22 +7,20 @@ public class ManageRequest : IDisposable
 {
     
     private IDictionary<string, string> RequestDictionary = new Dictionary<string, string>();
-    private SeriLog seriLog = new SeriLog();
-    public NetworkStream Stream { get; set; }
-    private string Verb { get; set; }
-    private string Resource { get; set; }
+    private readonly SeriLog _seriLog = new SeriLog();
     private int ContentLength { get; set; }
     private long StartTime { get; set; }
-    public string Request { get; set; }
-    
+    public NetworkStream Stream { get; set; } = null!;
+    private string Verb { get; set; } = null!;
+    private string Resource { get; set; } = null!;
+    public string Request { get; set; } = null!;
 
-    
     public void InitialiseStartTime(Stopwatch timerStart)
     {
         StartTime = timerStart.ElapsedMilliseconds;
     }
 
-    public char[] ReadBody(StreamReader streamReader)
+    private char[] ReadBody(StreamReader streamReader)
     {
         var body = new char[ContentLength];
         streamReader.ReadBlock(body, 0, ContentLength);
@@ -62,12 +60,12 @@ public class ManageRequest : IDisposable
     {
         Requests requests = new();
         
-        return requests.HandleRequest(Verb, Resource, RequestDictionary, ReadBody(streamReader), seriLog);
+        return requests.HandleRequest(Verb, Resource, RequestDictionary, ReadBody(streamReader), _seriLog);
     }
 
     public void PrintSeriLog(int length, Stopwatch timer)
     {
-        seriLog.SeriLogger(timer.ElapsedMilliseconds - StartTime, length);
+        _seriLog.SeriLogger(timer.ElapsedMilliseconds - StartTime, length);
     }
     
     public void Dispose()

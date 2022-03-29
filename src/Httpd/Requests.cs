@@ -17,7 +17,6 @@ public class Requests
         else if (verb is "POST")
         {
             var (bytes, status) = PostResponseCreator(resource, requesttDictionary, body);
-            Console.WriteLine(body);
             serilog.HttpMethod = verb;
             serilog.Path = resource;
             serilog.Status = status;
@@ -65,7 +64,6 @@ public class Requests
     private (byte[], string) PostResponseCreator(string path, IDictionary<string, string> request, char[] body)
     {
         var bodyS = new string(body);
-        Console.WriteLine(bodyS);
         var byteResponse = _responseBuilder.ResponseManager(path, request, bodyS);
         return byteResponse;
     }
