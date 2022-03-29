@@ -1,4 +1,5 @@
-﻿using System.Configuration;
+﻿using System.Collections;
+using System.Configuration;
 
 namespace Httpd;
 
@@ -44,22 +45,25 @@ public class FileReader
 
     public static void ReadAppConfig()
     {
-        var fileSupported = ConfigurationManager.AppSettings["fileSupported"];
-        var splitFileSupported = fileSupported.Split();
-        for (int i = 0; i < splitFileSupported.Length; i++)
+        var fileSupported = (Hashtable)ConfigurationManager.GetSection("fileSupported");
+        Dictionary<string,string> fileDictionary = fileSupported.Cast<DictionaryEntry>().ToDictionary(d => (string)d.Key, d => (string)d.Value);
+        
+        foreach (var (key, value) in fileDictionary)
         {
-            var split = splitFileSupported[i].Split(':');
-            ImagesFormat.Add(split[0], split[1]);
+            Console.WriteLine(key + " " + value);
+            ImagesFormat.Add(key, value);
         }
-        fileSupported = ConfigurationManager.AppSettings["testFileSupported"];
-        splitFileSupported = fileSupported.Split();
-        for (int i = 0; i < splitFileSupported.Length; i++)
+
+        Console.WriteLine();
+        var textSupported = (Hashtable)ConfigurationManager.GetSection("testFileSupported");
+        Dictionary<string,string> textDictionary = textSupported.Cast<DictionaryEntry>().ToDictionary(d => (string)d.Key, d => (string)d.Value);
+        foreach (var (key, value) in textDictionary)
         {
-            var split = splitFileSupported[i].Split(':');
-            FileFormat.Add(split[0], split[1]);
+            Console.WriteLine(key + " " + value);
+            FileFormat.Add(key, value);
         }
         var directoryListing = ConfigurationManager.AppSettings["Directory_Listing"];
-        if (directoryListing.Equals("true"))
+        if (directoryListing != null && directoryListing.Equals("true"))
         {
             DirectoryListing = true;
         }
