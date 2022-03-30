@@ -2,12 +2,12 @@
 
 public class ResponseBuilder
 {
-    private IDictionary<string, string> Parameters = new Dictionary<string, string>();
-    private IDictionary<string, string> PostValues = new Dictionary<string, string>();
+    private readonly IDictionary<string, string> _parameters = new Dictionary<string, string>();
+    private readonly IDictionary<string, string> _postValues = new Dictionary<string, string>();
 
     public (byte[], string) ResponseManager(string path, IDictionary<string, string> request, string postResponse)
     {
-        Parameters.Clear();
+        _parameters.Clear();
         (byte[], string, string) responseBytes;
         if (!postResponse.Equals(""))
         {
@@ -58,14 +58,14 @@ public class ResponseBuilder
         var topHtml = Httpd.HtmlBuilder.HeaderDebug();
         var bottomHtml = Httpd.HtmlBuilder.Footer();
         topHtml += Httpd.HtmlBuilder.Debug(request);
-        if (Parameters.Count > 0)
+        if (_parameters.Count > 0)
         {
-            topHtml += Httpd.HtmlBuilder.Parameters(Parameters);
+            topHtml += Httpd.HtmlBuilder.Parameters(_parameters);
         }
 
-        if (PostValues.Count > 0)
+        if (_postValues.Count > 0)
         {
-            topHtml += Httpd.HtmlBuilder.Parameters(Parameters);
+            topHtml += Httpd.HtmlBuilder.Parameters(_parameters);
         }
         
         return (ByteReader.ConvertTextToByte(topHtml + bottomHtml), "200", "text/html");
@@ -184,12 +184,12 @@ public class ResponseBuilder
             if (temp.Length <= 1) continue;
             if (isParam)
             {
-                Parameters.TryAdd(temp[0], temp[1]);
+                _parameters.TryAdd(temp[0], temp[1]);
             }
             else
             {
                 Console.WriteLine(temp[0] + " & " + temp[1]);
-                PostValues.TryAdd(temp[0], temp[1]);
+                _postValues.TryAdd(temp[0], temp[1]);
             }
         }
     }
