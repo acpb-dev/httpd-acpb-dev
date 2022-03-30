@@ -41,7 +41,7 @@ public class FileReaderTests
     }
     
     [Theory]
-    [InlineData("Gzip.cs", "404", "text/html")]
+    [InlineData("Gzip.cs", "404 Not Found", "text/html")]
     public void ReadSpecifiedFilesTest(string path , string expected1, string expected2)
     {
         var result = FileReader.ReadSpecifiedFiles(path);

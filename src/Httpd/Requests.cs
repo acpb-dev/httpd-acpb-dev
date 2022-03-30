@@ -4,55 +4,45 @@ public class Requests
 {
     private readonly ResponseBuilder _responseBuilder = new();
     
-    public byte[] HandleRequest(string verb, string resource, IDictionary<string, string> requesttDictionary, char[] body, SeriLog serilog)
+    public byte[] HandleRequest(string verb, string resource, IDictionary<string, string> requestDictionary, char[] body, SeriLog serilog)
     {
+        serilog.HttpMethod = verb;
+        serilog.Path = resource;
         switch (verb)
         {
             case "GET":
             {
-                var (bytes, status) = GetResponseCreator(resource, requesttDictionary);
-                serilog.HttpMethod = verb;
-                serilog.Path = resource;
+                var (bytes, status) = GetResponseCreator(resource, requestDictionary);
                 serilog.Status = status;
                 return bytes;
             }
             case "POST":
             {
-                var (bytes, status) = PostResponseCreator(resource, requesttDictionary, body);
-                serilog.HttpMethod = verb;
-                serilog.Path = resource;
+                var (bytes, status) = PostResponseCreator(resource, requestDictionary, body);
                 serilog.Status = status;
                 return bytes;
             }
             case "PUT":
             {
                 var (bytes, status) = PutResponseCreator();
-                serilog.HttpMethod = verb;
-                serilog.Path = resource;
                 serilog.Status = status;
                 return bytes;
             }
             case "PATCH":
             {
                 var (bytes, status) = PatchResponseCreator();
-                serilog.HttpMethod = verb;
-                serilog.Path = resource;
                 serilog.Status = status;
                 return bytes;
             }
             case "DELETE":
             {
                 var (bytes, status) = DeleteResponseCreator();
-                serilog.HttpMethod = verb;
-                serilog.Path = resource;
                 serilog.Status = status;
                 return bytes;
             }
             default:
             {
-                var (bytes, status) = GetResponseCreator(resource, requesttDictionary);
-                serilog.HttpMethod = verb;
-                serilog.Path = resource;
+                var (bytes, status) = GetResponseCreator(resource, requestDictionary);
                 serilog.Status = status;
                 return bytes;
             }
@@ -72,14 +62,14 @@ public class Requests
     }
     private (byte[], string) PutResponseCreator()
     {
-        return(ByteReader.ConvertTextToByte(HtmlBuilder.Page404()), "404");
+        return(ByteReader.ConvertTextToByte(HtmlBuilder.Page404()), "404 Not Found");
     }
     private (byte[], string) PatchResponseCreator()
     {
-        return(ByteReader.ConvertTextToByte(HtmlBuilder.Page404()), "404");
+        return(ByteReader.ConvertTextToByte(HtmlBuilder.Page404()), "404 Not Found");
     }
     private (byte[], string) DeleteResponseCreator()
     {
-        return(ByteReader.ConvertTextToByte(HtmlBuilder.Page404()), "404");
+        return(ByteReader.ConvertTextToByte(HtmlBuilder.Page404()), "404 Not Found");
     }
 }

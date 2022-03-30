@@ -39,22 +39,22 @@ public static class FileReader
         if (temp.Length < 2)
         {
             return DirectoryListing ? ResponseBuilder.HtmlBuilder(path)
-                : (ByteReader.ConvertTextToByte(HtmlBuilder.Page404()), "404", "text/html");
+                : (ByteReader.ConvertTextToByte(HtmlBuilder.Page404()), "404 Not Found", "text/html");
         }
         var extension = temp[^1];
         if (!CheckExtension(FileFormat, extension).Equals("N/A"))
         {
-            return DirectoryReader.CheckFileExistence(path) ? (ByteReader.ConvertFileToByte(path.TrimStart('/')), "200", CheckExtension(FileFormat, extension))
-                : (ByteReader.ConvertTextToByte(HtmlBuilder.Page404()), "404", "text/html");
+            return DirectoryReader.CheckFileExistence(path) ? (ByteReader.ConvertFileToByte(path.TrimStart('/')), "200 OK", CheckExtension(FileFormat, extension))
+                : (ByteReader.ConvertTextToByte(HtmlBuilder.Page404()), "404 Not Found", "text/html");
         }
         else if (!CheckExtension(ImagesFormat, extension).Equals("N/A"))
         {
             if (DirectoryReader.CheckFileExistence(path))
             {
-                return (ByteReader.ConvertBytes(path.TrimStart('/')), "200", CheckExtension(ImagesFormat, extension));
+                return (ByteReader.ConvertBytes(path.TrimStart('/')), "200 OK", CheckExtension(ImagesFormat, extension));
             }
         }
-        return (ByteReader.ConvertTextToByte(HtmlBuilder.Page415()), "415", "text/html");
+        return (ByteReader.ConvertTextToByte(HtmlBuilder.Page415()), "415 Unsupported Media Type", "text/html");
     }
     
     public static string CheckExtension(Dictionary<string, string> dictionary, string extension)

@@ -41,7 +41,7 @@ public class ResponseBuilder
     
     private static byte[] ResponseHeader(byte[] responseBytes, string error, string contentType, bool gzip)
     {
-        var response = $"HTTP/1.1 {error} OK\r\n";
+        var response = $"HTTP/1.1 {error}\r\n";
         response += $"Content-Length: {responseBytes.Length}\r\n";
         response += $"Content-Type: {contentType}\r\n";
         if (gzip)
@@ -68,7 +68,7 @@ public class ResponseBuilder
             topHtml += Httpd.HtmlBuilder.Parameters(_parameters);
         }
         
-        return (ByteReader.ConvertTextToByte(topHtml + bottomHtml), "200", "text/html");
+        return (ByteReader.ConvertTextToByte(topHtml + bottomHtml), "200 OK", "text/html");
     }
 
     private (byte[], string, string) SearchIndex()
@@ -79,10 +79,10 @@ public class ResponseBuilder
             var result = variable[^10..];
             if (result.Equals("index.html"))
             {
-                return (ByteReader.ConvertFileToByte(result), "200", "text/html");
+                return (ByteReader.ConvertFileToByte(result), "200 OK", "text/html");
             }
         }
-        return FileReader.DirectoryListing ? FileReader.ReadSpecifiedFiles("/") : (ByteReader.ConvertTextToByte(Httpd.HtmlBuilder.Page404()), "404", "text/html");
+        return FileReader.DirectoryListing ? FileReader.ReadSpecifiedFiles("/") : (ByteReader.ConvertTextToByte(Httpd.HtmlBuilder.Page404()), "404 Not Found", "text/html");
     }
     
     
@@ -94,7 +94,7 @@ public class ResponseBuilder
         var bottomHtml = Httpd.HtmlBuilder.Footer();
         if (!Directory.Exists(path.Trim('/')) && !path.Equals("/"))
         {
-            return (ByteReader.ConvertTextToByte(Httpd.HtmlBuilder.Page404()), "404", "text/html");
+            return (ByteReader.ConvertTextToByte(Httpd.HtmlBuilder.Page404()), "404 Not Found", "text/html");
         }
         var files = DirectoryReader.ReadFilesInSpecifiedDirectory(path);
         var directories = DirectoryReader.ReadSpecifiedDirectories(path);
@@ -141,7 +141,7 @@ public class ResponseBuilder
             
             topHtml += Httpd.HtmlBuilder.DirectoryListingItem(DirectoryReader.CleanPath(value), DirectoryReader.CleanString(key), false, dir.LastAccessTime, fi1.Length);
         }
-        return (ByteReader.ConvertTextToByte(topHtml + bottomHtml), "200", "text/html");
+        return (ByteReader.ConvertTextToByte(topHtml + bottomHtml), "200 OK", "text/html");
     }
     
     private static bool DebugMode(string path)
