@@ -2,7 +2,7 @@ using System.IO.Compression;
 
 namespace Httpd;
 
-public static class Gzip
+public static class GzipEncoding
 {
 
     public static bool IsGzipEncode(IDictionary<string, string> request)
@@ -20,9 +20,8 @@ public static class Gzip
         return false;
     }
 
-    public static byte[] GZip(byte[] data)
+    public static byte[] GZipEncode(byte[] data)
     {
-        
         using var compressedStream = new MemoryStream();
         using var zipStream = new GZipStream(compressedStream, CompressionMode.Compress);
         zipStream.Write(data, 0, data.Length);

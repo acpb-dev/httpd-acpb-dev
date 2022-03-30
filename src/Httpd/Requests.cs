@@ -72,14 +72,14 @@ public class Requests
     }
     private (byte[], string) PutResponseCreator()
     {
-        return(ByteReader.ConvertTextToByte(HtmlStringBuilder.Page404()), "404");
+        return(ByteReader.ConvertTextToByte(HtmlBuilder.Page404()), "404");
     }
     private (byte[], string) PatchResponseCreator()
     {
-        return(ByteReader.ConvertTextToByte(HtmlStringBuilder.Page404()), "404");
+        return(ByteReader.ConvertTextToByte(HtmlBuilder.Page404()), "404");
     }
     private (byte[], string) DeleteResponseCreator()
     {
-        return(ByteReader.ConvertTextToByte(HtmlStringBuilder.Page404()), "404");
+        return(ByteReader.ConvertTextToByte(HtmlBuilder.Page404()), "404");
     }
 }

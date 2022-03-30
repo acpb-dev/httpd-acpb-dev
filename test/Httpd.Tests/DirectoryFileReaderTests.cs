@@ -8,7 +8,7 @@ public class DirectoryFileReaderTests
     [InlineData("lol")]
     public void ReadSpecifiedFilesTest(string test)
     {
-        var result = DirectoryFileReader.ReadFilesInDirectory();
+        var result = DirectoryReader.ReadFilesInDirectory();
         Assert.NotEqual(expectedReadSpecifiedFilesTest, result);
     }
     

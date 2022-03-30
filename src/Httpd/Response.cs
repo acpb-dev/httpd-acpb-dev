@@ -31,12 +31,12 @@ public class ResponseBuilder
             responseBytes = FileReader.ReadSpecifiedFiles(path);
         }
 
-        if (Gzip.IsGzipEncode(request))
+        if (GzipEncoding.IsGzipEncode(request))
         {
-            responseBytes.Item1 = Gzip.GZip(responseBytes.Item1);
+            responseBytes.Item1 = GzipEncoding.GZipEncode(responseBytes.Item1);
         }
         
-        return (AddTwoByteArrays(ResponseHeader(responseBytes.Item1, responseBytes.Item2, responseBytes.Item3, Gzip.IsGzipEncode(request)), responseBytes.Item1), responseBytes.Item2);
+        return (AddTwoByteArrays(ResponseHeader(responseBytes.Item1, responseBytes.Item2, responseBytes.Item3, GzipEncoding.IsGzipEncode(request)), responseBytes.Item1), responseBytes.Item2);
     }
     
     private static byte[] ResponseHeader(byte[] responseBytes, string error, string contentType, bool gzip)
@@ -55,17 +55,17 @@ public class ResponseBuilder
 
     private (byte[], string, string) DebugBuilder(IDictionary<string, string> request)
     {
-        var topHtml = HtmlStringBuilder.Header();
-        var bottomHtml = HtmlStringBuilder.Footer();
-        topHtml += HtmlStringBuilder.Debug(request);
+        var topHtml = Httpd.HtmlBuilder.HeaderDebug();
+        var bottomHtml = Httpd.HtmlBuilder.Footer();
+        topHtml += Httpd.HtmlBuilder.Debug(request);
         if (Parameters.Count > 0)
         {
-            topHtml += HtmlStringBuilder.Params(Parameters);
+            topHtml += Httpd.HtmlBuilder.Parameters(Parameters);
         }
 
         if (PostValues.Count > 0)
         {
-            topHtml += HtmlStringBuilder.Params(Parameters);
+            topHtml += Httpd.HtmlBuilder.Parameters(Parameters);
         }
         
         return (ByteReader.ConvertTextToByte(topHtml + bottomHtml), "200", "text/html");
@@ -73,7 +73,7 @@ public class ResponseBuilder
 
     private (byte[], string, string) SearchIndex()
     {
-        var test = DirectoryFileReader.ReadFilesInDirectory();
+        var test = DirectoryReader.ReadFilesInDirectory();
         foreach (var variable in test)
         {
             var result = variable[^10..];
@@ -82,7 +82,7 @@ public class ResponseBuilder
                 return (ByteReader.ConvertFileToByte(result), "200", "text/html");
             }
         }
-        return FileReader.DirectoryListing ? FileReader.ReadSpecifiedFiles("/") : (ByteReader.ConvertTextToByte(HtmlStringBuilder.Page404()), "404", "text/html");
+        return FileReader.DirectoryListing ? FileReader.ReadSpecifiedFiles("/") : (ByteReader.ConvertTextToByte(Httpd.HtmlBuilder.Page404()), "404", "text/html");
     }
     
     
@@ -90,14 +90,14 @@ public class ResponseBuilder
     {
         IDictionary<string, string> fileNames = new Dictionary<string, string>();
         IDictionary<string, string> directoriesNames = new Dictionary<string, string>();
-        var topHtml = HtmlStringBuilder.HeaderDl();
-        var bottomHtml = HtmlStringBuilder.Footer();
+        var topHtml = Httpd.HtmlBuilder.HeaderDirectoryListing();
+        var bottomHtml = Httpd.HtmlBuilder.Footer();
         if (!Directory.Exists(path.Trim('/')) && !path.Equals("/"))
         {
-            return (ByteReader.ConvertTextToByte(HtmlStringBuilder.Page404()), "404", "text/html");
+            return (ByteReader.ConvertTextToByte(Httpd.HtmlBuilder.Page404()), "404", "text/html");
         }
-        var files = DirectoryFileReader.ReadFilesInSpecifiedDirectory(path);
-        var directories = DirectoryFileReader.ReadSpecifiedDirectories(path);
+        var files = DirectoryReader.ReadFilesInSpecifiedDirectory(path);
+        var directories = DirectoryReader.ReadSpecifiedDirectories(path);
         if (files.Length > 0)
         {
             foreach (var file in files)
@@ -124,14 +124,14 @@ public class ResponseBuilder
             {
                 test = "/";
             }
-            topHtml += HtmlStringBuilder.ParentDirectory(test, "Parent Directory");
+            topHtml += Httpd.HtmlBuilder.ParentDirectory(test, "Parent Directory");
         }
 
         foreach (var (key, value) in directoriesNames)
         {
             var dir = new DirectoryInfo(value);
             
-            topHtml += HtmlStringBuilder.Alink(DirectoryFileReader.CleanPath(value), DirectoryFileReader.CleanString(key), true, dir.LastAccessTime, 0);
+            topHtml += Httpd.HtmlBuilder.DirectoryListingItem(DirectoryReader.CleanPath(value), DirectoryReader.CleanString(key), true, dir.LastAccessTime, 0);
         }
 
         foreach (var (key, value) in fileNames)
@@ -139,7 +139,7 @@ public class ResponseBuilder
             var dir = new DirectoryInfo(value);
             var fi1 = new FileInfo(value);
             
-            topHtml += HtmlStringBuilder.Alink(DirectoryFileReader.CleanPath(value), DirectoryFileReader.CleanString(key), false, dir.LastAccessTime, fi1.Length);
+            topHtml += Httpd.HtmlBuilder.DirectoryListingItem(DirectoryReader.CleanPath(value), DirectoryReader.CleanString(key), false, dir.LastAccessTime, fi1.Length);
         }
         return (ByteReader.ConvertTextToByte(topHtml + bottomHtml), "200", "text/html");
     }
