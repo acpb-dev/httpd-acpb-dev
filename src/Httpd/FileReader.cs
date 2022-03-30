@@ -5,8 +5,8 @@ namespace Httpd;
 
 public static class FileReader
 {
-    private static Dictionary<string, string> ImagesFormat = new();
-    private static Dictionary<string, string> FileFormat = new();
+    private static readonly Dictionary<string, string> ImagesFormat = new();
+    private static readonly Dictionary<string, string> FileFormat = new();
     public static bool DirectoryListing;
 
     public static void ReadAppConfig()
@@ -47,15 +47,14 @@ public static class FileReader
             return DirectoryReader.CheckFileExistence(path) ? (ByteReader.ConvertFileToByte(path.TrimStart('/')), "200", CheckExtension(FileFormat, extension))
                 : (ByteReader.ConvertTextToByte(HtmlBuilder.Page404()), "404", "text/html");
         }
-        
-        if (!CheckExtension(ImagesFormat, extension).Equals("N/A"))
+        else if (!CheckExtension(ImagesFormat, extension).Equals("N/A"))
         {
             if (DirectoryReader.CheckFileExistence(path))
             {
                 return (ByteReader.ConvertBytes(path.TrimStart('/')), "200", CheckExtension(ImagesFormat, extension));
             }
         }
-        return (ByteReader.ConvertTextToByte(HtmlBuilder.Page404()), "404", "text/html");
+        return (ByteReader.ConvertTextToByte(HtmlBuilder.Page415()), "415", "text/html");
     }
     
     public static string CheckExtension(Dictionary<string, string> dictionary, string extension)
