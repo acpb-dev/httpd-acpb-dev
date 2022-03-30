@@ -35,7 +35,7 @@ public static class DirectoryFileReader
         return Directory.Exists(path);
     }
 
-    public static bool CheckFileExistance(string fileName)
+    public static bool CheckFileExistence(string fileName)
     {
         var currentDirectory = Directory.GetCurrentDirectory();
         return File.Exists(currentDirectory + fileName);
@@ -50,7 +50,7 @@ public static class DirectoryFileReader
 
     public static string CleanString(string sourceString)
     {
-        var splitted = sourceString.Split('/');
-        return splitted[^1];
+        var split = sourceString.Split('/');
+        return split[^1];
     }
 }

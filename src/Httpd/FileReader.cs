@@ -3,7 +3,7 @@ using System.Configuration;
 
 namespace Httpd;
 
-public class FileReader
+public static class FileReader
 {
     private static Dictionary<string, string> ImagesFormat = new();
     private static Dictionary<string, string> FileFormat = new();
@@ -14,28 +14,19 @@ public class FileReader
         var temp = path.Split(".");
         if (temp.Length < 2)
         {
-            if (DirectoryListing)
-            {
-                return ResponseBuilder.HtmlBuilder(path);
-            }
-            return (ByteReader.ConvertTextToByte(HtmlStringBuilder.Page404()), "404", "text/html"); 
+            return DirectoryListing ? ResponseBuilder.HtmlBuilder(path)
+                : (ByteReader.ConvertTextToByte(HtmlStringBuilder.Page404()), "404", "text/html");
         }
         var extension = temp[^1];
         if (!CheckExtension(FileFormat, extension).Equals("N/A"))
         {
-            if (DirectoryFileReader.CheckFileExistance(path))
-            {
-                return (ByteReader.ConvertFileToByte(path.TrimStart('/')), "200", CheckExtension(FileFormat, extension));
-            }
-            else
-            {
-                return (ByteReader.ConvertTextToByte(HtmlStringBuilder.Page404()), "404", "text/html");
-            }
+            return DirectoryFileReader.CheckFileExistence(path) ? (ByteReader.ConvertFileToByte(path.TrimStart('/')), "200", CheckExtension(FileFormat, extension))
+                : (ByteReader.ConvertTextToByte(HtmlStringBuilder.Page404()), "404", "text/html");
         }
         
         if (!CheckExtension(ImagesFormat, extension).Equals("N/A"))
         {
-            if (DirectoryFileReader.CheckFileExistance(path))
+            if (DirectoryFileReader.CheckFileExistence(path))
             {
                 return (ByteReader.ConvertBytes(path.TrimStart('/')), "200", CheckExtension(ImagesFormat, extension));
             }
@@ -46,7 +37,7 @@ public class FileReader
     public static void ReadAppConfig()
     {
         var fileSupported = (Hashtable)ConfigurationManager.GetSection("fileSupported");
-        Dictionary<string,string> fileDictionary = fileSupported.Cast<DictionaryEntry>().ToDictionary(d => (string)d.Key, d => (string)d.Value);
+        var fileDictionary = fileSupported.Cast<DictionaryEntry>().ToDictionary(d => (string)d.Key, d => (string)d.Value!);
         
         foreach (var (key, value) in fileDictionary)
         {
@@ -55,7 +46,7 @@ public class FileReader
 
         Console.WriteLine();
         var textSupported = (Hashtable)ConfigurationManager.GetSection("testFileSupported");
-        Dictionary<string,string> textDictionary = textSupported.Cast<DictionaryEntry>().ToDictionary(d => (string)d.Key, d => (string)d.Value);
+        var textDictionary = textSupported.Cast<DictionaryEntry>().ToDictionary(d => (string)d.Key, d => (string)d.Value!);
         foreach (var (key, value) in textDictionary)
         {
             FileFormat.Add(key, value);

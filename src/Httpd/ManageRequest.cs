@@ -6,7 +6,7 @@ namespace Httpd;
 public class ManageRequest : IDisposable
 {
     
-    private IDictionary<string, string> RequestDictionary = new Dictionary<string, string>();
+    private readonly IDictionary<string, string> _requestDictionary = new Dictionary<string, string>();
     private readonly SeriLog _seriLog = new SeriLog();
     private int ContentLength { get; set; }
     private long StartTime { get; set; }
@@ -15,7 +15,7 @@ public class ManageRequest : IDisposable
     private string Resource { get; set; } = null!;
     public string Request { get; set; } = null!;
 
-    public void InitialiseStartTime(Stopwatch timerStart)
+    public void InitialiseTimer(Stopwatch timerStart)
     {
         StartTime = timerStart.ElapsedMilliseconds;
     }
@@ -46,7 +46,7 @@ public class ManageRequest : IDisposable
             {
                 ContentLength = int.Parse(split[1]);
             }
-            RequestDictionary.Add(split[0], split[1]);
+            _requestDictionary.Add(split[0], split[1]);
         }
     }
 
@@ -60,7 +60,7 @@ public class ManageRequest : IDisposable
     {
         Requests requests = new();
         
-        return requests.HandleRequest(Verb, Resource, RequestDictionary, ReadBody(streamReader), _seriLog);
+        return requests.HandleRequest(Verb, Resource, _requestDictionary, ReadBody(streamReader), _seriLog);
     }
 
     public void PrintSeriLog(int length, Stopwatch timer)
@@ -70,10 +70,10 @@ public class ManageRequest : IDisposable
     
     public void Dispose()
     {
-        RequestDictionary.Clear();
-        Request = null;
-        Verb = null;
-        Resource = null;
+        _requestDictionary.Clear();
+        Request = null!;
+        Verb = null!;
+        Resource = null!;
         ContentLength = 0;
         StartTime = 0;
     }

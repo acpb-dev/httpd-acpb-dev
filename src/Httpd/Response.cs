@@ -39,7 +39,7 @@ public class ResponseBuilder
         return (AddTwoByteArrays(ResponseHeader(responseBytes.Item1, responseBytes.Item2, responseBytes.Item3, Gzip.IsGzipEncode(request)), responseBytes.Item1), responseBytes.Item2);
     }
     
-    private byte[] ResponseHeader(byte[] responseBytes, string error, string contentType, bool gzip)
+    private static byte[] ResponseHeader(byte[] responseBytes, string error, string contentType, bool gzip)
     {
         var response = $"HTTP/1.1 {error} OK\r\n";
         response += $"Content-Length: {responseBytes.Length}\r\n";
@@ -82,11 +82,7 @@ public class ResponseBuilder
                 return (ByteReader.ConvertFileToByte(result), "200", "text/html");
             }
         }
-        if (FileReader.DirectoryListing)
-        {
-            return FileReader.ReadSpecifiedFiles("/");
-        }
-        return (ByteReader.ConvertTextToByte(HtmlStringBuilder.Page404()), "404", "text/html");
+        return FileReader.DirectoryListing ? FileReader.ReadSpecifiedFiles("/") : (ByteReader.ConvertTextToByte(HtmlStringBuilder.Page404()), "404", "text/html");
     }
     
     
@@ -133,14 +129,14 @@ public class ResponseBuilder
 
         foreach (var (key, value) in directoriesNames)
         {
-            DirectoryInfo dir = new DirectoryInfo(value);
+            var dir = new DirectoryInfo(value);
             
             topHtml += HtmlStringBuilder.Alink(DirectoryFileReader.CleanPath(value), DirectoryFileReader.CleanString(key), true, dir.LastAccessTime, 0);
         }
 
         foreach (var (key, value) in fileNames)
         {
-            DirectoryInfo dir = new DirectoryInfo(value);
+            var dir = new DirectoryInfo(value);
             var fi1 = new FileInfo(value);
             
             topHtml += HtmlStringBuilder.Alink(DirectoryFileReader.CleanPath(value), DirectoryFileReader.CleanString(key), false, dir.LastAccessTime, fi1.Length);
@@ -148,18 +144,12 @@ public class ResponseBuilder
         return (ByteReader.ConvertTextToByte(topHtml + bottomHtml), "200", "text/html");
     }
     
-    private bool DebugMode(string path)
+    private static bool DebugMode(string path)
     {
         const string debug = "/debug";
-        if (path.Length >= debug.Length)
-        {
-            var test = path.Remove(0, path.Length-debug.Length);
-            if (test.Equals(debug))
-            {
-                return true;
-            }
-        }
-        return false;
+        if (path.Length < debug.Length) return false;
+        var test = path.Remove(0, path.Length-debug.Length);
+        return test.Equals(debug);
     }
 
     private string Params(string path)
@@ -168,27 +158,21 @@ public class ResponseBuilder
         var indexS = path.LastIndexOf('/');
         if (indexS > indexQ)
         {
-            
-            if (indexQ > -1 && indexS > 1)
-            {
-                var param = path.Remove(indexS);
-                param = param.Remove(0, indexQ+1);
-                path = path.Remove(indexQ, indexS - indexQ);
-                WriteParamsOrPost(param, true);
-                return path;
-            }
+            if (indexQ <= -1 || indexS <= 1) return path;
+            var param = path.Remove(indexS);
+            param = param.Remove(0, indexQ+1);
+            path = path.Remove(indexQ, indexS - indexQ);
+            WriteParamsOrPost(param, true);
+            return path;
         }
         else
         {
-            if (indexQ > -1)
-            {
-                var param = path.Remove(0, indexQ+1);
-                path = path.Remove(indexQ);
-                WriteParamsOrPost(param, true);
-                return path;
-            }
+            if (indexQ <= -1) return path;
+            var param = path.Remove(0, indexQ+1);
+            path = path.Remove(indexQ);
+            WriteParamsOrPost(param, true);
+            return path;
         }
-        return path;
     }
 
     private void WriteParamsOrPost(string param, bool isParam)
@@ -197,22 +181,20 @@ public class ResponseBuilder
         foreach (var separate in seperated)
         {
             var temp = separate.Split('=');
-            if (temp.Length > 1)
+            if (temp.Length <= 1) continue;
+            if (isParam)
             {
-                if (isParam)
-                {
-                    Parameters.TryAdd(temp[0], temp[1]);
-                }
-                else
-                {
-                    Console.WriteLine(temp[0] + " & " + temp[1]);
-                    PostValues.TryAdd(temp[0], temp[1]);
-                }
+                Parameters.TryAdd(temp[0], temp[1]);
+            }
+            else
+            {
+                Console.WriteLine(temp[0] + " & " + temp[1]);
+                PostValues.TryAdd(temp[0], temp[1]);
             }
         }
     }
     
-    private byte[] AddTwoByteArrays(byte[] array1, byte[] array2)
+    private static byte[] AddTwoByteArrays(byte[] array1, byte[] array2)
     {
         var z = new byte[array1.Length + array2.Length];
         array1.CopyTo(z, 0);

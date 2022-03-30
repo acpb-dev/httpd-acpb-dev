@@ -6,53 +6,56 @@ public class Requests
     
     public byte[] HandleRequest(string verb, string resource, IDictionary<string, string> requesttDictionary, char[] body, SeriLog serilog)
     {
-        if (verb is "GET")
+        switch (verb)
         {
-            var (bytes, status) = GetResponseCreator(resource, requesttDictionary);
-            serilog.HttpMethod = verb;
-            serilog.Path = resource;
-            serilog.Status = status;
-            return bytes;
-        }
-        else if (verb is "POST")
-        {
-            var (bytes, status) = PostResponseCreator(resource, requesttDictionary, body);
-            serilog.HttpMethod = verb;
-            serilog.Path = resource;
-            serilog.Status = status;
-            return bytes;
-        }
-        else if (verb is "PUT")
-        {
-            var (bytes, status) = PutResponseCreator();
-            serilog.HttpMethod = verb;
-            serilog.Path = resource;
-            serilog.Status = status;
-            return bytes;
-        }
-        else if (verb is "PATCH")
-        {
-            var (bytes, status) = PatchResponseCreator();
-            serilog.HttpMethod = verb;
-            serilog.Path = resource;
-            serilog.Status = status;
-            return bytes;
-        }
-        else if (verb is "DELETE")
-        {
-            var (bytes, status) = DeleteResponseCreator();
-            serilog.HttpMethod = verb;
-            serilog.Path = resource;
-            serilog.Status = status;
-            return bytes;
-        }
-        else
-        {
-            var (bytes, status) = GetResponseCreator(resource, requesttDictionary);
-            serilog.HttpMethod = verb;
-            serilog.Path = resource;
-            serilog.Status = status;
-            return bytes;
+            case "GET":
+            {
+                var (bytes, status) = GetResponseCreator(resource, requesttDictionary);
+                serilog.HttpMethod = verb;
+                serilog.Path = resource;
+                serilog.Status = status;
+                return bytes;
+            }
+            case "POST":
+            {
+                var (bytes, status) = PostResponseCreator(resource, requesttDictionary, body);
+                serilog.HttpMethod = verb;
+                serilog.Path = resource;
+                serilog.Status = status;
+                return bytes;
+            }
+            case "PUT":
+            {
+                var (bytes, status) = PutResponseCreator();
+                serilog.HttpMethod = verb;
+                serilog.Path = resource;
+                serilog.Status = status;
+                return bytes;
+            }
+            case "PATCH":
+            {
+                var (bytes, status) = PatchResponseCreator();
+                serilog.HttpMethod = verb;
+                serilog.Path = resource;
+                serilog.Status = status;
+                return bytes;
+            }
+            case "DELETE":
+            {
+                var (bytes, status) = DeleteResponseCreator();
+                serilog.HttpMethod = verb;
+                serilog.Path = resource;
+                serilog.Status = status;
+                return bytes;
+            }
+            default:
+            {
+                var (bytes, status) = GetResponseCreator(resource, requesttDictionary);
+                serilog.HttpMethod = verb;
+                serilog.Path = resource;
+                serilog.Status = status;
+                return bytes;
+            }
         }
     }
 

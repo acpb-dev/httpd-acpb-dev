@@ -10,17 +10,11 @@ public static class Gzip
         foreach (var (key, value) in request)
         {
             //Console.WriteLine(key + " " + value);
-            if (key.Equals("Accept-Encoding"))
+            if (!key.Equals("Accept-Encoding")) continue;
+            var split = value.Split(",");
+            if (split.Select(val => val.Trim()).Any(valTrimmed => valTrimmed.Equals("gzip")))
             {
-                var split = value.Split(",");
-                foreach (var val in split)
-                {
-                    var valTrimmed = val.Trim();
-                    if (valTrimmed.Equals("gzip"))
-                    {
-                        return true;
-                    }
-                }
+                return true;
             }
         }
         return false;
@@ -34,7 +28,6 @@ public static class Gzip
         zipStream.Write(data, 0, data.Length);
         zipStream.Close();
         return compressedStream.ToArray();
-        return data;
 
     }
 }
