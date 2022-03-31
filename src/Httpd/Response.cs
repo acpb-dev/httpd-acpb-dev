@@ -4,9 +4,11 @@ public class ResponseBuilder
 {
     private readonly IDictionary<string, string> _parameters = new Dictionary<string, string>();
     private readonly IDictionary<string, string> _postValues = new Dictionary<string, string>();
+    private static bool debug = false;
 
     public (byte[], string) ResponseManager(string path, IDictionary<string, string> request, string postResponse)
     {
+        debug = false;
         _parameters.Clear();
         (byte[], string, string) responseBytes;
         if (!postResponse.Equals(""))
@@ -20,6 +22,7 @@ public class ResponseBuilder
         
         if (DebugMode(path))
         {
+            debug = true;
             responseBytes = DebugBuilder(request);
         }
         else if (path.Equals("/"))
@@ -35,22 +38,51 @@ public class ResponseBuilder
         {
             responseBytes.Item1 = GzipEncoding.GZipEncode(responseBytes.Item1);
         }
+
+        var test = ResponseHeader(responseBytes.Item1, responseBytes.Item2, responseBytes.Item3,
+            GzipEncoding.IsGzipEncode(request));
+        if (debug)
+        {
+            var split = test.Split("\n");
+            var temper = Httpd.HtmlBuilder.Response(split);
+            
+            //Console.WriteLine(temper);
+            
+            if (test.Contains("Content-Encoding: gzip"))
+            {
+                return (AddTwoByteArrays(ByteReader.ConvertTextToByte(test), AddTwoByteArrays(responseBytes.Item1, GzipEncoding.GZipEncode(ByteReader.ConvertTextToByte(temper)))), responseBytes.Item2);
+            }
+            return (AddTwoByteArrays(ByteReader.ConvertTextToByte(test), AddTwoByteArrays(responseBytes.Item1, ByteReader.ConvertTextToByte(temper))), responseBytes.Item2);
+        }
         
-        return (AddTwoByteArrays(ResponseHeader(responseBytes.Item1, responseBytes.Item2, responseBytes.Item3, GzipEncoding.IsGzipEncode(request)), responseBytes.Item1), responseBytes.Item2);
+        return (AddTwoByteArrays(ByteReader.ConvertTextToByte(test), responseBytes.Item1), responseBytes.Item2);
     }
     
-    private static byte[] ResponseHeader(byte[] responseBytes, string error, string contentType, bool gzip)
+    private static string ResponseHeader(byte[] responseBytes, string status, string contentType, bool gzip)
     {
-        var response = $"HTTP/1.1 {error}\r\n";
-        response += $"Content-Length: {responseBytes.Length}\r\n";
-        response += $"Content-Type: {contentType}\r\n";
+        var response1 = $"HTTP/1.1 {status}\r\n";
+        response1 += $"Content-Length: {responseBytes.Length}\r\n";
+        response1 += $"Content-Type: {contentType}\r\n";
         if (gzip)
         {
-            response += "Content-Encoding: gzip\r\n";
+            response1 += "Content-Encoding: gzip\r\n";
         }
+
+        if (debug)
+        {
+            var response = $"HTTP/1.1 {status}\r\n";
+            response += $"Content-Length: {responseBytes.Length + response1.Length}\r\n";
+            response += $"Content-Type: {contentType}\r\n";
+            if (gzip)
+            {
+                response += "Content-Encoding: gzip\r\n";
+                response1 = response;
+            }
+        }
+
         // response += "Connection: close\r\n";
-        response += "\r\n";
-        return ByteReader.ConvertTextToByte(response);
+        response1 += "\r\n";
+        return response1;
     }
 
     private (byte[], string, string) DebugBuilder(IDictionary<string, string> request)
