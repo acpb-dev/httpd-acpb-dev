@@ -6,7 +6,7 @@ public class ResponseBuilder
 {
     private readonly IDictionary<string, string> _parameters = new Dictionary<string, string>();
     private readonly IDictionary<string, string> _postValues = new Dictionary<string, string>();
-    private static bool _debug = false;
+    private static bool _debug;
 
     public (byte[], string) ResponseManager(string path, IDictionary<string, string> request, string postResponse)
     {
@@ -22,11 +22,10 @@ public class ResponseBuilder
         {
             path = Params(path);
         }
-        
-        if (DebugMode(path))
+
+        if (!IsRouteInPath(path, request).Item2.Equals(""))
         {
-            _debug = true;
-            responseBytes = DebugBuilder(fullPath, request);
+            responseBytes = IsRouteInPath(path, request);
         }
         else if (path.Equals("/"))
         {
@@ -45,28 +44,47 @@ public class ResponseBuilder
         var test = ResponseHeader(responseBytes.Item1, responseBytes.Item2, responseBytes.Item3, GzipEncoding.IsGzipEncode(request));
         if (_debug)
         {
-            var temper = Httpd.HtmlBuilder.Response(test);
+            var temper = HtmlBuilder.Response(test);
             
             if (test.Contains("gzip"))
             {
-                responseBytes.Item1 = GzipEncoding.GZipEncode(ByteReader.ConvertTextToByte(Encoding.UTF8.GetString(GzipEncoding.GZipDencode(AddTwoByteArrays(responseBytes.Item1, GzipEncoding.GZipEncode(ByteReader.ConvertTextToByte(temper.Trim() + Httpd.HtmlBuilder.Footer())))))));
-                return (AddTwoByteArrays(ByteReader.ConvertTextToByte(test), GzipEncoding.GZipEncode(ByteReader.ConvertTextToByte(Encoding.UTF8.GetString(GzipEncoding.GZipDencode(responseBytes.Item1))))), responseBytes.Item2);
+                responseBytes.Item1 = GzipEncoding.GZipEncode(ByteReader.ConvertTextToByte(Encoding.UTF8.GetString(GzipEncoding.GZipDecode(AddTwoByteArrays(responseBytes.Item1, GzipEncoding.GZipEncode(ByteReader.ConvertTextToByte(temper.Trim() + Httpd.HtmlBuilder.Footer())))))));
+                return (AddTwoByteArrays(ByteReader.ConvertTextToByte(test), GzipEncoding.GZipEncode(ByteReader.ConvertTextToByte(Encoding.UTF8.GetString(GzipEncoding.GZipDecode(responseBytes.Item1))))), responseBytes.Item2);
             }
 
             Console.WriteLine("nope");
             return (AddTwoByteArrays(ByteReader.ConvertTextToByte(test), AddTwoByteArrays(responseBytes.Item1, ByteReader.ConvertTextToByte(temper))), responseBytes.Item2);
         }
-
-        
         return (AddTwoByteArrays(ByteReader.ConvertTextToByte(test), responseBytes.Item1), responseBytes.Item2);
     }
 
-    private string CheckForRoute()
+    private (byte[], string, string) IsRouteInPath(string path, IDictionary<string, string> request)
     {
         foreach (var (key, value) in FileReader.Routes)
         {
-            
+            if (path.Length > key.Length)
+            {
+                var test = path.Remove(0, path.Length-key.Length);
+                if (test.Equals(key))
+                {
+                    return ExecuteRoute(value, path, request);
+                }
+            }
         }
+        return (Array.Empty<byte>(), "", "");
+    }
+
+    private (byte[], string, string) ExecuteRoute(string route, string path, IDictionary<string, string> request)
+    {
+        if (route.Equals("debug"))
+        {
+            _debug = true;
+            return DebugBuilder(path, request);
+        }else if (route.Equals("page404"))
+        {
+            return (ByteReader.ConvertTextToByte(HtmlBuilder.Page404()), "404 Not Found", "text/html");
+        }
+        return (Array.Empty<byte>(), "", "");
     }
     
     private static string ResponseHeader(byte[] responseBytes, string status, string contentType, bool gzip)
@@ -86,13 +104,13 @@ public class ResponseBuilder
             response += $"Content-Type: {contentType}\r\n";
             if (gzip)
             {
-                response += $"Content-Length: {GzipEncoding.GZipEncode(ByteReader.ConvertTextToByte(Encoding.UTF8.GetString(GzipEncoding.GZipDencode(AddTwoByteArrays(responseBytes, GzipEncoding.GZipEncode(ByteReader.ConvertTextToByte(Httpd.HtmlBuilder.Response(response1.Trim()) + Httpd.HtmlBuilder.Footer()))))))).Length}\r\n";
+                response += $"Content-Length: {GzipEncoding.GZipEncode(ByteReader.ConvertTextToByte(Encoding.UTF8.GetString(GzipEncoding.GZipDecode(AddTwoByteArrays(responseBytes, GzipEncoding.GZipEncode(ByteReader.ConvertTextToByte(HtmlBuilder.Response(response1.Trim()) + HtmlBuilder.Footer()))))))).Length}\r\n";
                 response += "Content-Encoding: gzip\r\n";
                 
             }
             else
             {
-                response += $"Content-Length: {ByteReader.ConvertTextToByte(Encoding.UTF8.GetString(GzipEncoding.GZipDencode(AddTwoByteArrays(responseBytes, GzipEncoding.GZipEncode(ByteReader.ConvertTextToByte(Httpd.HtmlBuilder.Response(response1.Trim()) + Httpd.HtmlBuilder.Footer())))))).Length}\r\n";
+                response += $"Content-Length: {ByteReader.ConvertTextToByte(Encoding.UTF8.GetString(GzipEncoding.GZipDecode(AddTwoByteArrays(responseBytes, GzipEncoding.GZipEncode(ByteReader.ConvertTextToByte(HtmlBuilder.Response(response1.Trim()) + HtmlBuilder.Footer())))))).Length}\r\n";
             }
             response1 = response;
         }
@@ -103,17 +121,17 @@ public class ResponseBuilder
 
     private (byte[], string, string) DebugBuilder(string path, IDictionary<string, string> request)
     {
-        var topHtml = Httpd.HtmlBuilder.HeaderDebug();
+        var topHtml = HtmlBuilder.HeaderDebug();
         topHtml += "GET " + path + " HTTP/1.1";
-        topHtml += Httpd.HtmlBuilder.Debug(request);
+        topHtml += HtmlBuilder.Debug(request);
         if (_parameters.Count > 0)
         {
-            topHtml += Httpd.HtmlBuilder.Parameters(_parameters);
+            topHtml += HtmlBuilder.Parameters(_parameters);
         }
 
         if (_postValues.Count > 0)
         {
-            topHtml += Httpd.HtmlBuilder.Parameters(_parameters);
+            topHtml += HtmlBuilder.Parameters(_parameters);
         }
         
         return (ByteReader.ConvertTextToByte(topHtml), "200 OK", "text/html");
@@ -130,19 +148,19 @@ public class ResponseBuilder
                 return (ByteReader.ConvertFileToByte(result), "200 OK", "text/html");
             }
         }
-        return FileReader.DirectoryListing ? FileReader.ReadSpecifiedFiles("/") : (ByteReader.ConvertTextToByte(Httpd.HtmlBuilder.Page404()), "404 Not Found", "text/html");
+        return FileReader.DirectoryListing ? FileReader.ReadSpecifiedFiles("/") : (ByteReader.ConvertTextToByte(HtmlBuilder.Page404()), "404 Not Found", "text/html");
     }
     
     
-    public static (byte[], string, string) HtmlBuilder(string path)
+    public static (byte[], string, string) DirectoryListingCreator(string path)
     {
         IDictionary<string, string> fileNames = new Dictionary<string, string>();
         IDictionary<string, string> directoriesNames = new Dictionary<string, string>();
-        var topHtml = Httpd.HtmlBuilder.HeaderDirectoryListing();
-        var bottomHtml = Httpd.HtmlBuilder.Footer();
+        var topHtml = HtmlBuilder.HeaderDirectoryListing();
+        var bottomHtml = HtmlBuilder.Footer();
         if (!Directory.Exists(path.Trim('/')) && !path.Equals("/"))
         {
-            return (ByteReader.ConvertTextToByte(Httpd.HtmlBuilder.Page404()), "404 Not Found", "text/html");
+            return (ByteReader.ConvertTextToByte(HtmlBuilder.Page404()), "404 Not Found", "text/html");
         }
         var files = DirectoryReader.ReadFilesInSpecifiedDirectory(path);
         var directories = DirectoryReader.ReadSpecifiedDirectories(path);
@@ -172,14 +190,14 @@ public class ResponseBuilder
             {
                 test = "/";
             }
-            topHtml += Httpd.HtmlBuilder.ParentDirectory(test, "Parent Directory");
+            topHtml += HtmlBuilder.ParentDirectory(test, "Parent Directory");
         }
 
         foreach (var (key, value) in directoriesNames)
         {
             var dir = new DirectoryInfo(value);
             
-            topHtml += Httpd.HtmlBuilder.DirectoryListingItem(DirectoryReader.CleanPath(value), DirectoryReader.CleanString(key), true, dir.LastAccessTime, 0);
+            topHtml += HtmlBuilder.DirectoryListingItem(DirectoryReader.CleanPath(value), DirectoryReader.CleanString(key), true, dir.LastAccessTime, 0);
         }
 
         foreach (var (key, value) in fileNames)
@@ -187,18 +205,12 @@ public class ResponseBuilder
             var dir = new DirectoryInfo(value);
             var fi1 = new FileInfo(value);
             
-            topHtml += Httpd.HtmlBuilder.DirectoryListingItem(DirectoryReader.CleanPath(value), DirectoryReader.CleanString(key), false, dir.LastAccessTime, fi1.Length);
+            topHtml += HtmlBuilder.DirectoryListingItem(DirectoryReader.CleanPath(value), DirectoryReader.CleanString(key), false, dir.LastAccessTime, fi1.Length);
         }
         return (ByteReader.ConvertTextToByte(topHtml + bottomHtml), "200 OK", "text/html");
     }
     
-    private static bool DebugMode(string path)
-    {
-        const string debug = "/debug";
-        if (path.Length < debug.Length) return false;
-        var test = path.Remove(0, path.Length-debug.Length);
-        return test.Equals(debug);
-    }
+
 
     private string Params(string path)
     {

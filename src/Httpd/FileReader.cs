@@ -7,10 +7,20 @@ public static class FileReader
 {
     private static readonly Dictionary<string, string> ImagesFormat = new();
     private static readonly Dictionary<string, string> FileFormat = new();
+    public static readonly Dictionary<string, string> Routes = new();
     public static bool DirectoryListing;
 
     public static void ReadAppConfig()
     {
+        var routesSupported = (Hashtable)ConfigurationManager.GetSection("routesSupported");
+        var routeDirectoory = routesSupported.Cast<DictionaryEntry>().ToDictionary(d => (string)d.Key, d => (string)d.Value!);
+        
+        foreach (var (key, value) in routeDirectoory)
+        {
+            Routes.Add(key, value);
+        }
+
+        
         var fileSupported = (Hashtable)ConfigurationManager.GetSection("fileSupported");
         var fileDictionary = fileSupported.Cast<DictionaryEntry>().ToDictionary(d => (string)d.Key, d => (string)d.Value!);
         
@@ -38,7 +48,7 @@ public static class FileReader
         var temp = path.Split(".");
         if (temp.Length < 2)
         {
-            return DirectoryListing ? ResponseBuilder.HtmlBuilder(path)
+            return DirectoryListing ? ResponseBuilder.DirectoryListingCreator(path)
                 : (ByteReader.ConvertTextToByte(HtmlBuilder.Page404()), "404 Not Found", "text/html");
         }
         var extension = temp[^1];

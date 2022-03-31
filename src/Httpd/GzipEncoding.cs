@@ -29,7 +29,7 @@ public static class GzipEncoding
         return compressedStream.ToArray();
     }
     
-    public static byte[] GZipDencode(byte[] data)
+    public static byte[] GZipDecode(byte[] data)
     {
         using (var compressedStream = new MemoryStream(data))
         using (var zipStream = new GZipStream(compressedStream, CompressionMode.Decompress))
