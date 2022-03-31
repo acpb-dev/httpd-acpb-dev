@@ -809,3 +809,18 @@ $RECYCLE.BIN/
 .idea/.idea.Httpd/.idea/projectSettingsUpdater.xml
 .idea/.idea.Httpd/.idea/.name
 .idea/.idea.Httpd/.idea/vcs.xml
+.idea/.idea.Httpd/.idea/encodings.xml
+
+# Default ignored files
+/shelf/
+/workspace.xml
+# Rider ignored files
+/modules.xml
+/projectSettingsUpdater.xml
+/.idea.Httpd.iml
+/contentModel.xml
+# Editor-based HTTP Client requests
+/httpRequests/
+# Datasource local storage ignored files
+/dataSources/
+/dataSources.local.xml
