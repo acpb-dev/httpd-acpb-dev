@@ -32,20 +32,18 @@ public static class HtmlBuilder
         }
         return html;
     }
-    public static string Response(string[] response)
+    public static string Response(string test)
     {
+        var response = test.Split("\n");
         var responseHtml = "<h1 style=\"padding-top: .5rem;\">Response</h1> <div class=\"row\"> -------------------------------------------------------- </div>";
         foreach (var variable in response)
         {
-            Console.WriteLine(variable);
-            if (!variable.Equals(""))
+            if (!variable.Equals("") && !variable.Equals(" "))
             {
-                responseHtml += $"<div class=\"row\" style=\"margin-top: .2rem;\"><div class=\"col-6\"> <a>{variable}</a> </div><div class=\"col-6\"> <a></a> </div> </div>";
+                responseHtml += $"<div class=\"row\" style=\"margin-top: .2rem;\"><div class=\"col-6\"> <a>{variable.Trim()} </a> </div><div class=\"col-6\"></div></div>";
             }
             
         }
-
-        Console.WriteLine(responseHtml);
         return responseHtml;
     }
     public static string DirectoryListingItem(string href, string value, bool toUpper, DateTime date, double size)

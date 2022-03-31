@@ -1,4 +1,6 @@
-﻿namespace Httpd;
+﻿using System.Text;
+
+namespace Httpd;
 
 public class ResponseBuilder
 {
@@ -43,13 +45,13 @@ public class ResponseBuilder
             GzipEncoding.IsGzipEncode(request));
         if (debug)
         {
-            var split = test.Split("\n");
-            var temper = Httpd.HtmlBuilder.Response(split);
+            var temper = Httpd.HtmlBuilder.Response(test);
             
             //Console.WriteLine(temper);
             
-            if (test.Contains("Content-Encoding: gzip"))
+            if (test.Contains("gzip"))
             {
+                Console.WriteLine("first " + (AddTwoByteArrays(responseBytes.Item1, GzipEncoding.GZipEncode(ByteReader.ConvertTextToByte(temper))).Length));
                 return (AddTwoByteArrays(ByteReader.ConvertTextToByte(test), AddTwoByteArrays(responseBytes.Item1, GzipEncoding.GZipEncode(ByteReader.ConvertTextToByte(temper)))), responseBytes.Item2);
             }
             return (AddTwoByteArrays(ByteReader.ConvertTextToByte(test), AddTwoByteArrays(responseBytes.Item1, ByteReader.ConvertTextToByte(temper))), responseBytes.Item2);
@@ -67,11 +69,10 @@ public class ResponseBuilder
         {
             response1 += "Content-Encoding: gzip\r\n";
         }
-
         if (debug)
         {
             var response = $"HTTP/1.1 {status}\r\n";
-            response += $"Content-Length: {responseBytes.Length + response1.Length}\r\n";
+            response += $"Content-Length: {responseBytes.Length + GzipEncoding.GZipEncode(ByteReader.ConvertTextToByte(Httpd.HtmlBuilder.Response(response1))).Length}\r\n";
             response += $"Content-Type: {contentType}\r\n";
             if (gzip)
             {
@@ -79,7 +80,7 @@ public class ResponseBuilder
                 response1 = response;
             }
         }
-
+        Console.WriteLine("2nd " + (responseBytes.Length + GzipEncoding.GZipEncode(ByteReader.ConvertTextToByte(Httpd.HtmlBuilder.Response(response1))).Length));
         // response += "Connection: close\r\n";
         response1 += "\r\n";
         return response1;
@@ -220,7 +221,7 @@ public class ResponseBuilder
             }
             else
             {
-                Console.WriteLine(temp[0] + " & " + temp[1]);
+                // Console.WriteLine(temp[0] + " & " + temp[1]);
                 _postValues.TryAdd(temp[0], temp[1]);
             }
         }
