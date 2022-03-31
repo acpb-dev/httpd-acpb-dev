@@ -8,7 +8,7 @@ public class SeriLog
     public string Path = null!;
     public string Status = null!;
     
-    public void SeriLogger(long timeInMs, int contentLength)
+    public void SeriLogger(double timeInMs, int contentLength)
     {
         Log.Logger = new LoggerConfiguration()
             .WriteTo.Console()

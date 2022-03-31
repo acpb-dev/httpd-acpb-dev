@@ -25,7 +25,7 @@ public static class HtmlBuilder
     }
     public static string Parameters(IDictionary<string, string> param)
     {
-        var html = "<h1 style=\"padding-top: .5rem;\">Params</h1> <div class=\"row\"> <div class=\"col-6\"> <h5> <a>Key</a> </h5> </div> <div class=\"col-6\"> <h5> <a>Value</a> </h5> </div> </div> <div class=\"row\"> ----------------------------------------------------------------------------------------------------------------------------------------- </div>";
+        var html = "<h1 style=\"padding-top: .5rem;\">Parameters</h1> <div class=\"row\"> <div class=\"col-6\"> <h5> <a>Key</a> </h5> </div> <div class=\"col-6\"> <h5> <a>Value</a> </h5> </div> </div> <div class=\"row\"> ----------------------------------------------------------------------------------------------------------------------------------------- </div>";
         foreach (var (key, value) in param)
         {
             html += $"<div class=\"row\"  style=\"margin-top: .2rem;\"> <div class=\"col-6\"> <div> <a>{key} :</a> </div> </div> <div class=\"col-6\"> <div> <a>{value}</a> </div> </div></div>";

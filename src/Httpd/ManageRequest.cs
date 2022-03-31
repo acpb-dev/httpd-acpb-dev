@@ -17,7 +17,7 @@ public class ManageRequest : IDisposable
 
     public void InitialiseTimer(Stopwatch timerStart)
     {
-        StartTime = timerStart.ElapsedMilliseconds;
+        StartTime = timerStart.ElapsedTicks;
     }
 
     private char[] ReadBody(StreamReader streamReader)
@@ -31,7 +31,7 @@ public class ManageRequest : IDisposable
     {
         if (Request is "")
         {
-            StartTime = timer.ElapsedMilliseconds;
+            StartTime = timer.ElapsedTicks;
         }
         if (currentLine.Split().Length == 3 && currentLine.Contains("HTTP/1.1"))
         {
@@ -65,7 +65,9 @@ public class ManageRequest : IDisposable
 
     public void PrintSeriLog(int length, Stopwatch timer)
     {
-        _seriLog.SeriLogger(timer.ElapsedMilliseconds - StartTime, length);
+        // ReSharper disable once PossibleLossOfFraction
+        double tickEnlapsed = timer.ElapsedTicks - StartTime;
+        _seriLog.SeriLogger(Math.Round(tickEnlapsed/10000, 3), length);
     }
     
     public void Dispose()

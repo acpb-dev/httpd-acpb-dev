@@ -60,6 +60,14 @@ public class ResponseBuilder
         
         return (AddTwoByteArrays(ByteReader.ConvertTextToByte(test), responseBytes.Item1), responseBytes.Item2);
     }
+
+    private string CheckForRoute()
+    {
+        foreach (var (key, value) in FileReader.Routes)
+        {
+            
+        }
+    }
     
     private static string ResponseHeader(byte[] responseBytes, string status, string contentType, bool gzip)
     {
