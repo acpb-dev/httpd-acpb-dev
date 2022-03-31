@@ -6,13 +6,14 @@ public class ResponseBuilder
 {
     private readonly IDictionary<string, string> _parameters = new Dictionary<string, string>();
     private readonly IDictionary<string, string> _postValues = new Dictionary<string, string>();
-    private static bool debug = false;
+    private static bool _debug = false;
 
     public (byte[], string) ResponseManager(string path, IDictionary<string, string> request, string postResponse)
     {
-        debug = false;
+        _debug = false;
         _parameters.Clear();
         (byte[], string, string) responseBytes;
+        string fullPath = path;
         if (!postResponse.Equals(""))
         {
             WriteParamsOrPost(postResponse, true);
@@ -24,8 +25,8 @@ public class ResponseBuilder
         
         if (DebugMode(path))
         {
-            debug = true;
-            responseBytes = DebugBuilder(request);
+            _debug = true;
+            responseBytes = DebugBuilder(fullPath, request);
         }
         else if (path.Equals("/"))
         {
@@ -41,21 +42,21 @@ public class ResponseBuilder
             responseBytes.Item1 = GzipEncoding.GZipEncode(responseBytes.Item1);
         }
 
-        var test = ResponseHeader(responseBytes.Item1, responseBytes.Item2, responseBytes.Item3,
-            GzipEncoding.IsGzipEncode(request));
-        if (debug)
+        var test = ResponseHeader(responseBytes.Item1, responseBytes.Item2, responseBytes.Item3, GzipEncoding.IsGzipEncode(request));
+        if (_debug)
         {
             var temper = Httpd.HtmlBuilder.Response(test);
             
-            //Console.WriteLine(temper);
-            
             if (test.Contains("gzip"))
             {
-                Console.WriteLine("first " + (AddTwoByteArrays(responseBytes.Item1, GzipEncoding.GZipEncode(ByteReader.ConvertTextToByte(temper))).Length));
-                return (AddTwoByteArrays(ByteReader.ConvertTextToByte(test), AddTwoByteArrays(responseBytes.Item1, GzipEncoding.GZipEncode(ByteReader.ConvertTextToByte(temper)))), responseBytes.Item2);
+                responseBytes.Item1 = GzipEncoding.GZipEncode(ByteReader.ConvertTextToByte(Encoding.UTF8.GetString(GzipEncoding.GZipDencode(AddTwoByteArrays(responseBytes.Item1, GzipEncoding.GZipEncode(ByteReader.ConvertTextToByte(temper.Trim() + Httpd.HtmlBuilder.Footer())))))));
+                return (AddTwoByteArrays(ByteReader.ConvertTextToByte(test), GzipEncoding.GZipEncode(ByteReader.ConvertTextToByte(Encoding.UTF8.GetString(GzipEncoding.GZipDencode(responseBytes.Item1))))), responseBytes.Item2);
             }
+
+            Console.WriteLine("nope");
             return (AddTwoByteArrays(ByteReader.ConvertTextToByte(test), AddTwoByteArrays(responseBytes.Item1, ByteReader.ConvertTextToByte(temper))), responseBytes.Item2);
         }
+
         
         return (AddTwoByteArrays(ByteReader.ConvertTextToByte(test), responseBytes.Item1), responseBytes.Item2);
     }
@@ -69,27 +70,33 @@ public class ResponseBuilder
         {
             response1 += "Content-Encoding: gzip\r\n";
         }
-        if (debug)
+        if (_debug)
         {
             var response = $"HTTP/1.1 {status}\r\n";
-            response += $"Content-Length: {responseBytes.Length + GzipEncoding.GZipEncode(ByteReader.ConvertTextToByte(Httpd.HtmlBuilder.Response(response1))).Length}\r\n";
+            
+            
             response += $"Content-Type: {contentType}\r\n";
             if (gzip)
             {
+                response += $"Content-Length: {GzipEncoding.GZipEncode(ByteReader.ConvertTextToByte(Encoding.UTF8.GetString(GzipEncoding.GZipDencode(AddTwoByteArrays(responseBytes, GzipEncoding.GZipEncode(ByteReader.ConvertTextToByte(Httpd.HtmlBuilder.Response(response1.Trim()) + Httpd.HtmlBuilder.Footer()))))))).Length}\r\n";
                 response += "Content-Encoding: gzip\r\n";
-                response1 = response;
+                
             }
+            else
+            {
+                response += $"Content-Length: {ByteReader.ConvertTextToByte(Encoding.UTF8.GetString(GzipEncoding.GZipDencode(AddTwoByteArrays(responseBytes, GzipEncoding.GZipEncode(ByteReader.ConvertTextToByte(Httpd.HtmlBuilder.Response(response1.Trim()) + Httpd.HtmlBuilder.Footer())))))).Length}\r\n";
+            }
+            response1 = response;
         }
-        Console.WriteLine("2nd " + (responseBytes.Length + GzipEncoding.GZipEncode(ByteReader.ConvertTextToByte(Httpd.HtmlBuilder.Response(response1))).Length));
         // response += "Connection: close\r\n";
         response1 += "\r\n";
         return response1;
     }
 
-    private (byte[], string, string) DebugBuilder(IDictionary<string, string> request)
+    private (byte[], string, string) DebugBuilder(string path, IDictionary<string, string> request)
     {
         var topHtml = Httpd.HtmlBuilder.HeaderDebug();
-        var bottomHtml = Httpd.HtmlBuilder.Footer();
+        topHtml += "GET " + path + " HTTP/1.1";
         topHtml += Httpd.HtmlBuilder.Debug(request);
         if (_parameters.Count > 0)
         {
@@ -101,7 +108,7 @@ public class ResponseBuilder
             topHtml += Httpd.HtmlBuilder.Parameters(_parameters);
         }
         
-        return (ByteReader.ConvertTextToByte(topHtml + bottomHtml), "200 OK", "text/html");
+        return (ByteReader.ConvertTextToByte(topHtml), "200 OK", "text/html");
     }
 
     private (byte[], string, string) SearchIndex()
