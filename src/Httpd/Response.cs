@@ -83,6 +83,9 @@ public class ResponseBuilder
         }else if (route.Equals("page404"))
         {
             return (ByteReader.ConvertTextToByte(HtmlBuilder.Page404()), "404 Not Found", "text/html");
+        }else if (route.Equals("hello"))
+        {
+            return (ByteReader.ConvertTextToByte(HtmlBuilder.HelloJord()), "200 OK", "text/html");
         }
         return (Array.Empty<byte>(), "", "");
     }
