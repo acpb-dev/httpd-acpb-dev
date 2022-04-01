@@ -62,7 +62,7 @@ public class ResponseBuilder
     {
         foreach (var (key, value) in FileReader.Routes)
         {
-            if (path.Length > key.Length)
+            if (path.Length >= key.Length)
             {
                 var test = path.Remove(0, path.Length-key.Length);
                 if (test.Equals(key))
